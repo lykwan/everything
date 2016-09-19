@@ -6,7 +6,7 @@ Everyone on the internet is inundated with new information and updates. Wouldnâ€
 
 Our application will provide a list of sources that users can add to their feed, such as youtube, news, etc. Our application will also provide a framework api that a user can add different plugins to personalize their feed further. If a user would like to create a specific source for their own feed, a user can implement their own plugins that can be used with our framework api.
 
-Development of the features in this application will be guided by different apis for the plugins, such as youtube api or ny times api
+Development of the features in this application will be guided by different apis for the plugins, such as youtube api or Hack news RSS feed. Reddis cache would be also used to store temporary aggregated data.
 
 (Itâ€™s kind of like feedly but for social media feeds)
 
@@ -48,22 +48,27 @@ https://github.com/intridea/omniauth
 **Day 1**: Get backend setup and user sign up mechanism (through facebook, twitter, or google account)  Goals by the end of the day:
 
 - A completed `package.json`
+- Rails backend setup for auth system (through a third party app such as facebook)
+- Database tables schema ready
 
-**Day 2**: Work on identifying the colors used in the DOM by class and other attributes, and create and render a new DOM with different colors.  By the end of the day, I will have:
+**Day 2**: Work on getting the framework to take in data from plugins and parse it into the frontend. Work on the home page of the front end. Goals:
 
-- The ability to identify all colors
-- A new HTML file that gets rendered in place of the current DOM, using different colors
+- Writing a small sample plugin
+- Writing the parsing of the plugin result to show on the frontend
+- Work on showing different categories feed on the home page
 
-**Day 3**: Dedicate this day to correctly replacing colors with their grey scale or high-contrast equivalents.  By the end of the day:
+**Day 3**: Work on writing a plugin with api that the framework can use for signing upWork on adding different sources (plugins) to different feeds on the front end. By the end of the day:
 
-- Implement an algorithm for replacing colors with grey scale tones
-- At least understand (and hopefully implement) and algorithm for replacing colors with high-contrast equivalents
-- Render a new DOM that contains each of these color equivalents
+- Getting the access token from an user and pass it to the framework
+- adding different categories in the news_feed
+- side bar component
+- reddis cache for storing temporary data
 
-**Day 4**: Create the settings page and connect the settings to the color change logic.  If time, create high-contrast grey scale and low-contrast algorithms as well.  By the end of the day:
+**Day 4**: Work on creating the infinite scroll for the news feed, work on the newsfeed page of each category. Work on the second sample plugin. By the end of the day:
 
-- Fully implemented settings changes that re-render a differently colored DOM
-- If time, implement the final two features: normal color to low contrast and normal to high-contrast grey scale
+- infinite scroll for the news feed, working with the cache to achieve that
+- write a second sample plugin and fetch data from another api
 
-
-**Day 5**: Styling the app with CSS.
+**Day 5**: Styling the app with CSS, make sure everything works together.
+- Add smooth CSS transitions
+- if time permits, bonus features would be implemented.
