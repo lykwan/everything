@@ -48,8 +48,6 @@ https://github.com/intridea/omniauth
 **Day 1**: Get backend setup and user sign up mechanism (through facebook, twitter, or google account)  Goals by the end of the day:
 
 - A completed `package.json`
--
--
 
 **Day 2**: Work on identifying the colors used in the DOM by class and other attributes, and create and render a new DOM with different colors.  By the end of the day, I will have:
 
