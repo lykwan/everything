@@ -1,7 +1,8 @@
 import React from "react";
 import {Router, Route, IndexRoute, hashHistory, browserHistory} from "react-router";
 import App from "./app.jsx";
-import DashboardContainer from "./dashboard.jsx";
+import Dashboard from "./dashboard.jsx";
+import SessionFormContainer from './session_form_container';
 
 
 class AppRouter extends React.Component{
@@ -19,7 +20,7 @@ class AppRouter extends React.Component{
     const currentState = this.context.store.getState();
     const currentUser = currentState.session.currentUser;
     if (!currentUser) {
-      replace('/login');
+      replace('/');
     }
   }
 
@@ -27,7 +28,7 @@ class AppRouter extends React.Component{
     const currentState = this.context.store.getState();
     const currentUser = currentState.session.currentUser;
     if (currentUser) {
-      replace('/');
+      replace('/dashboard');
     }
   }
 
@@ -36,7 +37,8 @@ class AppRouter extends React.Component{
     return(
       <Router history={ hashHistory }>
         <Route path="/" component={ App }>
-          <Route path="/dashboard" component={ DashboardContainer } /> //onEnter={this._ensureLoggedIn}
+          <IndexRoute component={ SessionFormContainer } /> //onEnter={this._redirectIfLoggedIn}
+          <Route path="dashboard" component={ Dashboard } /> //onEnter={this._ensureLoggedIn}
         </Route>
       </Router>
     );
