@@ -6,27 +6,29 @@ class Dashboard extends React.Component{
     this.embedYoutubeVideo = this.embedYoutubeVideo.bind(this);
   }
 
-  embedYoutubeVideo() {
-    // 2. This code loads the IFrame Player API code asynchronously.
-    var tag = document.createElement('script');
+  componentDidMount() {
+    this.embedYoutubeVideo();
+  }
 
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  embedYoutubeVideo() {
+    console.log("embedding");
 
     // 3. This function creates an <iframe> (and YouTube player)
     //    after the API code downloads.
-    var player;
+
+    let player;
+    let playerTag = document.getElementById('player');
+    let options = {
+      height: '200',
+      width: '320',
+      videoId: 'M7lc1UVf-VE',
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }};
+
     function onYouTubeIframeAPIReady() {
-     player = new YT.Player('player', {
-       height: '200',
-       width: '320',
-       videoId: 'M7lc1UVf-VE',
-       events: {
-         'onReady': onPlayerReady,
-         'onStateChange': onPlayerStateChange
-       }
-     });
+      this.player = new YT.Player(playerTag, options)
     }
 
     // 4. The API will call this function when the video player is ready.
@@ -37,7 +39,7 @@ class Dashboard extends React.Component{
     // 5. The API calls this function when the player's state changes.
     //    The function indicates that when playing a video (state=1),
     //    the player should play for six seconds and then stop.
-    var done = false;
+    let done = false;
     function onPlayerStateChange(event) {
     //  if (event.data == YT.PlayerState.PLAYING && !done) {
     //    setTimeout(stopVideo, 6000);
@@ -47,12 +49,12 @@ class Dashboard extends React.Component{
     function stopVideo() {
      player.stopVideo();
     }
+    debugger
   }
 
 
   render() {
-    this.embedYoutubeVideo();
-    console.log("playing vide");
+
     return (
       <div>
         <div id="player">In the player div</div>

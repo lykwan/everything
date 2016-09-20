@@ -32697,28 +32697,31 @@
 	  }
 	
 	  _createClass(Dashboard, [{
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      this.embedYoutubeVideo();
+	    }
+	  }, {
 	    key: "embedYoutubeVideo",
 	    value: function embedYoutubeVideo() {
-	      // 2. This code loads the IFrame Player API code asynchronously.
-	      var tag = document.createElement('script');
-	
-	      tag.src = "https://www.youtube.com/iframe_api";
-	      var firstScriptTag = document.getElementsByTagName('script')[0];
-	      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	      console.log("embedding");
 	
 	      // 3. This function creates an <iframe> (and YouTube player)
 	      //    after the API code downloads.
-	      var player;
+	
+	      var player = void 0;
+	      var playerTag = document.getElementById('player');
+	      var options = {
+	        height: '200',
+	        width: '320',
+	        videoId: 'M7lc1UVf-VE',
+	        events: {
+	          'onReady': onPlayerReady,
+	          'onStateChange': onPlayerStateChange
+	        } };
+	
 	      function onYouTubeIframeAPIReady() {
-	        player = new YT.Player('player', {
-	          height: '200',
-	          width: '320',
-	          videoId: 'M7lc1UVf-VE',
-	          events: {
-	            'onReady': onPlayerReady,
-	            'onStateChange': onPlayerStateChange
-	          }
-	        });
+	        this.player = new YT.Player(playerTag, options);
 	      }
 	
 	      // 4. The API will call this function when the video player is ready.
@@ -32739,12 +32742,12 @@
 	      function stopVideo() {
 	        player.stopVideo();
 	      }
+	      debugger;
 	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      this.embedYoutubeVideo();
-	      console.log("playing vide");
+	
 	      return _react2.default.createElement(
 	        "div",
 	        null,
