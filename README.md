@@ -26,8 +26,8 @@ With this application, users will be able to:
 
 ### Wireframes
 
-![log in screen](./log_in.png)
-![news feed page](./news_feed.png)
+![log in screen](./docs/wireframes/log_in.png)
+![news feed page](./docs/wireframes/news_feed.png)
 
 ### Technologies & Technical Challenges
 
@@ -57,7 +57,7 @@ https://github.com/intridea/omniauth
 - Writing the parsing of the plugin result to show on the frontend
 - Work on showing different categories feed on the home page
 
-**Day 3**: Work on writing a plugin with api that the framework can use for signing upWork on adding different sources (plugins) to different feeds on the front end. By the end of the day:
+**Day 3**: Work on writing a plugin with api that the framework can use for signing up. Work on adding different sources (plugins) to different feeds on the front end. By the end of the day:
 
 - Getting the access token from an user and pass it to the framework
 - adding different categories in the news_feed
