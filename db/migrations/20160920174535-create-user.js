@@ -12,9 +12,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      img: {
-        type: Sequelize.STRING
-      },
       name: {
         type: Sequelize.STRING,
         allowNull: false
@@ -29,7 +26,7 @@ module.exports = {
       }
     });
   },
-  
+
   down: function(queryInterface, Sequelize) {
     return queryInterface.dropTable('Users');
   }

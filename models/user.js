@@ -5,14 +5,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       unique: true
     },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-
-    img: DataTypes.STRING
-
+    }
   }, {
     classMethods: {
       associate: function(models) {

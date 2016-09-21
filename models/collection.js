@@ -3,16 +3,17 @@ module.exports = function(sequelize, DataTypes) {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'uniqueUserFeed'
+      unique: 'uniqueUserCollection'
     },
   }, {
     classMethods: {
       associate: function(models) {
         Collection.belongsTo(models.User, {
+          onUpdate: 'CASCADE',
           onDelete: 'CASCADE',
           foreignKey: {
             allowNull: false,
-            unique: 'uniqueUserFeed'
+            unique: 'uniqueUserCollection'
           }
         });
       }
