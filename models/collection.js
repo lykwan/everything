@@ -16,6 +16,8 @@ module.exports = function(sequelize, DataTypes) {
             unique: 'uniqueUserCollection'
           }
         });
+
+        Collection.hasMany(models.Feed);
       }
     }
   });

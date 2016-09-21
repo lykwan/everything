@@ -1,13 +1,27 @@
 module.exports = function(sequelize, DataTypes) {
-  const Feed = sequelize.define('Feed', {
-
+  var Feed = sequelize.define('Feed', {
   }, {
     classMethods: {
       associate: function(models) {
-        // Feed.belongsTo
+        Feed.belongsTo(models.Model, {
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          foreignKey: {
+            allowNull: false,
+            unique: 'uniquePluginCollection'
+          }
+        });
+
+        Feed.belongsTo(models.Plugin, {
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
+          foreignKey: {
+            allowNull: false,
+            unique: 'uniquePluginCollection'
+          }
+        });
       }
     }
   });
-
   return Feed;
 };

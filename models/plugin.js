@@ -1,11 +1,14 @@
-'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Plugin = sequelize.define('Plugin', {
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true
+    }
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Plugin.hasMany(models.Feed);
       }
     }
   });
