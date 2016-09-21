@@ -6,6 +6,10 @@ var session = require('express-session');
 var users = require('./routes/users.js');
 var collections = require('./routes/collections.js');
 
+<<<<<<< 8c5599b855cc9f434b30b0e18cab46ca43254b2e
+// app.use(express.static(__dirname + 'public'));
+=======
+>>>>>>> set up collection migrations and model
 app.use(express.static('public'));
 
 app.use(bodyParser.urlencoded({ extended: false }));

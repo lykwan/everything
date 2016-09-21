@@ -47,5 +47,5 @@ app.use('/users', users);
 app.use('/collections', collections);
 
 app.listen(3000, function () {
-  console.log('Everything listening on port 3000!');
+  console.log('Example app listening on port 3000!');
 });
