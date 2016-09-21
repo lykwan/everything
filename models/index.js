@@ -3,26 +3,29 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
-const db =
+const sequelize =
   new Sequelize(config.database, config.username, config.password, config);
 const SequelizeFixtures = require('sequelize-fixtures');
-const models = {};
+const db = {};
 
-// add models to the db
+// add db to the sequelize
 fs.readdirSync(__dirname)
   .filter(file => {
     return (file.charAt(0) !== '.') && (file !== "index.js");
   })
   .forEach(file => {
-    const model = db.import(path.join(__dirname, file));
-    models[model.name] = model;
+    const model = sequelize.import(path.join(__dirname, file));
+    db[model.name] = model;
   });
 
 // form associations for each model
-Object.keys(models).forEach(modelName => {
-  if ('associate' in models[modelName]) {
-    models[modelName].associate(models);
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
   }
 });
+
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;
