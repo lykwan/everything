@@ -32664,7 +32664,7 @@
 /* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -32693,23 +32693,36 @@
 	    var _this = _possibleConstructorReturn(this, (Dashboard.__proto__ || Object.getPrototypeOf(Dashboard)).call(this, props));
 	
 	    _this.embedYoutubeVideo = _this.embedYoutubeVideo.bind(_this);
+	    _this.player;
 	    return _this;
 	  }
 	
 	  _createClass(Dashboard, [{
-	    key: "componentDidMount",
+	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      this.embedYoutubeVideo();
 	    }
 	  }, {
-	    key: "embedYoutubeVideo",
+	    key: 'embedYoutubeVideo',
 	    value: function embedYoutubeVideo() {
-	      console.log("embedding");
+	      var _this2 = this;
 	
-	      // 3. This function creates an <iframe> (and YouTube player)
-	      //    after the API code downloads.
+	      var onPlayerReady = function onPlayerReady(event) {
+	        event.target.playVideo();
+	      };
 	
-	      var player = void 0;
+	      var done = false;
+	      var onPlayerStateChange = function onPlayerStateChange(event) {
+	        //  if (event.data == YT.PlayerState.PLAYING && !done) {
+	        //    setTimeout(stopVideo, 6000);
+	        //    done = true;
+	        //  }
+	      };
+	
+	      var stopVideo = function stopVideo() {
+	        _this2.player.stopVideo();
+	      };
+	
 	      var playerTag = document.getElementById('player');
 	      var options = {
 	        height: '200',
@@ -32720,46 +32733,28 @@
 	          'onStateChange': onPlayerStateChange
 	        } };
 	
-	      function onYouTubeIframeAPIReady() {
-	        this.player = new YT.Player(playerTag, options);
-	      }
+	      var onYouTubeIframeAPIReady = function onYouTubeIframeAPIReady() {};
+	      this.player = new YT.Player(playerTag, options);
 	
-	      // 4. The API will call this function when the video player is ready.
-	      function onPlayerReady(event) {
-	        event.target.playVideo();
-	      }
-	
-	      // 5. The API calls this function when the player's state changes.
-	      //    The function indicates that when playing a video (state=1),
-	      //    the player should play for six seconds and then stop.
-	      var done = false;
-	      function onPlayerStateChange(event) {
-	        //  if (event.data == YT.PlayerState.PLAYING && !done) {
-	        //    setTimeout(stopVideo, 6000);
-	        //    done = true;
-	        //  }
-	      }
-	      function stopVideo() {
-	        player.stopVideo();
-	      }
+	      // onYouTubeIframeAPIReady();
 	      debugger;
 	    }
 	  }, {
-	    key: "render",
+	    key: 'render',
 	    value: function render() {
 	
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
 	        _react2.default.createElement(
-	          "div",
-	          { id: "player" },
-	          "In the player div"
+	          'div',
+	          { id: 'player' },
+	          'In the player div'
 	        ),
 	        _react2.default.createElement(
-	          "div",
+	          'div',
 	          null,
-	          "Hello from Dashboard"
+	          'Hello from Dashboard'
 	        )
 	      );
 	    }

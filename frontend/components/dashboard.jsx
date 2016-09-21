@@ -4,6 +4,7 @@ class Dashboard extends React.Component{
   constructor(props) {
     super(props);
     this.embedYoutubeVideo = this.embedYoutubeVideo.bind(this);
+    this.player;
   }
 
   componentDidMount() {
@@ -11,12 +12,23 @@ class Dashboard extends React.Component{
   }
 
   embedYoutubeVideo() {
-    console.log("embedding");
 
-    // 3. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
+    const onPlayerReady = (event) => {
+     event.target.playVideo();
+   };
 
-    let player;
+    let done = false;
+    const onPlayerStateChange = (event) => {
+    //  if (event.data == YT.PlayerState.PLAYING && !done) {
+    //    setTimeout(stopVideo, 6000);
+    //    done = true;
+    //  }
+    };
+
+    const stopVideo = () => {
+      this.player.stopVideo();
+    };
+
     let playerTag = document.getElementById('player');
     let options = {
       height: '200',
@@ -27,28 +39,11 @@ class Dashboard extends React.Component{
         'onStateChange': onPlayerStateChange
       }};
 
-    function onYouTubeIframeAPIReady() {
-      this.player = new YT.Player(playerTag, options)
-    }
+    const onYouTubeIframeAPIReady = () => {
+    };
+    this.player = new YT.Player(playerTag, options);
 
-    // 4. The API will call this function when the video player is ready.
-    function onPlayerReady(event) {
-     event.target.playVideo();
-    }
-
-    // 5. The API calls this function when the player's state changes.
-    //    The function indicates that when playing a video (state=1),
-    //    the player should play for six seconds and then stop.
-    let done = false;
-    function onPlayerStateChange(event) {
-    //  if (event.data == YT.PlayerState.PLAYING && !done) {
-    //    setTimeout(stopVideo, 6000);
-    //    done = true;
-    //  }
-    }
-    function stopVideo() {
-     player.stopVideo();
-    }
+    // onYouTubeIframeAPIReady();
     debugger
   }
 
