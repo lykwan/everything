@@ -10,11 +10,19 @@ class AppRouter extends React.Component{
     super(props);
     this._ensureLoggedIn = this._ensureLoggedIn.bind(this);
     this._redirectIfLoggedIn = this._redirectIfLoggedIn.bind(this);
+    this.makeSessionFormWrapper = this.makeSessionFormWrapper.bind(this);
+    this.SessionFormWrapper;
   }
-  //
-  // shouldComponentUpdate() {
-  //   return false;
-  // }
+
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  componentDidMount() {
+    console.log("in router");
+    console.log(this.props.fb);
+    this.makeSessionFormWrapper();
+  }
 
   _ensureLoggedIn(nextState, replace){
     const currentState = this.context.store.getState();
@@ -32,12 +40,23 @@ class AppRouter extends React.Component{
     }
   }
 
+  makeSessionFormWrapper() {
+    console.log("making wrapper");
+    this.SessionFormWrapper = React.createClass({
+      render() {
+        return (
+            <SessionForm fb={this.props.fb} />
+        );
+      }
+    });
+    debugger
+  }
 
   render(){
     return(
       <Router history={ hashHistory }>
         <Route path="/" component={ App }>
-          <IndexRoute component={ SessionForm } /> //onEnter={this._redirectIfLoggedIn}
+          <IndexRoute component={ this.SessionFormWrapper } /> //onEnter={this._redirectIfLoggedIn}
           <Route path="dashboard" component={ Dashboard } /> //onEnter={this._ensureLoggedIn}
         </Route>
       </Router>

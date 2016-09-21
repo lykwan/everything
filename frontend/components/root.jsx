@@ -2,9 +2,9 @@ import React from "react";
 import { Provider } from 'react-redux';
 import AppRouter from "./router.jsx";
 
-const Root = ({store}) => (
+const Root = ({store, fb}) => (
   <Provider store={store}>
-    <AppRouter />
+    <AppRouter fb={fb} />
   </Provider>
 );
 

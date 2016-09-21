@@ -31921,10 +31921,11 @@
 	
 	var Root = function Root(_ref) {
 	  var store = _ref.store;
+	  var fb = _ref.fb;
 	  return _react2.default.createElement(
 	    _reactRedux.Provider,
 	    { store: store },
-	    _react2.default.createElement(_router2.default, null)
+	    _react2.default.createElement(_router2.default, { fb: fb })
 	  );
 	};
 	
@@ -32576,14 +32577,24 @@
 	
 	    _this._ensureLoggedIn = _this._ensureLoggedIn.bind(_this);
 	    _this._redirectIfLoggedIn = _this._redirectIfLoggedIn.bind(_this);
+	    _this.makeSessionFormWrapper = _this.makeSessionFormWrapper.bind(_this);
+	    _this.SessionFormWrapper;
 	    return _this;
 	  }
-	  //
-	  // shouldComponentUpdate() {
-	  //   return false;
-	  // }
 	
 	  _createClass(AppRouter, [{
+	    key: "shouldComponentUpdate",
+	    value: function shouldComponentUpdate() {
+	      return false;
+	    }
+	  }, {
+	    key: "componentDidMount",
+	    value: function componentDidMount() {
+	      console.log("in router");
+	      console.log(this.props.fb);
+	      this.makeSessionFormWrapper();
+	    }
+	  }, {
 	    key: "_ensureLoggedIn",
 	    value: function _ensureLoggedIn(nextState, replace) {
 	      var currentState = this.context.store.getState();
@@ -32602,6 +32613,18 @@
 	      }
 	    }
 	  }, {
+	    key: "makeSessionFormWrapper",
+	    value: function makeSessionFormWrapper() {
+	      console.log("making wrapper");
+	      this.SessionFormWrapper = _react2.default.createClass({
+	        displayName: "SessionFormWrapper",
+	        render: function render() {
+	          return _react2.default.createElement(_session_form2.default, { fb: this.props.fb });
+	        }
+	      });
+	      debugger;
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -32610,7 +32633,7 @@
 	        _react2.default.createElement(
 	          _reactRouter.Route,
 	          { path: "/", component: _app2.default },
-	          _react2.default.createElement(_reactRouter.IndexRoute, { component: _session_form2.default }),
+	          _react2.default.createElement(_reactRouter.IndexRoute, { component: this.SessionFormWrapper }),
 	          " //onEnter=",
 	          this._redirectIfLoggedIn,
 	          _react2.default.createElement(_reactRouter.Route, { path: "dashboard", component: _dashboard2.default }),
@@ -32796,92 +32819,83 @@
 	  function SessionForm(props) {
 	    _classCallCheck(this, SessionForm);
 	
-	    return _possibleConstructorReturn(this, (SessionForm.__proto__ || Object.getPrototypeOf(SessionForm)).call(this, props));
 	    // this.checkLoginState = this.checkLoginState.bind(this);
 	    // this.statusChangeCallback = this.statusChangeCallback.bind(this);
 	    // this.loggedInCallback = this.loggedInCallback.bind(this);
-	    // this.checkLoginState = this.checkLoginState.bind(this);
+	    var _this = _possibleConstructorReturn(this, (SessionForm.__proto__ || Object.getPrototypeOf(SessionForm)).call(this, props));
+	
+	    _this.FB = _this.props.fb;
+	    _this.onLogout = _this.onLogout.bind(_this);
+	    _this.onStatusChange = _this.onStatusChange.bind(_this);
+	    _this.state = { message: "" };
+	    return _this;
 	  }
 	
 	  _createClass(SessionForm, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
 	      console.log("mounted");
-	      // this.FB.Event.subscribe('auth.logout',
-	      //    this.onLogout.bind(this));
-	      // this.FB.Event.subscribe('auth.statusChange',
-	      //    this.onStatusChange.bind(this));
+	      console.log(this.FB);
+	      this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
+	      this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
 	    }
-	    //
-	    // FB.getLoginStatus(response) {
-	    //   this.statusChangeCallback(response);
-	    // };
+	  }, {
+	    key: "onStatusChange",
+	    value: function onStatusChange(response) {
+	      var _this2 = this;
 	
-	    // checkLoginState() {
-	    //   this.FB.getLoginStatus((response) => {
-	    //     this.statusChangeCallback(response);
-	    //   });
-	    // }
-	    //
-	    // statusChangeCallback(response) {
-	    //   console.log('statusChangeCallback');
-	    //   console.log(response);
-	    //
-	    //   if (response.status === 'connected') {
-	    //      // Logged into your app and Facebook.
-	    //      this.loggedInCallback();
-	    //    } else if (response.status === 'not_authorized') {
-	    //      // The person is logged into Facebook, but not your app.
-	    //      document.getElementById('status').innerHTML = 'Please log ' +
-	    //        'into this app.';
-	    //    } else {
-	    //      // The person is not logged into Facebook, so we're not sure if
-	    //      // they are logged into this app or not.
-	    //      document.getElementById('status').innerHTML = 'Please log ' +
-	    //        'into Facebook.';
-	    //    }
-	    // }
-	    //
-	    // loggedInCallback() {
-	    //   console.log('Welcome!  Fetching your information.... ');
-	    //   FB.api('/me', (response) => {
-	    //     console.log("response is" + response);
-	    //     console.log('Successful login for: ' + response.name);
-	    //     document.getElementById('status').innerHTML =
-	    //       'Thanks for logging in, ' + response.name + '!';
-	    //   });
-	    // }
+	      console.log(response);
 	
+	      if (response.status === "connected") {
+	        this.FB.api('/me', function () {
+	          _this2.setState({
+	            message: "Welcome + " + response.name
+	          });
+	        });
 	
-	    // onStatusChange(response) {
-	    //    console.log( response );
-	    //    var self = this;
-	    //
-	    //    if( response.status === "connected" ) {
-	    //       this.FB.api('/me', function(response) {
-	    //          var message = "Welcome " + response.name;
-	    //          self.setState({
-	    //             message: message
-	    //          });
-	    //       })
-	    //    }
-	    // }
-	    //
-	    // onLogout(response) {
-	    //    this.setState({
-	    //       message: ""
-	    //    });
-	    // }
+	        $.ajax({
+	          method: "POST",
+	          url: "login",
+	          data: response.authResponse.accessToken,
+	          dataType: "json",
+	          success: function success() {
+	            console.log('Welcome Valerie');
+	          },
+	          error: function error() {
+	            console.log('fb login error');
+	          }
+	        });
+	      } else if (response.status === 'not_authorized') {
 	
-	    // <div className="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true"></div>
+	        this.setState({
+	          message: "Please log into #Everthing"
+	        });
+	      } else {
 	
+	        this.setState({
+	          message: "Please log into Faceboook"
+	        });
+	      }
+	    }
+	  }, {
+	    key: "onLogout",
+	    value: function onLogout(response) {
+	      this.setState({
+	        message: ""
+	      });
+	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
 	        "div",
 	        null,
-	        "in session form"
+	        _react2.default.createElement("div", { className: "fb-login-button", "data-max-rows": "1", "data-size": "medium", "data-show-faces": "false", "data-auto-logout-link": "true" }),
+	        _react2.default.createElement(
+	          "div",
+	          null,
+	          this.state.message
+	        )
 	      );
 	    }
 	  }]);
