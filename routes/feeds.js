@@ -3,7 +3,7 @@ const express = require('express');
 const router  = express.Router();
 
 router.post('/', function(req, res) {
-  models.Feed.create({
+  models.UserApp.create({
     pluginId: req.body.pluginId,
     collectionId: req.body.collectionId
   }).then(function(feed) {

@@ -1,5 +1,5 @@
 module.exports = function(sequelize, DataTypes) {
-  var Plugin = sequelize.define('Plugin', {
+  var App = sequelize.define('App', {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -8,9 +8,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Plugin.belongsToMany(models.Collection, { through: 'feeds' });
+        App.belongsToMany(models.User, { through: 'UserApp' });
       }
     }
   });
-  return Plugin;
+  return App;
 };
