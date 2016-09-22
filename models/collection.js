@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
           }
         });
 
-        Collection.hasMany(models.Feed);
+        Collection.belongsToMany(models.Plugin, { through: 'feeds' });
       }
     }
   });

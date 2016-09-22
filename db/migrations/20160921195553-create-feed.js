@@ -36,6 +36,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }).then(function() {
+      return queryInterface.addIndex('Feeds',
+        ['pluginId', 'collectionId'], {
+        indexName: 'uniquePluginCollection',
+        indicesType: 'UNIQUE'
+      });
+    }).then(function() {
+      return queryInterface.addIndex('Feeds', ['collectionId']);
     });
   },
   down: function(queryInterface, Sequelize) {

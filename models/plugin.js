@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Plugin.hasMany(models.Feed);
+        Plugin.belongsToMany(models.Collection, { through: 'feeds' });
       }
     }
   });

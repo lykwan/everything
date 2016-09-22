@@ -15,4 +15,13 @@ router.get('/', function(req, res) {
   });
 });
 
+router.post('/', function(req, res) {
+  models.Collection.create({
+    title: req.body.title
+    //ADD USER ID HERE
+  }).then(function(collection) {
+    res.json(collection);
+  });
+});
+
 module.exports = router;

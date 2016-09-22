@@ -4,7 +4,7 @@ module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Collections', [{
       title: 'social',
-      userId: 4,
+      userId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {});
@@ -14,7 +14,7 @@ module.exports = {
     return queryInterface.bulkDelete('Collections', [
       {
         title: 'social',
-        userId: 4
+        userId: 1
       }
     ]);
   }
