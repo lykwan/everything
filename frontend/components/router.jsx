@@ -2,9 +2,9 @@ import React from "react";
 import {Router, Route, IndexRoute, hashHistory, browserHistory} from "react-router";
 import App from "./app.jsx";
 import DashboardContainer from "./dashboard_container.jsx";
-import Feeds from "./feeds.jsx";
-import AppIndex from "./app/apps.jsx";
-import AppDetails from "./app/app_details.jsx";
+import FeedsContainer from "./feeds_container.jsx";
+import AppIndexContainer from "./app/apps_container.jsx";
+import AppDetailsContainer from "./app/app_details_container.jsx";
 import SessionFormContainer from './session_form_container.jsx';
 
 
@@ -43,9 +43,9 @@ class AppRouter extends React.Component{
         <Route path="/" component={ App }>
           <IndexRoute component={ SessionFormContainer } /> //onEnter={this._redirectIfLoggedIn}
           <Route path="dashboard" component={ DashboardContainer }> //onEnter={this._ensureLoggedIn}
-            <Route path="/all" component={ Feeds }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/apps" component={ AppIndex }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/apps/:appId" component={ AppDetails }/> //onEnter={this._ensureLoggedIn}
+            <Route path="/all" component={ FeedsContainer }/> //onEnter={this._ensureLoggedIn}
+            <Route path="/apps" component={ AppIndexContainer }/> //onEnter={this._ensureLoggedIn}
+            <Route path="/apps/:appId" component={ AppDetailsContainer }/> //onEnter={this._ensureLoggedIn}
           </Route>
         </Route>
       </Router>

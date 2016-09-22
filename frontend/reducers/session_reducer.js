@@ -19,6 +19,11 @@ const SessionReducer = (state = preloadedState, action) => {
     case AppConstants.RECEIVE_USER_APPS:
       newState.currentUser.apps = action.apps;
       return newState;
+    case AppConstants.RECEIVE_SINGLE_USER_APP:
+      newState.currentUser.apps = [...newState.currentUser.apps, action.app];
+      return newState;
+
+
     case Actions.SessionConstants.LOGOUT:
       return preloadedState;
     default:

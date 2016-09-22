@@ -12,8 +12,16 @@ const AppMiddleware = ({getState, dispatch}) => (next) => (action) => {
       API.requestUserApps(success);
       break;
 
+    case Actions.AppConstants.ADD_SINGLE_APP:
+      success = (app) => {
+        dispatch(Actions.receiveSingleUserApp(app));};
+      API.addSingleApp(action.appId, success);
+      break;
+
     default:
       return next(action);
+
+
   }
 };
 

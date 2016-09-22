@@ -75,7 +75,7 @@ class Dashboard extends React.Component{
     let apps;
 
     if (this.props.apps) {
-      apps = this.props.apps.forEach((app, idx) => {
+      apps = this.props.apps.map((app, idx) => {
         return (
           <li key={idx} onClick={this.handleAppClick.bind(this, app.id)}>app.name</li>
         );
@@ -99,8 +99,9 @@ class Dashboard extends React.Component{
           <img src="http://graph.facebook.com/userid_here/picture"/>
           <button className="logout-button" onClick={this.handleLogout}>LOGOUT</button>
           <button className="all-button" onClick={this.handleShowAll}>All feeds</button>
+          <div>list of apps</div>
           <ul>{apps}</ul>
-          <button className="add-plugin-button" onClick={this.handleAddApp}>Add a new app</button>
+          <button className="add-plugin-button" onClick={this.handleAddApp}> <i className="fa fa-plus-circle" aria-hidden="true"></i>Add a new app</button>
         </div>
         <div className="children">{this.props.children}</div>
       </div>
