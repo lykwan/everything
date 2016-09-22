@@ -1,6 +1,6 @@
 import merge from "lodash/merge";
 
-const DashboardReducer = (state = {}, action) => {
+const AppReducer = (state = {}, action) => {
   let newState = merge({}, state);
   switch (action.type) {
     default:
@@ -8,4 +8,4 @@ const DashboardReducer = (state = {}, action) => {
   }
 };
 
-export default DashboardReducer;
+export default AppReducer;

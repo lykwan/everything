@@ -15,7 +15,7 @@ Development of the features in this application will be guided by different apis
 With this application, users will be able to:
 
 - [ ] Gather all news feed into one, consistent looking feed,
-- [ ] Customizable applications and dashboard,
+- [ ] Customizable application list,
 - [ ] The option for users to customize their feed further by implementing their own plugins for our framework
 
 ### Bonus Features
