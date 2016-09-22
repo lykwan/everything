@@ -10,8 +10,7 @@ class Feeds extends React.Component{
 
   render() {
 
-    let feeds;
-
+    let feeds = (<div></div>);
     if (this.props.feeds) {
       feeds = this.props.feeds.map((feed, idx) => {
         return (

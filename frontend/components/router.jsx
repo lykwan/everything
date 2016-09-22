@@ -42,10 +42,10 @@ class AppRouter extends React.Component{
       <Router history={ hashHistory }>
         <Route path="/" component={ App }>
           <IndexRoute component={ SessionFormContainer } /> //onEnter={this._redirectIfLoggedIn}
-          <Route path="dashboard" component={ DashboardContainer }> //onEnter={this._ensureLoggedIn}
-            <Route path="/all" component={ FeedsContainer }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/apps" component={ AppIndexContainer }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/apps/:appId" component={ AppDetailsContainer }/> //onEnter={this._ensureLoggedIn}
+          <Route path="/dashboard" component={ DashboardContainer }> //onEnter={this._ensureLoggedIn}
+            <Route path="/dashboard/all" component={ FeedsContainer }/> //onEnter={this._ensureLoggedIn}
+            <Route path="/dashboard/apps" component={ AppIndexContainer }/> //onEnter={this._ensureLoggedIn}
+            <Route path="/dashboard/apps/:appId" component={ AppDetailsContainer }/> //onEnter={this._ensureLoggedIn}
           </Route>
         </Route>
       </Router>

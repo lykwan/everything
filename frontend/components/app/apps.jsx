@@ -10,7 +10,6 @@ class Apps extends React.Component{
   render() {
 
     let apps;
-
     if (this.props.apps) {
       apps = this.props.apps.map((app, idx) => {
         return (
@@ -23,6 +22,7 @@ class Apps extends React.Component{
 
     return (
       <div className="apps-container">
+        <div>Hello from apps!!</div>
         <ul>{apps}</ul>
       </div>
     );

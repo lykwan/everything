@@ -5,7 +5,6 @@ const FeedReducer = (state = {}, action) => {
   let newState = merge({}, state);
   switch (action.type) {
     case Actions.FeedConstants.RECEIVE_USER_FEEDS:
-      newState.currentUser = action.currentUser;
       return action.feeds;
     default:
       return state;

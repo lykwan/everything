@@ -44,7 +44,7 @@ class FeedItem extends React.Component{
         left            : '150px',
         right           : '150px',
         bottom          : '75px',
-        border          : '2px solid #4ABDAC',
+        border          : '2px solid #000',
         boxShadow       : '0 0 10px #909090',
         padding         : '25px',
         zIndex          : 11,

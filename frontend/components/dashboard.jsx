@@ -102,8 +102,8 @@ class Dashboard extends React.Component{
           <div>list of apps</div>
           <ul>{apps}</ul>
           <button className="add-plugin-button" onClick={this.handleAddApp}> <i className="fa fa-plus-circle" aria-hidden="true"></i>Add a new app</button>
+          <div className="children">{this.props.children}</div>
         </div>
-        <div className="children">{this.props.children}</div>
       </div>
     );
   }
