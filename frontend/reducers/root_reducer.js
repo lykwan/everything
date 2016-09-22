@@ -1,9 +1,13 @@
 import {combineReducers} from "redux";
-import DashboardReducer from "./dashboard_reducer.js";
+import SessionReducer from "./session_reducer.js";
+import FeedReducer from "./feed_reducer.js";
+import AppReducer from "./app_reducer.js";
 
 const RootReducer = combineReducers(
   {
-    dashboard: DashboardReducer
+    session: SessionReducer,
+    apps: AppReducer,
+    feeds: AppReducer
   }
 );
 
