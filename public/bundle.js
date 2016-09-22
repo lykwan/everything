@@ -35420,15 +35420,16 @@
 	
 	var _session_actions = __webpack_require__(384);
 	
-	var _ = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _feed_actions = __webpack_require__(415);
+	
+	var _app_actions = __webpack_require__(414);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
 	    currentUser: state.session.currentUser,
-	    feeds: state.feeds,
-	    apps: state.session.currentUser.apps
+	    feeds: state.feeds
 	  };
 	};
 	
@@ -35438,10 +35439,10 @@
 	      return dispatch((0, _session_actions.logout)());
 	    },
 	    requestUserFeeds: function requestUserFeeds() {
-	      return dispatch((0, _.requestUserFeeds)());
+	      return dispatch((0, _feed_actions.requestUserFeeds)());
 	    },
 	    requestUserApps: function requestUserApps() {
-	      return dispatch((0, _.requestUserApps)());
+	      return dispatch((0, _app_actions.requestUserApps)());
 	    }
 	  };
 	};

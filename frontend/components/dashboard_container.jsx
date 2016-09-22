@@ -1,13 +1,13 @@
 import Dashboard from "./dashboard.jsx";
 import {connect} from "react-redux";
 import {logout} from "../actions/session_actions.js";
-import {requestUserFeeds} from "";
-import {requestUserApps} from "";
+import {requestUserFeeds} from "../actions/feed_actions.js";
+import {requestUserApps} from "../actions/app_actions.js";
 
 const mapStateToProps = (state) => ({
   currentUser: state.session.currentUser,
   feeds: state.feeds,
-  apps: state.session.currentUser.apps
+  // apps: state.session.currentUser.apps
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
