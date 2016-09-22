@@ -28,6 +28,7 @@ class SessionForm extends React.Component{
 
   onStatusChange(response) {
      console.log( response );
+     console.log(response.authResponse.accessToken);
 
      if ( response.status === "connected" ) {
         this.FB.api('/me', () => {

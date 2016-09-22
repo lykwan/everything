@@ -26490,7 +26490,7 @@
 	          error = function error(errors) {
 	            dispatch(Actions.receiveErrors(errors));
 	          };
-	          API.login(action.credentials, success, error);
+	          API.login(action.token, success, error);
 	          break;
 	        case Actions.SessionConstants.LOGOUT:
 	          success = function success() {
@@ -26510,17 +26510,25 @@
 
 /***/ },
 /* 313 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	// import $ from "jquery";
+	exports.logout = exports.login = undefined;
+	
+	var _jquery = __webpack_require__(379);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var login = exports.login = function login(token, success, error) {
-	  $.ajax({
+	  console.log("in session api");
+	  console.log(token);
+	  _jquery2.default.ajax({
 	    method: "POST",
 	    url: "login",
 	    data: { accessToken: token },
@@ -26533,7 +26541,7 @@
 	};
 	
 	var logout = exports.logout = function logout(success, error) {
-	  $.ajax({
+	  _jquery2.default.ajax({
 	    method: "DELETE",
 	    url: "logout",
 	    success: success,
@@ -46102,6 +46110,7 @@
 	      var _this2 = this;
 	
 	      console.log(response);
+	      console.log(response.authResponse.accessToken);
 	
 	      if (response.status === "connected") {
 	        this.FB.api('/me', function () {

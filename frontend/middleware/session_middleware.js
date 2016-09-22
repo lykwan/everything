@@ -10,7 +10,7 @@ const SessionMiddleware = ({getState, dispatch}) => (next) => (action) => {
         dispatch(Actions.receiveCurrentUser(currentUser));};
       error = (errors) => {
         dispatch(Actions.receiveErrors(errors));};
-      API.login(action.credentials, success, error);
+      API.login(action.token, success, error);
       break;
     case Actions.SessionConstants.LOGOUT:
       success = () => (next(action));
