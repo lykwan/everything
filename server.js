@@ -6,8 +6,6 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const users = require('./routes/users.js');
 
-app.use(express.static('public'));
-
 // req body
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -21,20 +19,18 @@ app.use(session({
 }));
 
 app.post('/login', function(req, res) {
-  console.log(req);
-  // https.get('https://graph.facebook.com/me?fields=id,name&access_token=EAACEdEose0cBAMxMDz4ZBgB7rIBO6kn1BhNBQLqhZB20D2NikOlRkmvX3NIPsbgnEHDO2jQou7fpxajXVOCRpEvftU6JY6lj8IOwm0FDzlPeFjFntEgqM65HyXdQumkarif2ZBcDd6KSPGqDxxWefotQK4X15kkbN4t556IZAAZDZD', (res) => {
-  //   console.log('statusCode:', res.statusCode);
-  //
-  //   res.on('data', (d) => {
-  //     const p = JSON.parse(d);
-  //     console.log(p);
-  //     console.log(p.id);
-  //   });
-  //
-  // }).on('error', (e) => {
-  //   console.error(e);
-  // });
-  // console.log(req.session);
+  https.get(
+    `https://graph.facebook.com/me?fields=id,name&access_token=${req.body.accessToken}`,
+    (fbRes) => {
+    fbRes.on('data', (data) => {
+      const userProfile = JSON.parse(data);
+      req.session.accessToken = req.body.accessToken;
+    });
+  }).on('error', (e) => {
+    console.error(e);
+  });
+
+  console.log(req.session);
   res.send('hello');
 });
 
@@ -44,7 +40,7 @@ app.get('/logout', function(req, res) {
 });
 
 function restrictLogin(req, res, next) {
-  if (req.session && req.session.user) {
+  if (req.session && req.session.user && req.) {
     next();
   } else {
     res.sendStatus(401);
@@ -52,6 +48,8 @@ function restrictLogin(req, res, next) {
 }
 
 app.use(restrictLogin);
+app.use(express.static('public'));
+
 app.use('/users', users);
 
 app.listen(3000, function () {
