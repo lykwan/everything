@@ -1,28 +1,28 @@
 'use strict';
 module.exports = {
   up: function(queryInterface, Sequelize) {
-    return queryInterface.createTable('Feeds', {
+    return queryInterface.createTable('UserApps', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      pluginId: {
+      appId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'pluginId',
+          model: 'app',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      collectionId: {
+      userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'collectionId',
+          model: 'user',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -36,9 +36,17 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    }).then(function() {
+      return queryInterface.addIndex('UserApps',
+        ['userId', 'appId'], {
+        indexName: 'uniqueUserApp',
+        indicesType: 'UNIQUE'
+      });
+    }).then(function() {
+      return queryInterface.addIndex('UserApps', ['appId']);
     });
   },
   down: function(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Feeds');
+    return queryInterface.dropTable('UserApps');
   }
 };

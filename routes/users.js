@@ -11,4 +11,20 @@ router.post('/', function(req, res) {
   });
 });
 
+router.get('/login', function(req, res) {
+  req.session.user = 'blah';
+  console.log(req.session);
+  res.send('hello');
+});
+
+router.get('/hello', function(req, res) {
+  console.log(req.session);
+  res.send('hellowws');
+});
+
+router.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.send('hello');
+});
+
 module.exports = router;
