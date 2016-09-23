@@ -2,21 +2,16 @@ const models = require('../models/index');
 const express = require('express');
 const router  = express.Router();
 
-// router.post('/', function(req, res) {
-//   models.User.create({
-//     fbAccessToken: 'whatever',
-//     name: req.body.name
-//   }).then(function(user) {
-//     res.json(user);
-//   });
-// });
-//
-router.get('/me', function(req, res) {
-  models.User.findOne({
-    where: {
-      fbId: req.session.userProfile.id
+router.get('/', function(req, res) {
+  models.Apps.findAll()
+    .then(function(apps) {
+      res.send(apps);
     }
-  }).then(function(user) {
+  });
+
+
+
+
     if (user) {
       res.json(user);
     } else {
