@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const users = require('./routes/users.js');
+const apps = require('./routes/apps.js');
 
 app.use(express.static('public'));
 
@@ -40,7 +41,7 @@ app.post('/login', function(req, res) {
   });
 });
 
-app.post('/logout', function(req, res) {
+app.del('/logout', function(req, res) {
   req.session.destroy();
   res.send({ message: 'successfully logged out' });
 });
@@ -55,6 +56,7 @@ function restrictLogin(req, res, next) {
 
 app.use(restrictLogin);
 app.use('/users', users);
+app.use('/apps', apps);
 
 app.listen(3000, function () {
   console.log('Everything listening on port 3000!');
