@@ -3,7 +3,7 @@ import {Router, Route, IndexRoute, hashHistory, browserHistory} from "react-rout
 import App from "./app.jsx";
 import DashboardContainer from "./dashboard_container.jsx";
 import FeedsContainer from "./feeds_container.jsx";
-import AppIndexContainer from "./app/apps_container.jsx";
+import AppsContainer from "./app/apps_container.jsx";
 import AppDetailsContainer from "./app/app_details_container.jsx";
 import SessionFormContainer from './session_form_container.jsx';
 
@@ -37,14 +37,14 @@ class AppRouter extends React.Component{
   }
 
 
-  render(){
+  render() {
     return(
       <Router history={ hashHistory }>
         <Route path="/" component={ App }>
           <IndexRoute component={ SessionFormContainer } /> //onEnter={this._redirectIfLoggedIn}
-          <Route path="/dashboard" component={ DashboardContainer }> //onEnter={this._ensureLoggedIn}
-            <Route path="/dashboard/all" component={ FeedsContainer }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/dashboard/apps" component={ AppIndexContainer }/> //onEnter={this._ensureLoggedIn}
+          <Route path="/dashboard" component={ DashboardContainer }>
+            <IndexRoute component={ FeedsContainer } />  //onEnter={this._ensureLoggedIn}
+            <Route path="/dashboard/apps" component={ AppsContainer }/> //onEnter={this._ensureLoggedIn}
             <Route path="/dashboard/apps/:appId" component={ AppDetailsContainer }/> //onEnter={this._ensureLoggedIn}
           </Route>
         </Route>

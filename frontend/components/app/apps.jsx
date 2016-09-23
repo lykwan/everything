@@ -7,17 +7,24 @@ class Apps extends React.Component{
     super(props);
   }
 
+  componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.requestCurrentUser();
+    }
+    this.props.requestAllApps();
+  }
+
   render() {
 
     let apps;
-    if (this.props.apps) {
+    if (this.props.loggedIn && this.props.apps) {
       apps = this.props.apps.map((app, idx) => {
         return (
           <AppItem app={app}/>
         );
       });
     } else {
-      apps = (<div></div>);
+      apps = (<div>no apps yet</div>);
     }
 
     return (

@@ -1,8 +1,6 @@
 import $ from "jquery";
 
 export const login = (token, success, error) => {
-  console.log("in session api");
-  console.log(token);
   $.ajax({
     method: "POST",
     url: `login`,
@@ -19,5 +17,15 @@ export const logout = (success, error) => {
     url: `logout`,
     success,
     error: () => {console.log('fb logout error');}
+  });
+};
+
+export const requestCurrentUser = (success, error) => {
+  $.ajax({
+    method: "GET",
+    url: `users/me`,
+    dataType: "json",
+    success,
+    error: () => {console.log('request current user error');}
   });
 };

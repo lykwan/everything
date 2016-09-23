@@ -5,7 +5,7 @@ import Modal from "react-modal";
 class AppItem extends React.Component{
   constructor(props) {
     super(props);
-    this.handleAppClick = this.handleAppClick.bind(this);
+    this.handleAddApp = this.handleAddApp.bind(this);
     this.addDisabled = false;
   }
 
@@ -15,8 +15,8 @@ class AppItem extends React.Component{
     }
   }
 
-  handleAppClick() {
-    this.props.addSingleApp(this.props.app.id);
+  handleAddApp() {
+    this.props.addSingleUserApp(this.props.app.id);
   }
 
 

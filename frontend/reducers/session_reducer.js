@@ -8,9 +8,10 @@ const preloadedState = {
 };
 
 const SessionReducer = (state = preloadedState, action) => {
-  let newState = merge({}, preloadedState);
+  let newState = merge({}, state);
   switch (action.type) {
     case Actions.SessionConstants.RECEIVE_CURRENT_USER:
+      newState.errors = [];
       newState.currentUser = action.currentUser;
       return newState;
     case Actions.SessionConstants.RECEIVE_ERRORS:
@@ -19,10 +20,9 @@ const SessionReducer = (state = preloadedState, action) => {
     case AppConstants.RECEIVE_USER_APPS:
       newState.currentUser.apps = action.apps;
       return newState;
-    case AppConstants.RECEIVE_SINGLE_USER_APP:
+    case AppConstants.MERGE_SINGLE_USER_APP:
       newState.currentUser.apps = [...newState.currentUser.apps, action.app];
       return newState;
-
 
     case Actions.SessionConstants.LOGOUT:
       return preloadedState;

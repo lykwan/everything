@@ -1,6 +1,7 @@
 export const SessionConstants = {
   LOGIN: "LOGIN",
   LOGOUT: "LOGOUT",
+  REQUEST_CURRENT_USER: "REQUEST_CURRENT_USER",
   RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
   RECEIVE_ERRORS: "RECEIVE_ERRORS"
 };
@@ -10,6 +11,9 @@ export const login = (token) => ({
   token
 });
 
+export const requestCurrentUser = () => ({
+  type: SessionConstants.REQUEST_CURRENT_USER
+});
 
 export const logout = () => ({
   type: SessionConstants.LOGOUT,

@@ -3,12 +3,9 @@ import React from "react";
 class SessionForm extends React.Component{
   constructor(props) {
     super(props);
-    // this.checkLoginState = this.checkLoginState.bind(this);
-    // this.statusChangeCallback = this.statusChangeCallback.bind(this);
-    // this.loggedInCallback = this.loggedInCallback.bind(this);
+
     this.onLogout = this.onLogout.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
-    // this.displayUser = this.displayUser.bind(this);
     this.state = {message: ""};
   }
 
@@ -27,16 +24,17 @@ class SessionForm extends React.Component{
   }
 
   onStatusChange(response) {
-     console.log( response );
-     console.log(response.authResponse.accessToken);
 
      if ( response.status === "connected" ) {
-        this.FB.api('/me', () => {
+        this.FB.api('/me', (res) => {
            this.setState({
               message: `Welcome!`
            });
+           console.log('Successful login for: ' + res.name);
+           console.log(res);
         });
         this.props.login(response.authResponse.accessToken);
+        this.displayUser();
 
      } else if (response.status === 'not_authorized') {
          this.setState({
@@ -57,14 +55,6 @@ class SessionForm extends React.Component{
      });
   }
 
-  // displayUser() {
-  //   this.FB.api('/me', (response) => {
-  //     console.log('Successful login for: ' + response.name);
-  //     console.log(response);
-  //     console.log('Thanks for logging in, ' + response.name + '!');
-  //
-  //   });
-  // }
 
   render() {
     return (
