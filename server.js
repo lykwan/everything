@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const users = require('./routes/users.js');
 
+app.use(express.static('public'));
+
 // req body
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -23,33 +25,35 @@ app.post('/login', function(req, res) {
     `https://graph.facebook.com/me?fields=id,name&access_token=${req.body.accessToken}`,
     (fbRes) => {
     fbRes.on('data', (data) => {
-      const userProfile = JSON.parse(data);
-      req.session.accessToken = req.body.accessToken;
+      const jsonData = JSON.parse(data);
+      if (jsonData.error) {
+        res.status(401).json({ error: jsonData.error });
+      } else {
+        console.log(jsonData);
+        req.session.accessToken = req.body.accessToken;
+        req.session.userProfile = jsonData;
+        res.redirect('/users/me');
+      }
     });
   }).on('error', (e) => {
-    console.error(e);
+    res.status(404).json({ error: e });
   });
-
-  console.log(req.session);
-  res.send('hello');
 });
 
-app.get('/logout', function(req, res) {
+app.post('/logout', function(req, res) {
   req.session.destroy();
-  res.send('hello');
+  res.send({ message: 'successfully logged out' });
 });
 
 function restrictLogin(req, res, next) {
-  if (req.session && req.session.user && req.) {
+  if (req.session && req.session.accessToken) {
     next();
   } else {
-    res.sendStatus(401);
+    res.status(401).json({ message: 'user must be logged in' });
   }
 }
 
 app.use(restrictLogin);
-app.use(express.static('public'));
-
 app.use('/users', users);
 
 app.listen(3000, function () {

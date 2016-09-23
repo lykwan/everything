@@ -14,7 +14,7 @@ module.exports = {
     */
     return queryInterface.bulkInsert('Users', [{
       name: 'whateverrrrr',
-      fbAccessToken: 'yeahhhh',
+      fbId: 2,
       createdAt: new Date(),
       updatedAt: new Date()
     }], {});
