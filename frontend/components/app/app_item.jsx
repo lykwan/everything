@@ -17,19 +17,23 @@ class AppItem extends React.Component{
 
   handleAddApp() {
     this.props.addSingleUserApp(this.props.app.id);
+
   }
 
-
+// <div>this.props.app.logo</div>
+// <div>this.props.app.description</div>
   render() {
 
     if (this.props.app) {
       return (
         <div className="app-item-container">
-          <div>this.props.app.logo</div>
+          <div>this.props.app.id</div>
           <div>this.props.app.name</div>
-          <div>this.props.app.description</div>
-
-          <button className="add-plugin-button" onClick={this.handleAddApp} disabled = {this.addDisabled}><i className="fa fa-plus-circle" aria-hidden="true"></i></button>
+          <button className="add-plugin-button"
+            onClick={this.handleAddApp}
+            disabled = {this.addDisabled}>
+            <i className="fa fa-plus-circle" aria-hidden="true"></i>
+          </button>
         </div>
       );
     }

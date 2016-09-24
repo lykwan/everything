@@ -1,4 +1,5 @@
 import React from "react";
+import {withRouter} from "react-router";
 
 class SessionForm extends React.Component{
   constructor(props) {
@@ -10,6 +11,11 @@ class SessionForm extends React.Component{
   }
 
   componentDidMount() {
+    if (!this.props.loggedIn) {
+      this.props.requestCurrentUser();
+    } else {
+      this.props.router.push("/dashboard");
+    }
     this.FB = this.context.fb;
     this.FB.Event.subscribe('auth.logout',
       this.onLogout.bind(this));
@@ -34,7 +40,7 @@ class SessionForm extends React.Component{
            console.log(res);
         });
         this.props.login(response.authResponse.accessToken);
-        this.displayUser();
+
 
      } else if (response.status === 'not_authorized') {
          this.setState({
@@ -71,4 +77,4 @@ SessionForm.contextTypes = {
   fb: React.PropTypes.object
 };
 
-export default SessionForm;
+export default withRouter(SessionForm);

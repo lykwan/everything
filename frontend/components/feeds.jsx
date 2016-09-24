@@ -12,19 +12,21 @@ class Feeds extends React.Component{
     if (!this.props.loggedIn) {
       this.props.requestCurrentUser();
     }
+    this.props.requestUserFeeds();
   }
 
   render() {
 
     let feeds;
     if (this.props.loggedIn && this.props.feeds) {
-      feeds = this.props.feeds.map((feed, idx) => {
-        return (
-          <FeedItem feed={feed}/>
-        );
-      });
-    } else {
+      // feeds = this.props.feeds.map((feed, idx) => {
+      //   return (
+      //     <FeedItem feed={feed}/>
+      //   );
+      // });
       feeds = (<div>no feeds yet</div>);
+    } else {
+      feeds = (<div>fetching feeds</div>);
     }
 
     return (

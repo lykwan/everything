@@ -72,9 +72,9 @@
 	  var store = void 0;
 	  if (window.currentUser) {
 	    var preloadedState = { session: { currentUser: window.currentUser } };
-	    store = (0, _store2.default)(preloadedState);
+	    window.store = store = (0, _store2.default)(preloadedState);
 	  } else {
-	    store = (0, _store2.default)();
+	    window.store = store = (0, _store2.default)();
 	  }
 	  var root = document.getElementById('root');
 	  _reactModal2.default.setAppElement(document.body);
@@ -26545,8 +26545,10 @@
 	          break;
 	
 	        case Actions.SessionConstants.LOGOUT:
-	          success = function success() {
-	            return next(action);
+	          success = function success(res) {
+	            console.log("in session reducer");
+	            console.log(res.message);
+	            next(action);
 	          };
 	          API.logout(success);
 	          break;
@@ -43389,8 +43391,6 @@
 	
 	var _session_actions = __webpack_require__(189);
 	
-	var _feed_actions = __webpack_require__(308);
-	
 	var _app_actions = __webpack_require__(190);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -43405,9 +43405,6 @@
 	  return {
 	    logout: function logout() {
 	      return dispatch((0, _session_actions.logout)());
-	    },
-	    requestUserFeeds: function requestUserFeeds() {
-	      return dispatch((0, _feed_actions.requestUserFeeds)());
 	    },
 	    requestUserApps: function requestUserApps() {
 	      return dispatch((0, _app_actions.requestUserApps)());
@@ -43464,10 +43461,9 @@
 	  _createClass(Dashboard, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
-	      if (!this.props.currentUser) {
-	        this.props.requestCurrentUser();
-	      }
-	      this.props.requestUserFeeds();
+	      // if (!this.props.currentUser) {
+	      //   this.props.requestCurrentUser();
+	      // } => request happens in each of the children of dashboard so dont need this here
 	      this.props.requestUserApps();
 	    }
 	  }, {
@@ -43509,18 +43505,15 @@
 	        apps = _react2.default.createElement("div", null);
 	      }
 	
-	      var name = void 0;
+	      var name = void 0,
+	          image = void 0;
 	      if (this.props.currentUser) {
+	        var link = "http://graph.facebook.com/" + this.props.currentUser.fbId + "/picture/";
+	        image = _react2.default.createElement("img", { src: link });
 	        name = this.props.currentUser.name;
 	      } else {
-	        name = "current user name";
-	      }
-	
-	      var fbId = void 0;
-	      if (this.props.currentUser) {
-	        fbId = this.props.currentUser.fbId;
-	      } else {
-	        fbId = 1165521306824666;
+	        image = _react2.default.createElement("i", { className: "fa fa-spinner fa-pulse fa-3x fa-fw" });
+	        name = "User fb name";
 	      }
 	
 	      return _react2.default.createElement(
@@ -43539,7 +43532,11 @@
 	            null,
 	            name
 	          ),
-	          _react2.default.createElement("img", { src: "http://graph.facebook.com/1165521306824666/picture/" }),
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            image
+	          ),
 	          _react2.default.createElement(
 	            "button",
 	            { className: "logout-button", onClick: this.handleLogout },
@@ -43600,6 +43597,8 @@
 	
 	var _session_actions = __webpack_require__(189);
 	
+	var _feed_actions = __webpack_require__(308);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var mapStateToProps = function mapStateToProps(state) {
@@ -43614,6 +43613,9 @@
 	  return {
 	    requestCurrentUser: function requestCurrentUser() {
 	      return dispatch((0, _session_actions.requestCurrentUser)());
+	    },
+	    requestUserFeeds: function requestUserFeeds() {
+	      return dispatch((0, _feed_actions.requestUserFeeds)());
 	    }
 	  };
 	};
@@ -43665,6 +43667,7 @@
 	      if (!this.props.loggedIn) {
 	        this.props.requestCurrentUser();
 	      }
+	      this.props.requestUserFeeds();
 	    }
 	  }, {
 	    key: "render",
@@ -43672,14 +43675,21 @@
 	
 	      var feeds = void 0;
 	      if (this.props.loggedIn && this.props.feeds) {
-	        feeds = this.props.feeds.map(function (feed, idx) {
-	          return _react2.default.createElement(_feed_item2.default, { feed: feed });
-	        });
-	      } else {
+	        // feeds = this.props.feeds.map((feed, idx) => {
+	        //   return (
+	        //     <FeedItem feed={feed}/>
+	        //   );
+	        // });
 	        feeds = _react2.default.createElement(
 	          "div",
 	          null,
 	          "no feeds yet"
+	        );
+	      } else {
+	        feeds = _react2.default.createElement(
+	          "div",
+	          null,
+	          "fetching feeds"
 	        );
 	      }
 	
@@ -43753,19 +43763,13 @@
 	  }
 	
 	  _createClass(FeedItem, [{
-	    key: "handleFeedClick",
-	    value: function handleFeedClick() {
-	      // this.props.router.push(`/dashboard/apps/${feedId}`);
-	      // openMOdal
-	    }
-	  }, {
-	    key: "closeEventModal",
-	    value: function closeEventModal() {
+	    key: "closeModal",
+	    value: function closeModal() {
 	      this.setState({ ModalOpen: false });
 	    }
 	  }, {
-	    key: "openEventModal",
-	    value: function openEventModal() {
+	    key: "openModal",
+	    value: function openModal() {
 	      this.setState({ ModalOpen: true });
 	    }
 	  }, {
@@ -43797,23 +43801,28 @@
 	          backgroundColor: '#faf6e8'
 	        }
 	      };
+	
+	      var imgsrc = this.props.feed.picture ? this.props.feed.picture : "";
+	
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "feed-item-container" },
+	        _react2.default.createElement("img", { src: imgsrc }),
 	        _react2.default.createElement(
-	          "div",
-	          { onClick: this.openEventModal },
-	          "title"
+	          "a",
+	          { href: "#",
+	            onClick: this.openModal },
+	          this.props.feed.title
 	        ),
 	        _react2.default.createElement(
 	          "div",
 	          null,
-	          "picture"
+	          this.props.feed.body
 	        ),
 	        _react2.default.createElement(
 	          "div",
 	          null,
-	          "body"
+	          this.props.feed.appName
 	        ),
 	        _react2.default.createElement(
 	          _reactModal2.default,
@@ -43825,7 +43834,7 @@
 	          _react2.default.createElement(
 	            "div",
 	            null,
-	            "modal for feed detail"
+	            "modal for feed content"
 	          )
 	        )
 	      );
@@ -45961,6 +45970,10 @@
 	    value: function handleAddApp() {
 	      this.props.addSingleUserApp(this.props.app.id);
 	    }
+	
+	    // <div>this.props.app.logo</div>
+	    // <div>this.props.app.description</div>
+	
 	  }, {
 	    key: "render",
 	    value: function render() {
@@ -45972,7 +45985,7 @@
 	          _react2.default.createElement(
 	            "div",
 	            null,
-	            "this.props.app.logo"
+	            "this.props.app.id"
 	          ),
 	          _react2.default.createElement(
 	            "div",
@@ -45980,13 +45993,10 @@
 	            "this.props.app.name"
 	          ),
 	          _react2.default.createElement(
-	            "div",
-	            null,
-	            "this.props.app.description"
-	          ),
-	          _react2.default.createElement(
 	            "button",
-	            { className: "add-plugin-button", onClick: this.handleAddApp, disabled: this.addDisabled },
+	            { className: "add-plugin-button",
+	              onClick: this.handleAddApp,
+	              disabled: this.addDisabled },
 	            _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" })
 	          )
 	        );
@@ -46184,6 +46194,9 @@
 	  return {
 	    login: function login(token) {
 	      return dispatch((0, _session_actions.login)(token));
+	    },
+	    requestCurrentUser: function requestCurrentUser() {
+	      return dispatch((0, _session_actions.requestCurrentUser)());
 	    }
 	  };
 	};
@@ -46205,6 +46218,8 @@
 	var _react = __webpack_require__(1);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(316);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -46231,6 +46246,11 @@
 	  _createClass(SessionForm, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
+	      if (!this.props.loggedIn) {
+	        this.props.requestCurrentUser();
+	      } else {
+	        this.props.router.push("/dashboard");
+	      }
 	      this.FB = this.context.fb;
 	      this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
 	      this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
@@ -46256,7 +46276,6 @@
 	          console.log(res);
 	        });
 	        this.props.login(response.authResponse.accessToken);
-	        this.displayUser();
 	      } else if (response.status === 'not_authorized') {
 	        this.setState({
 	          message: "Please log into #Everthing"
@@ -46297,7 +46316,7 @@
 	  fb: _react2.default.PropTypes.object
 	};
 	
-	exports.default = SessionForm;
+	exports.default = (0, _reactRouter.withRouter)(SessionForm);
 
 /***/ }
 /******/ ]);

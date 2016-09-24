@@ -11,10 +11,9 @@ class Dashboard extends React.Component{
   }
 
   componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.requestCurrentUser();
-    }
-    this.props.requestUserFeeds();
+    // if (!this.props.currentUser) {
+    //   this.props.requestCurrentUser();
+    // } => request happens in each of the children of dashboard so dont need this here
     this.props.requestUserApps();
   }
 
@@ -48,18 +47,14 @@ class Dashboard extends React.Component{
       apps = (<div></div>);
     }
 
-    let name;
+    let name, image;
     if (this.props.currentUser) {
+      let link = `http://graph.facebook.com/${this.props.currentUser.fbId}/picture/`;
+      image = (<img src={link}/>);
       name = this.props.currentUser.name;
     } else {
-      name = "current user name";
-    }
-
-    let fbId;
-    if (this.props.currentUser) {
-      fbId = this.props.currentUser.fbId;
-    } else {
-      fbId = 1165521306824666;
+      image = (<i className="fa fa-spinner fa-pulse fa-3x fa-fw"></i>);
+      name = "User fb name";
     }
 
     return (
@@ -67,7 +62,8 @@ class Dashboard extends React.Component{
         <div className="side-bar-container">
           <div>Hello from Dashboard</div>
           <div>{name}</div>
-          <img src="http://graph.facebook.com/1165521306824666/picture/"/>
+          <div>{image}</div>
+
           <button className="logout-button" onClick={this.handleLogout}>LOGOUT</button>
           <button className="all-button" onClick={this.handleShowAll}>All feeds</button>
           <div>list of apps</div>

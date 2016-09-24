@@ -13,16 +13,11 @@ class FeedItem extends React.Component{
     };
   }
 
-  handleFeedClick() {
-    // this.props.router.push(`/dashboard/apps/${feedId}`);
-    // openMOdal
-  }
-
-  closeEventModal() {
+  closeModal() {
     this.setState({ ModalOpen: false });
   }
 
-  openEventModal() {
+  openModal() {
     this.setState({ ModalOpen: true });
   }
 
@@ -54,11 +49,17 @@ class FeedItem extends React.Component{
         backgroundColor : '#faf6e8'
       }
     };
+
+    const imgsrc = (this.props.feed.picture) ? this.props.feed.picture : "";
+
     return (
       <div className="feed-item-container">
-         <div onClick={this.openEventModal}>title</div>
-         <div>picture</div>
-         <div>body</div>
+        <img src={imgsrc}/>
+        <a href="#"
+          onClick={this.openModal}>
+          {this.props.feed.title}</a>
+        <div>{this.props.feed.body}</div>
+        <div>{this.props.feed.appName}</div>
 
         <Modal
 
@@ -66,7 +67,7 @@ class FeedItem extends React.Component{
           onRequestClose={this.closeModal}
           style={style} >
 
-          <div>modal for feed detail</div>
+          <div>modal for feed content</div>
 
         </Modal>
       </div>
