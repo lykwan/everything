@@ -3,11 +3,11 @@ class Backend {
 
   }
 
-  getEarlierData() {
+  getNewerData() {
 
   }
 
-  getLaterData() {
+  getOlderData() {
 
   }
 

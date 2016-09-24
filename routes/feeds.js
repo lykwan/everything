@@ -13,4 +13,10 @@ router.post('/', function(req, res) {
   });
 });
 
+router.post('/:id/login', function (req, res) {
+  models.Feed.update(req.params.id, {
+    credentials: req.body.credentials
+  });
+
+
 module.exports = router;

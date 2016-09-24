@@ -1,3 +1,3 @@
-function initApp(appId) {
+function initApp(name) {
   const app =
 }

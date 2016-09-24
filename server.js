@@ -6,10 +6,9 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const users = require('./routes/users.js');
 const apps = require('./routes/apps.js');
-const models = require('../models/index');
-
-
-const Test = require('./plugin/twitter_feed/backend.js');
+const models = require('./models/index');
+const fs = require('fs');
+const path = require('path');
 
 app.use(express.static('public'));
 
@@ -25,19 +24,32 @@ app.use(session({
   saveUninitialized: false
 }));
 
-fs.readdirSync(__dirname)
-  .forEach(file => {
-    
-  });
+// fs.readdirSync(path.join(__dirname, 'plugins'))
+//   .forEach(file => {
+//     // does this need to be async as well?
+//     models.Plugin.create({ name: file, path: file });
+//   });
 
 
-  .filter(file => {
-    return (file.charAt(0) !== '.') && (file !== "index.js");
-  })
-  .forEach(file => {
-    const model = sequelize.import(path.join(__dirname, file));
-    db[model.name] = model;
-  });
+
+
+// var findDocuments = function(db) {
+//   return new Promise(function (resolve, reject) {
+//     // Get the documents collection
+//     var collection = db.collection('documents');
+//     // Find some documents
+//     collection.find({'a': 3}).toArray(function(err, docs) {
+//       assert.equal(err, null);
+//       console.log("Found the following records");
+//       console.log(docs);
+//       resolve(docs);
+//     });
+//   }).then(function (docs) {
+//     return docs.map(functionfdsklfmd)
+//   }).then(function (modifiedDocs) {
+//
+//   }).error(function
+// }
 
 
 app.post('/login', function(req, res) {
@@ -49,10 +61,28 @@ app.post('/login', function(req, res) {
       if (jsonData.error) {
         res.status(401).json({ error: jsonData.error });
       } else {
-        console.log(jsonData);
         req.session.accessToken = req.body.accessToken;
-        req.session.userProfile = jsonData;
-        res.redirect('/users/me');
+        let subfeedsData;
+        models.User.findOrCreate(jsonData)
+          .then(user => {
+            req.session.user = user;
+            // models.Subfeed.find({ userId: user.id });
+          //   user.getSubfeeds
+          // }).then(subfeeds => {// do i write return??
+          //   if (subfeeds.length !== 0) {
+          //     subfeedsData = subfeeds;
+          //     models.Plugin.findBysubfeeds(subfeeds);
+          //   }
+          // }).then(plugins => {
+          //   req.session.subfeedPlugins = {};
+          //   subfeedsData.forEach(subfeed => {
+          //     const plugin = plugins[subfeed.feedId];
+          //     const subfeedPlugin =
+          //       require(`./plugins/${ plugin.path }/backend.js`);
+          //     req.session.subfeedPlugin[subfeed.id] =
+          //       new Plugin(subfeed.params);
+          //   });
+          });
       }
     });
   }).on('error', (e) => {
@@ -66,7 +96,7 @@ app.delete('/logout', function(req, res) {
 });
 
 function restrictLogin(req, res, next) {
-  if (req.session && req.session.accessToken) {
+  if (req.session && req.session.user) {
     next();
   } else {
     res.status(401).json({ message: 'user must be logged in' });

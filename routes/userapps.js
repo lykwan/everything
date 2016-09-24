@@ -2,10 +2,6 @@ const models = require('../models/index');
 const express = require('express');
 const router  = express.Router();
 
-router.post('/', function(req, res) {
-  
-});
-
 router.get('/:id', function(req, res) {
   const appId = req.params.id;
   //TODO: fix this
