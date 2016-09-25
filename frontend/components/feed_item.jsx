@@ -21,8 +21,15 @@ class FeedItem extends React.Component{
     this.setState({ ModalOpen: true });
   }
 
+  handleFeedClick() {
+    const app = require(`../../../plugins/${this.props.feed.app.path}`);
+    this.modalContent = app.getDisplayHTML(this.props.feed.params);
+    this.openModal();
+  }
+
 
   render() {
+
     const style = {
       overlay : {
         position        : 'fixed',
@@ -35,10 +42,10 @@ class FeedItem extends React.Component{
       },
       content : {
         position        : 'fixed',
-        top             : '75px',
-        left            : '150px',
-        right           : '150px',
-        bottom          : '75px',
+        top             : '200px',
+        left            : '200px',
+        right           : '200px',
+        bottom          : '200px',
         border          : '2px solid #000',
         boxShadow       : '0 0 10px #909090',
         padding         : '25px',
@@ -46,19 +53,18 @@ class FeedItem extends React.Component{
         display         : 'flex',
         flexDirection   : 'column',
         justifyContent  : 'center',
-        backgroundColor : '#faf6e8'
+        backgroundColor : '#fff'
       }
     };
 
-    const imgsrc = (this.props.feed.picture) ? this.props.feed.picture : "";
-
+    // const imgsrc = (this.props.feed.image) ? this.props.feed.image : this.props.feed.logo;
+    
     return (
       <div className="feed-item-container">
-        <img src={imgsrc}/>
+        <img src={this.props.feed.image}/>
         <a href="#"
-          onClick={this.openModal}>
+          onClick={this.handleFeedClick}>
           {this.props.feed.title}</a>
-        <div>{this.props.feed.body}</div>
         <div>{this.props.feed.appName}</div>
 
         <Modal
@@ -67,7 +73,7 @@ class FeedItem extends React.Component{
           onRequestClose={this.closeModal}
           style={style} >
 
-          <div>modal for feed content</div>
+          <div>{this.modalContent}</div>
 
         </Modal>
       </div>

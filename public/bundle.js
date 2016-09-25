@@ -79,6 +79,9 @@
 	  var root = document.getElementById('root');
 	  _reactModal2.default.setAppElement(document.body);
 	  _reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store, fb: FB }), root);
+	
+	  //iterate through all the event_handlers.js
+	  // require(path)()
 	});
 
 /***/ },
@@ -43773,8 +43776,16 @@
 	      this.setState({ ModalOpen: true });
 	    }
 	  }, {
+	    key: "handleFeedClick",
+	    value: function handleFeedClick() {
+	      var app = !(function webpackMissingModule() { var e = new Error("Cannot find module \"../../../plugins\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+	      this.modalContent = app.getDisplayHTML(this.props.feed.params);
+	      this.openModal();
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
+	
 	      var style = {
 	        overlay: {
 	          position: 'fixed',
@@ -43787,10 +43798,10 @@
 	        },
 	        content: {
 	          position: 'fixed',
-	          top: '75px',
-	          left: '150px',
-	          right: '150px',
-	          bottom: '75px',
+	          top: '200px',
+	          left: '200px',
+	          right: '200px',
+	          bottom: '200px',
 	          border: '2px solid #000',
 	          boxShadow: '0 0 10px #909090',
 	          padding: '25px',
@@ -43798,26 +43809,21 @@
 	          display: 'flex',
 	          flexDirection: 'column',
 	          justifyContent: 'center',
-	          backgroundColor: '#faf6e8'
+	          backgroundColor: '#fff'
 	        }
 	      };
 	
-	      var imgsrc = this.props.feed.picture ? this.props.feed.picture : "";
+	      // const imgsrc = (this.props.feed.image) ? this.props.feed.image : this.props.feed.logo;
 	
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "feed-item-container" },
-	        _react2.default.createElement("img", { src: imgsrc }),
+	        _react2.default.createElement("img", { src: this.props.feed.image }),
 	        _react2.default.createElement(
 	          "a",
 	          { href: "#",
-	            onClick: this.openModal },
+	            onClick: this.handleFeedClick },
 	          this.props.feed.title
-	        ),
-	        _react2.default.createElement(
-	          "div",
-	          null,
-	          this.props.feed.body
 	        ),
 	        _react2.default.createElement(
 	          "div",
@@ -43834,7 +43840,7 @@
 	          _react2.default.createElement(
 	            "div",
 	            null,
-	            "modal for feed content"
+	            this.modalContent
 	          )
 	        )
 	      );
@@ -45954,14 +45960,29 @@
 	    var _this = _possibleConstructorReturn(this, (AppItem.__proto__ || Object.getPrototypeOf(AppItem)).call(this, props));
 	
 	    _this.handleAddApp = _this.handleAddApp.bind(_this);
-	    _this.addDisabled = false;
+	    _this.closeModal = _this.closeModal.bind(_this);
+	    _this.openModal = _this.openModal.bind(_this);
+	    // this.addDisabled = false; //disabled = {this.addDisabled}  => should we add this when the app is already added?
+	    _this.state = {
+	      ModalOpen: false
+	    };
 	    return _this;
 	  }
 	
 	  _createClass(AppItem, [{
+	    key: "closeModal",
+	    value: function closeModal() {
+	      this.setState({ ModalOpen: false });
+	    }
+	  }, {
+	    key: "openModal",
+	    value: function openModal() {
+	      this.setState({ ModalOpen: true });
+	    }
+	  }, {
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
-	      if (this.currentUser.apps.includes(this.props.app)) {
+	      if (this.props.currentUser.apps.includes(this.props.app)) {
 	        this.addDisabled = true;
 	      }
 	    }
@@ -45969,14 +45990,40 @@
 	    key: "handleAddApp",
 	    value: function handleAddApp() {
 	      this.props.addSingleUserApp(this.props.app.id);
+	      var app = __webpack_require__(426)("./" + this.props.app.path);
+	      this.modalContent = app.addSubFeedForm;
+	      this.openModal();
 	    }
-	
-	    // <div>this.props.app.logo</div>
-	    // <div>this.props.app.description</div>
-	
 	  }, {
 	    key: "render",
 	    value: function render() {
+	
+	      var style = {
+	        overlay: {
+	          position: 'fixed',
+	          top: 0,
+	          left: 0,
+	          right: 0,
+	          bottom: 0,
+	          backgroundColor: 'rgba(255, 255, 255, 0.7)',
+	          zIndex: 10
+	        },
+	        content: {
+	          position: 'fixed',
+	          top: '200px',
+	          left: '200px',
+	          right: '200px',
+	          bottom: '200px',
+	          border: '2px solid #000',
+	          boxShadow: '0 0 10px #909090',
+	          padding: '25px',
+	          zIndex: 11,
+	          display: 'flex',
+	          flexDirection: 'column',
+	          justifyContent: 'center',
+	          backgroundColor: '#fff'
+	        }
+	      };
 	
 	      if (this.props.app) {
 	        return _react2.default.createElement(
@@ -45993,37 +46040,36 @@
 	            "this.props.app.name"
 	          ),
 	          _react2.default.createElement(
+	            "div",
+	            null,
+	            "this.props.app.description"
+	          ),
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            "this.props.app.logo"
+	          ),
+	          _react2.default.createElement(
 	            "button",
 	            { className: "add-plugin-button",
-	              onClick: this.handleAddApp,
-	              disabled: this.addDisabled },
+	              onClick: this.handleAddApp },
 	            _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" })
+	          ),
+	          _react2.default.createElement(
+	            _reactModal2.default,
+	            {
+	
+	              isOpen: this.state.ModalOpen,
+	              onRequestClose: this.closeModal,
+	              style: style },
+	            this.modalContent
 	          )
 	        );
 	      } else {
 	        return _react2.default.createElement(
 	          "div",
-	          { className: "app-item-container" },
-	          _react2.default.createElement(
-	            "div",
-	            null,
-	            "App logo"
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            null,
-	            "App name"
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            null,
-	            "App description"
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            { onClick: this.handleAppClick },
-	            _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" })
-	          )
+	          null,
+	          "no app item"
 	        );
 	      }
 	    }
@@ -46317,6 +46363,301 @@
 	};
 	
 	exports.default = (0, _reactRouter.withRouter)(SessionForm);
+
+/***/ },
+/* 424 */,
+/* 425 */,
+/* 426 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var map = {
+		"./twitter/backend": 434,
+		"./twitter/backend.js": 434,
+		"./twitter/event_handlers": 435,
+		"./twitter/event_handlers.js": 435,
+		"./twitter/frontend": 436,
+		"./twitter/frontend.js": 436,
+		"./your_plugin_name_here/frontend": 433,
+		"./your_plugin_name_here/frontend.js": 433,
+		"./youtube/backend": 430,
+		"./youtube/backend.js": 430,
+		"./youtube/event_handlers": 431,
+		"./youtube/event_handlers.js": 431,
+		"./youtube/frontend": 432,
+		"./youtube/frontend.js": 432
+	};
+	function webpackContext(req) {
+		return __webpack_require__(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	webpackContext.id = 426;
+
+
+/***/ },
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Backend = function () {
+	  function Backend(params) {
+	    _classCallCheck(this, Backend);
+	
+	    this.feeds;
+	    this.nextPageToken;
+	    this.lastFetchedItem;
+	  }
+	
+	  _createClass(Backend, [{
+	    key: "getNewerData",
+	    value: function getNewerData() {}
+	  }, {
+	    key: "getOlderData",
+	    value: function getOlderData(n) {
+	      ajax;
+	      GET;
+	
+	      https: //www.googleapis.com/youtube/v3/videos?part=contentDetails,id,snippet&chart=mostPopular&regionCode=US&maxResults=25&key=AIzaSyB3SiawekvPegKNcefPRoYlbgVl9vaxQr0&order=date
+	      return this.fetchedData;
+	    }
+	  }, {
+	    key: "parseFetchedData",
+	    value: function parseFetchedData(data) {}
+	  }, {
+	    key: "initAuth",
+	    value: function initAuth() {}
+	  }]);
+	
+	  return Backend;
+	}();
+	
+	module.exports = Backend;
+
+/***/ },
+/* 431 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = function () {
+	  $('#twitter_feed_signup').submit(function (e) {});
+	
+	  //ajax request to backend to store the auth token
+	};
+
+/***/ },
+/* 432 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Frontend = function () {
+	  function Frontend() {
+	    _classCallCheck(this, Frontend);
+	  }
+	
+	  _createClass(Frontend, [{
+	    key: "addSubFeedForm",
+	    value: function addSubFeedForm() {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "div",
+	          { className: "plugin-name" },
+	          "Youtube"
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "subfeed-name-label" },
+	          "Name: "
+	        ),
+	        _react2.default.createElement("input", { className: "subfeed-name", type: "text" }),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "subfeed-name-label" },
+	          "Link: "
+	        ),
+	        _react2.default.createElement("input", { type: "text", className: "sub-feed-link" }),
+	        _react2.default.createElement("input", { type: "submit", className: "sub-feed-add-button", value: "submit" })
+	      );
+	    }
+	  }, {
+	    key: "getAuthForm",
+	    value: function getAuthForm() {}
+	  }, {
+	    key: "getDisplayHTML",
+	    value: function getDisplayHTML(params) {
+	      return _react2.default.createElement("div", { id: "ytplayer" });
+	    }
+	  }]);
+	
+	  return Frontend;
+	}();
+	
+	module.exports = Frontend;
+
+/***/ },
+/* 433 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Frontend = function () {
+	  function Frontend() {
+	    _classCallCheck(this, Frontend);
+	  }
+	
+	  _createClass(Frontend, [{
+	    key: "addSubFeedForm",
+	    value: function addSubFeedForm() {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "div",
+	          { className: "plugin-name" },
+	          "#YOUR PLUGIN NAME"
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "subfeed-name-label" },
+	          "Name: "
+	        ),
+	        _react2.default.createElement("input", { className: "subfeed-name", type: "text" }),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "subfeed-name-label" },
+	          "Link: "
+	        ),
+	        _react2.default.createElement("input", { type: "text", className: "sub-feed-link" }),
+	        _react2.default.createElement("input", { type: "submit", className: "sub-feed-add-button", value: "submit" })
+	      );
+	    }
+	  }, {
+	    key: "getAuthForm",
+	    value: function getAuthForm() {}
+	  }, {
+	    key: "getDisplayHTML",
+	    value: function getDisplayHTML(params) {
+	      return _react2.default.createElement("div", { id: "ytplayer" });
+	    }
+	  }]);
+	
+	  return Frontend;
+	}();
+	
+	module.exports = Frontend;
+
+/***/ },
+/* 434 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Backend = function () {
+	  function Backend(params) {
+	    _classCallCheck(this, Backend);
+	  }
+	
+	  _createClass(Backend, [{
+	    key: "getNewerData",
+	    value: function getNewerData() {}
+	  }, {
+	    key: "getOlderData",
+	    value: function getOlderData() {}
+	  }, {
+	    key: "initAuth",
+	    value: function initAuth() {}
+	  }]);
+	
+	  return Backend;
+	}();
+	
+	module.exports = Backend;
+
+/***/ },
+/* 435 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	module.exports = function () {
+	  $('#twitter_feed_signup').submit(function (e) {});
+	
+	  //ajax request to backend to store the auth token
+	};
+
+/***/ },
+/* 436 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var Frontend = function () {
+	  function Frontend() {
+	    _classCallCheck(this, Frontend);
+	  }
+	
+	  _createClass(Frontend, [{
+	    key: "addSubFeedForm",
+	    value: function addSubFeedForm() {
+	      return "hello!";
+	    }
+	  }, {
+	    key: "getAuthForm",
+	    value: function getAuthForm() {}
+	  }, {
+	    key: "getDisplayHTML",
+	    value: function getDisplayHTML() {}
+	  }]);
+	
+	  return Frontend;
+	}();
+	
+	module.exports = Frontend;
 
 /***/ }
 /******/ ]);

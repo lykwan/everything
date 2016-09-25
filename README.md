@@ -14,9 +14,9 @@ Development of the features in this application will be guided by different apis
 
 With this application, users will be able to:
 
+- [ ] Login to the app with their Facebook account,
 - [ ] Gather all news feed into one, consistent looking feed,
-- [ ] Customizable application list,
-- [ ] The option for users to customize their feed further by implementing their own plugins for our framework
+- [ ] The option for users to customize their feed further by implementing their own plugins for our framework (instructions on github README)
 
 ### Bonus Features
 
