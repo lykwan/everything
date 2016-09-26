@@ -11,9 +11,9 @@ class Dashboard extends React.Component{
   }
 
   componentDidMount() {
-    // if (!this.props.currentUser) {
-    //   this.props.requestCurrentUser();
-    // } => request happens in each of the children of dashboard so dont need this here
+    if (!this.props.currentUser) {
+      this.props.requestCurrentUser();
+    }
     this.props.requestUserApps();
   }
 
@@ -36,7 +36,6 @@ class Dashboard extends React.Component{
   render() {
 
     let apps;
-// onClick={this.handleAppClick.bind(this, userFeed.id)}
 
     if (this.props.userFeeds) {
       apps = Object.keys(this.props.userFeeds).map((userFeedKey, i) => {

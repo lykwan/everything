@@ -16,6 +16,4 @@ document.addEventListener("DOMContentLoaded", () => {
   Modal.setAppElement(document.body);
   ReactDOM.render(<Root store={store} fb={FB}/>, root);
 
-  //iterate through all the event_handlers.js
-  // require(path)()
 });

@@ -41,11 +41,11 @@ class AppRouter extends React.Component{
     return(
       <Router history={ hashHistory }>
         <Route path="/" component={ App }>
-          <IndexRoute component={ SessionFormContainer } /> //onEnter={this._redirectIfLoggedIn}
+          <IndexRoute component={ SessionFormContainer } />
           <Route path="/dashboard" component={ DashboardContainer }>
-            <IndexRoute component={ FeedsContainer } />  //onEnter={this._ensureLoggedIn}
-            <Route path="/dashboard/apps" component={ AppsContainer }/> //onEnter={this._ensureLoggedIn}
-            <Route path="/dashboard/apps/:appId" component={ AppDetailsContainer }/> //onEnter={this._ensureLoggedIn}
+            <IndexRoute component={ FeedsContainer } />
+            <Route path="/dashboard/apps" component={ AppsContainer }/>
+            <Route path="/dashboard/apps/:appId" component={ AppDetailsContainer }/>
           </Route>
         </Route>
       </Router>

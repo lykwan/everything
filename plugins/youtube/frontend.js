@@ -41,7 +41,7 @@ class Frontend {
   }
 
 
-  getDisplayHTML(params) {
+  getDisplayComponent(params) {
     let info = JSON.parse(params);
     const opts = {
        height: '360',

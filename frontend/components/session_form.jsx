@@ -14,7 +14,7 @@ class SessionForm extends React.Component{
     if (!this.props.loggedIn) {
       this.props.requestCurrentUser();
     } else {
-      // this.props.router.push("/dashboard");
+      this.props.router.push("/dashboard");
     }
     this.FB = this.context.fb;
     this.FB.Event.subscribe('auth.logout',
@@ -33,11 +33,9 @@ class SessionForm extends React.Component{
 
      if ( response.status === "connected" ) {
         this.FB.api('/me', (res) => {
-           this.setState({
-              message: `Welcome!`
-           });
-           console.log('Successful login for: ' + res.name);
-           console.log(res);
+          //  this.setState({
+          //     message: `Welcome, ${res.name}!`
+          //  });
         });
         this.props.login(response.authResponse.accessToken);
 
@@ -61,8 +59,6 @@ class SessionForm extends React.Component{
      });
   }
 
-// data-auto-logout-link="true"
-//data-show-faces="false"
   render() {
     return (
       <div className="login-container">

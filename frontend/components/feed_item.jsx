@@ -23,7 +23,7 @@ class FeedItem extends React.Component{
 
   handleFeedClick() {
     const app = require(`../../plugins/${this.props.feed.app.path}/frontend`);
-    this.modalContent = app.getDisplayHTML(this.props.feed.params);
+    this.modalContent = app.getDisplayComponent(this.props.feed.params);
     this.openModal();
   }
 
@@ -56,8 +56,6 @@ class FeedItem extends React.Component{
         backgroundColor : '#fff'
       }
     };
-
-    // const imgsrc = (this.props.feed.image) ? this.props.feed.image : this.props.feed.logo;
 
     return (
       <div className="feed-item-container">

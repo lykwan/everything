@@ -11,7 +11,7 @@ class Frontend {
 
   }
 
-  getDisplayHTML() {
+  getDisplayComponent() {
 
   }
 

@@ -5,7 +5,7 @@ import {requestUserFeeds} from "../actions/feed_actions.js";
 
 
 const mapStateToProps = (state) => ({
-  // currentUser: state.session.currentUser,
+  currentUser: state.session.currentUser,
   loggedIn: state.session.currentUser ? true : false,
   feeds: state.feeds
 });

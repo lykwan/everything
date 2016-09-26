@@ -79,9 +79,6 @@
 	  var root = document.getElementById('root');
 	  _reactModal2.default.setAppElement(document.body);
 	  _reactDom2.default.render(_react2.default.createElement(_root2.default, { store: store, fb: FB }), root);
-	
-	  //iterate through all the event_handlers.js
-	  // require(path)()
 	});
 
 /***/ },
@@ -43343,20 +43340,12 @@
 	          _reactRouter.Route,
 	          { path: "/", component: _app2.default },
 	          _react2.default.createElement(_reactRouter.IndexRoute, { component: _session_form_container2.default }),
-	          " //onEnter=",
-	          this._redirectIfLoggedIn,
 	          _react2.default.createElement(
 	            _reactRouter.Route,
 	            { path: "/dashboard", component: _dashboard_container2.default },
 	            _react2.default.createElement(_reactRouter.IndexRoute, { component: _feeds_container2.default }),
-	            "  //onEnter=",
-	            this._ensureLoggedIn,
 	            _react2.default.createElement(_reactRouter.Route, { path: "/dashboard/apps", component: _apps_container2.default }),
-	            " //onEnter=",
-	            this._ensureLoggedIn,
-	            _react2.default.createElement(_reactRouter.Route, { path: "/dashboard/apps/:appId", component: _app_details_container2.default }),
-	            " //onEnter=",
-	            this._ensureLoggedIn
+	            _react2.default.createElement(_reactRouter.Route, { path: "/dashboard/apps/:appId", component: _app_details_container2.default })
 	          )
 	        )
 	      );
@@ -43492,9 +43481,9 @@
 	  _createClass(Dashboard, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
-	      // if (!this.props.currentUser) {
-	      //   this.props.requestCurrentUser();
-	      // } => request happens in each of the children of dashboard so dont need this here
+	      if (!this.props.currentUser) {
+	        this.props.requestCurrentUser();
+	      }
 	      this.props.requestUserApps();
 	    }
 	  }, {
@@ -43523,7 +43512,6 @@
 	      var _this2 = this;
 	
 	      var apps = void 0;
-	      // onClick={this.handleAppClick.bind(this, userFeed.id)}
 	
 	      if (this.props.userFeeds) {
 	        apps = Object.keys(this.props.userFeeds).map(function (userFeedKey, i) {
@@ -43651,7 +43639,7 @@
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	  return {
-	    // currentUser: state.session.currentUser,
+	    currentUser: state.session.currentUser,
 	    loggedIn: state.session.currentUser ? true : false,
 	    feeds: state.feeds
 	  };
@@ -43824,7 +43812,7 @@
 	    key: "handleFeedClick",
 	    value: function handleFeedClick() {
 	      var app = __webpack_require__(417)("./" + this.props.feed.app.path + "/frontend");
-	      this.modalContent = app.getDisplayHTML(this.props.feed.params);
+	      this.modalContent = app.getDisplayComponent(this.props.feed.params);
 	      this.openModal();
 	    }
 	  }, {
@@ -43857,8 +43845,6 @@
 	          backgroundColor: '#fff'
 	        }
 	      };
-	
-	      // const imgsrc = (this.props.feed.image) ? this.props.feed.image : this.props.feed.logo;
 	
 	      return _react2.default.createElement(
 	        "div",
@@ -45903,8 +45889,8 @@
 	    key: "getAuthForm",
 	    value: function getAuthForm() {}
 	  }, {
-	    key: "getDisplayHTML",
-	    value: function getDisplayHTML() {}
+	    key: "getDisplayComponent",
+	    value: function getDisplayComponent() {}
 	  }]);
 	
 	  return Frontend;
@@ -45987,8 +45973,8 @@
 	      closeModal();
 	    }
 	  }, {
-	    key: "getDisplayHTML",
-	    value: function getDisplayHTML(params) {
+	    key: "getDisplayComponent",
+	    value: function getDisplayComponent(params) {
 	      var info = JSON.parse(params);
 	      var opts = {
 	        height: '360',
@@ -56287,7 +56273,7 @@
 	          right: '200px',
 	          bottom: '150px',
 	          border: '2px solid #000',
-	          // boxShadow       : '0 0 10px #909090',
+	          boxShadow: '0 0 10px #909090',
 	          padding: '25px',
 	          zIndex: 11,
 	          display: 'flex',
@@ -56296,10 +56282,6 @@
 	          backgroundColor: '#fff'
 	        }
 	      };
-	
-	      // <div>{this.props.app.id}</div>
-	      // <div>this.props.app.logo</div>
-	      // <div>this.props.app.description</div>
 	
 	      if (this.props.app) {
 	        return _react2.default.createElement(
@@ -56562,7 +56544,7 @@
 	      if (!this.props.loggedIn) {
 	        this.props.requestCurrentUser();
 	      } else {
-	        // this.props.router.push("/dashboard");
+	        this.props.router.push("/dashboard");
 	      }
 	      this.FB = this.context.fb;
 	      this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
@@ -56578,15 +56560,12 @@
 	  }, {
 	    key: "onStatusChange",
 	    value: function onStatusChange(response) {
-	      var _this2 = this;
 	
 	      if (response.status === "connected") {
 	        this.FB.api('/me', function (res) {
-	          _this2.setState({
-	            message: "Welcome!"
-	          });
-	          console.log('Successful login for: ' + res.name);
-	          console.log(res);
+	          //  this.setState({
+	          //     message: `Welcome, ${res.name}!`
+	          //  });
 	        });
 	        this.props.login(response.authResponse.accessToken);
 	      } else if (response.status === 'not_authorized') {
@@ -56606,10 +56585,6 @@
 	        message: ""
 	      });
 	    }
-	
-	    // data-auto-logout-link="true"
-	    //data-show-faces="false"
-	
 	  }, {
 	    key: "render",
 	    value: function render() {

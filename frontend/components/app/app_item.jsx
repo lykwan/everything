@@ -51,7 +51,7 @@ openModal() {
         right           : '200px',
         bottom          : '150px',
         border          : '2px solid #000',
-        // boxShadow       : '0 0 10px #909090',
+        boxShadow       : '0 0 10px #909090',
         padding         : '25px',
         zIndex          : 11,
         display         : 'flex',
@@ -61,9 +61,6 @@ openModal() {
       }
     };
 
-    // <div>{this.props.app.id}</div>
-    // <div>this.props.app.logo</div>
-    // <div>this.props.app.description</div>
 
     if (this.props.app) {
       return (
