@@ -12,26 +12,30 @@ const AppReducer = (state = {}, action) => {
       return newState;
     case Actions.AppConstants.RECEIVE_USER_APPS:
 
-      let userFeeds = action.apps.map(app => {
+      if (!newState["userFeeds"]) {
+        newState["userFeeds"] = {}
+      }
+      action.apps.forEach(app => {
         let subfeeds = app.Subfeeds.map(subfeed => (subfeed.name));
-        return {
-          pluginId: app.pluginId,
+        newState["userFeeds"][app.pluginId] = {
           name: app.Plugin.name,
           subfeeds: subfeeds
         };
       });
 
-      newState["userFeeds"] = userFeeds;
       return newState;
     case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
-
+      let pluginName = action.subfeed.Feed.Plugin.path;
       let subfeedName = action.subfeed.name;
       let pluginId = action.subfeed.Feed.pluginId;
-      newState.userFeeds.forEach(feed => {
-        if (feed.pluginId === pluginId) {
-          feed.subfeeds.push(subfeedName);
-        }
-      });
+      if (newState.userFeeds[pluginId]) {
+        newState.userFeeds[pluginId].subfeeds.push(subfeedName);
+      } else {
+        newState.userFeeds[pluginId] = {
+          name: pluginName,
+          subfeeds: [subfeedName]
+        };
+      }
 
       return newState;
     default:

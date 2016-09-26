@@ -26192,8 +26192,6 @@
 	  value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
 	var _merge = __webpack_require__(191);
 	
 	var _merge2 = _interopRequireDefault(_merge);
@@ -26211,57 +26209,46 @@
 	  var action = arguments[1];
 	
 	  var newState = (0, _merge2.default)({}, state);
+	  switch (action.type) {
+	    case Actions.AppConstants.RECEIVE_ALL_APPS:
+	      newState["allApps"] = action.apps;
+	      return newState;
+	    case Actions.AppConstants.RECEIVE_SINGLE_APP:
+	      newState["app"] = action.app;
+	      return newState;
+	    case Actions.AppConstants.RECEIVE_USER_APPS:
 	
-	  var _ret = function () {
-	    switch (action.type) {
-	      case Actions.AppConstants.RECEIVE_ALL_APPS:
-	        newState["allApps"] = action.apps;
-	        return {
-	          v: newState
-	        };
-	      case Actions.AppConstants.RECEIVE_SINGLE_APP:
-	        newState["app"] = action.app;
-	        return {
-	          v: newState
-	        };
-	      case Actions.AppConstants.RECEIVE_USER_APPS:
-	
-	        var userFeeds = action.apps.map(function (app) {
-	          var subfeeds = app.Subfeeds.map(function (subfeed) {
-	            return subfeed.name;
-	          });
-	          return {
-	            pluginId: app.pluginId,
-	            name: app.Plugin.name,
-	            subfeeds: subfeeds
-	          };
+	      if (!newState["userFeeds"]) {
+	        newState["userFeeds"] = {};
+	      }
+	      action.apps.forEach(function (app) {
+	        var subfeeds = app.Subfeeds.map(function (subfeed) {
+	          return subfeed.name;
 	        });
-	
-	        newState["userFeeds"] = userFeeds;
-	        return {
-	          v: newState
+	        newState["userFeeds"][app.pluginId] = {
+	          name: app.Plugin.name,
+	          subfeeds: subfeeds
 	        };
-	      case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
+	      });
 	
-	        var subfeedName = action.subfeed.name;
-	        var pluginId = action.subfeed.Feed.pluginId;
-	        newState.userFeeds.forEach(function (feed) {
-	          if (feed.pluginId === pluginId) {
-	            feed.subfeeds.push(subfeedName);
-	          }
-	        });
-	
-	        return {
-	          v: newState
+	      return newState;
+	    case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
+	      var pluginName = action.subfeed.Feed.Plugin.path;
+	      var subfeedName = action.subfeed.name;
+	      var pluginId = action.subfeed.Feed.pluginId;
+	      if (newState.userFeeds[pluginId]) {
+	        newState.userFeeds[pluginId].subfeeds.push(subfeedName);
+	      } else {
+	        newState.userFeeds[pluginId] = {
+	          name: pluginName,
+	          subfeeds: [subfeedName]
 	        };
-	      default:
-	        return {
-	          v: state
-	        };
-	    }
-	  }();
+	      }
 	
-	  if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+	      return newState;
+	    default:
+	      return state;
+	  }
 	};
 	
 	exports.default = AppReducer;
@@ -43533,13 +43520,14 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
+	      var _this2 = this;
 	
 	      var apps = void 0;
 	      // onClick={this.handleAppClick.bind(this, userFeed.id)}
 	
 	      if (this.props.userFeeds) {
-	        apps = this.props.userFeeds.map(function (userFeed, i) {
-	          var subfeeds = userFeed.subfeeds.map(function (subfeed, j) {
+	        apps = Object.keys(this.props.userFeeds).map(function (userFeedKey, i) {
+	          var subfeeds = _this2.props.userFeeds[userFeedKey].subfeeds.map(function (subfeed, j) {
 	            return _react2.default.createElement(
 	              "li",
 	              { className: "subfeed-item", key: j },
@@ -43553,7 +43541,7 @@
 	              "div",
 	              { className: "plugin-name" },
 	              _react2.default.createElement("i", { className: "fa fa-caret-down", "aria-hidden": "true" }),
-	              userFeed.name
+	              _this2.props.userFeeds[userFeedKey].name
 	            ),
 	            subfeeds
 	          );
@@ -43855,10 +43843,10 @@
 	        },
 	        content: {
 	          position: 'fixed',
-	          top: '200px',
-	          left: '200px',
-	          right: '200px',
-	          bottom: '200px',
+	          top: '100px',
+	          left: '100px',
+	          right: '100px',
+	          bottom: '100px',
 	          border: '2px solid #000',
 	          boxShadow: '0 0 10px #909090',
 	          padding: '25px',
@@ -56299,7 +56287,7 @@
 	          right: '200px',
 	          bottom: '150px',
 	          border: '2px solid #000',
-	          boxShadow: '0 0 10px #909090',
+	          // boxShadow       : '0 0 10px #909090',
 	          padding: '25px',
 	          zIndex: 11,
 	          display: 'flex',

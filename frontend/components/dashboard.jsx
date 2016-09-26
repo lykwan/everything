@@ -39,15 +39,15 @@ class Dashboard extends React.Component{
 // onClick={this.handleAppClick.bind(this, userFeed.id)}
 
     if (this.props.userFeeds) {
-      apps = this.props.userFeeds.map((userFeed, i) => {
-        let subfeeds = userFeed.subfeeds.map((subfeed, j) => {
+      apps = Object.keys(this.props.userFeeds).map((userFeedKey, i) => {
+        let subfeeds = this.props.userFeeds[userFeedKey].subfeeds.map((subfeed, j) => {
           return (<li className="subfeed-item" key={j}>{subfeed}</li>)
         })
         return (
           <div key={i}>
             <div className="plugin-name">
               <i className="fa fa-caret-down" aria-hidden="true"></i>
-              {userFeed.name}
+              {this.props.userFeeds[userFeedKey].name}
             </div>
 
             {subfeeds}
