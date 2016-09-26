@@ -18,7 +18,6 @@ module.exports = {
       },
       feedId: {
         allownull: false,
-        unique: true,
         type: Sequelize.INTEGER,
         references: {
           model: 'feeds',

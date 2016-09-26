@@ -3,14 +3,13 @@ const express = require('express');
 const router  = express.Router();
 
 router.post('/', function(req, res) {
-  let subfeedData;
   models.Feed.findOrCreate({
     where: {
       pluginId: req.body.pluginId,
       userId: req.session.user.id
     }
-  }).then(feed => {
-    console.log(feed);
+  }).spread(feed => {
+    console.log(feed.id);
     return models.Subfeed.create({
       feedId: feed.id,
       name: req.body.subfeedName,
@@ -30,9 +29,9 @@ router.post('/', function(req, res) {
     const plugin = subfeed.Feed.Plugin;
     console.log(plugin);
     const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
-    req.session.subfeedPlugins[subfeedData.id] =
-      new SubfeedPlugin(subfeedData.params);
-    res.json(subfeedData);
+    req.session.subfeedPlugins[subfeed.id] =
+      new SubfeedPlugin(subfeed.params);
+    res.json(subfeed);
   });
 });
 
