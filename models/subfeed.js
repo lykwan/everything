@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Subfeed.belongsTo(models.Feed, { foreignKey: 'feedId' });
+        Subfeed.belongsTo(models.Feed);
       },
 
       findPluginsFromFeeds: function(feeds, Feed, Plugin) {

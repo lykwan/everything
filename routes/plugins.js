@@ -3,7 +3,10 @@ const express = require('express');
 const router  = express.Router();
 
 router.get('/', function(req, res) {
-  res.send(models.Plugin.findAll({}));
+  models.Plugin.findAll()
+    .then(plugins => {
+      res.send(plugins);
+    });
 });
 
 module.exports = router;

@@ -2,45 +2,43 @@ const models = require('../models/index');
 const express = require('express');
 const router  = express.Router();
 
-router.post('/:plugin_name', function(req, res) {
+router.post('/', function(req, res) {
   let subfeedData;
-  models.Plugin.find()
   models.Feed.findOrCreate({
-    pluginId: req.body.pluginId,
-    userId: req.session.user.id
+    where: {
+      pluginId: req.body.pluginId,
+      userId: req.session.user.id
+    }
   }).then(feed => {
-    models.Subfeed.create({
+    console.log(feed);
+    return models.Subfeed.create({
       feedId: feed.id,
-      name: req.body.name,
-      params: req.body.params
+      name: req.body.subfeedName,
+      params: req.body.subfeedParams
+    });
   }).then(subfeed => {
-    subfeedData = subfeed;
-    models.Plugin.find({ id: req.body.feedId });
-  }).then(feed => {
-    const Plugin = require(`./plugins/${ feed.path }/backend.js`);
-    req.session.plugins[subfeedData.id] = new Plugin(subfeedData.params);
+    return models.Subfeed.find({
+      where: { id: subfeed.id },
+      include: [
+        { model: models.Feed, attributes: ['pluginId'], include: [
+          { model: models.Plugin, attributes: ['path'] }
+        ]}
+      ]
+    });
+  }).then(subfeed => {
+    console.log(subfeed.Feed);
+    const plugin = subfeed.Feed.Plugin;
+    console.log(plugin);
+    const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
+    req.session.subfeedPlugins[subfeedData.id] =
+      new SubfeedPlugin(subfeedData.params);
+    res.json(subfeedData);
   });
-});
-
-router.get('/:id', function(req, res) {
-  const appId = req.params.id;
-  //TODO: fix this
-  const testData = [{
-    id:   1,
-    title: 'hey',
-    img: null,
-    appName: 'ABC News'
-  }];
-
 });
 
 // router.get('/authForm', function (req, res) {
 // get the auth form string, pass it to frontend??
 
 // router.post('/:id/login', ) {
-
-
-
-
 
 module.exports = router;

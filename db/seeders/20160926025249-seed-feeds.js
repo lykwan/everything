@@ -3,7 +3,7 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Feeds', [{
-      userId: 1,
+      userId: 2,
       pluginId: 1,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -12,7 +12,7 @@ module.exports = {
 
   down: function (queryInterface, Sequelize) {
     return queryInterface.bulkDelete('Feeds', [
-      { userId: 1, pluginId: 1}
+      { userId: 2, pluginId: 1}
     ]);
   }
 };
