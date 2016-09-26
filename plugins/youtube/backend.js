@@ -8,6 +8,7 @@ class Backend {
   getNewerData(n, successCallback) {
     //get new data every day at 12AM
     let url, channelId;
+
     if (this.params.channelName) {
       $.ajax({
         method: "GET",
@@ -32,6 +33,8 @@ class Backend {
 
   getOlderData(n, successCallback) {
     let url, channelId;
+    console.log("this.params.channelName");
+    console.log(this.params.channelName);
     if (this.params.channelName) {
       $.ajax({
         method: "GET",
