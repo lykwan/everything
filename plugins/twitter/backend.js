@@ -1,6 +1,6 @@
 class Backend {
   constructor(params) {
-
+    console.log(params);
   }
 
   getNewerData() {

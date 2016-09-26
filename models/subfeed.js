@@ -10,7 +10,31 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+        Subfeed.belongsTo(models.Feed, { foreignKey: 'feedId' });
+      },
+
+      findPluginsFromFeeds: function(feeds, Feed, Plugin) {
+        const feedIds = feeds.map(feed => {
+          return feed.id;
+        });
+        return Subfeed.findAll({
+          where: { feedId: { in: feedIds }},
+          include: [
+            { model: Feed, attributes: ['pluginId'], include: [
+              { model: Plugin, attributes: ['path'] }
+            ]}
+          ]
+        });
+      }
+    },
+
+    instanceMethods: {
+      createNewSubfeedPlugin: function(subfeedPlugins) {
+        const plugin = this.Feed.Plugin;
+        const SubfeedPlugin =
+          require(`../plugins/${ plugin.path }/backend.js`);
+        subfeedPlugins[this.id] =
+          new SubfeedPlugin(this.params);
       }
     }
   });

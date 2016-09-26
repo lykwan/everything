@@ -9,6 +9,9 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Feed.hasMany(models.Subfeed, { foreignKey: 'feedId' });
+        Feed.belongsTo(models.User);
+        Feed.belongsTo(models.Plugin);
       }
     }
   });

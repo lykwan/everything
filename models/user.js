@@ -13,10 +13,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.belongsToMany(models.Feed, { through: 'Feed' });
+        User.hasMany(models.Feed, { foreignKey: 'userId' });
+        User.belongsToMany(models.Plugin, { through: models.Feed });
       },
     }
   });
-
   return User;
 };

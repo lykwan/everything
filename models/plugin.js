@@ -16,7 +16,8 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        Plugin.belongsToMany(models.Feed, { through: 'Feed' });
+        Plugin.hasMany(models.Feed, { foreignKey: 'pluginId' });
+        Plugin.belongsToMany(models.User, { through: 'Feed' });
       },
 
       addNewPlugins: function(files) {
@@ -45,6 +46,14 @@ module.exports = function(sequelize, DataTypes) {
               }
             });
           });
+      },
+
+      findFromSubfeeds: function(subfeeds) {
+        let pluginObj = {};
+        async.each(subfeeds, function(subfeed) {
+          const plugin = subfeed.getPlugin();
+          pluginObj[plugin.id] = plugin;
+        });
       }
     }
   });

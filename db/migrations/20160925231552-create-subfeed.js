@@ -18,9 +18,10 @@ module.exports = {
       },
       feedId: {
         allownull: false,
+        unique: true,
         type: Sequelize.INTEGER,
         references: {
-          model: 'feed',
+          model: 'feeds',
           key: 'id'
         },
         onUpdate: 'CASCADE',
