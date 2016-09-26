@@ -1,54 +1,122 @@
 # #Everything
 
-[Everything][app_link]
+Live link: [Everything][app_link]
 
 [app_link]: http://everything.lilykwan.me:3000
 
-Everyone on the internet is inundated with new information and updates. Wouldn’t it be great if you can just check on place for all new updates that you care about, and have it be highly customizable? This application replaces the need to check all the applications and websites that you follow as it centralizes all the information in one place.
+Everyone on the internet is inundated with new information and updates. Wouldn’t it be great if you can just check one place for only the updates that you care about, and have it be highly customizable? This application replaces the need to check all the feeds, social media, and websites that you follow as it centralizes all the information in one place.
 
-Our application will provide a list of sources that users can add to their feed, such as youtube, news, etc. Our application will also provide a framework api that a user can add different plugins to personalize their feed further. If a user would like to create a specific source for their own feed, a user can implement their own plugins that can be used with our framework api.
+Everything will provide a list of sources that users can add to their feed, such as youtube, RSS feed, etc. It also provides a framework API with which users can add different plugins to personalize their feed further if they do not see their application (source of feed) listed on Everything.
 
-Development of the features in this application will be guided by different apis for the plugins, such as youtube api or Hacker news RSS feed. Redis cache would be also used to store temporary aggregated data.
+### Technologies
 
-Backend is done with node.js, and frontend is done with react.js.
+- Backend: Node.js
+- Frontend: React.js/Redux
+- Cache: Redis
+- DB: SQLite3
 
 ## Features & Implementation
 
-# Add feed updates from some popular websites
+### Logging in with Facebook
 
-A user can use this webapp to follow some of his favorite websites, such as youtube, twitter, etc. The feeds that he/she follows will show up on the sidebar, and he/she can read the feeds she wants in one place.
+Instead of creating a new account on yet another app, we allow users to use our app by logging in with their Facebook account.
 
-# Add customized feed to his collections of feeds
+### Adding feeds to "All" reading list
 
-If a user wants to follow feed updates to a website that doesn't exist in our list, we provide them a framework that he/she can write a plugin to follow his/her customized link. The user can submit a PR request and we will review it, and will add it to our list of feeds to follow if we approve. The user can also start his/her own server by cloning our repo, and put his/her plugin inside the plugins folder of this repo.
+Users can follow feeds of built-in plugins, such as youtube, twitter, and RSS feed. The feeds of a user will be shown on the sidebar, with all the feeds that a user is following aggregated to the "All" list. (All feeds in one place)
+The available feeds of a specific plugin is dependent on the plugin; for instance for the Youtube plugin, the feeds would be Youtube channels, and for RSS feed, news sites/blog.
 
-The structure of the plugin follows:
-- The plugin must be in its own folder with two files: backend.js, and frontend.js
+### Adding customized plugin (instructions included)
 
-- frontend.js:
-It should be in a class, with the following methods:
+If users would like to follow feed updates to an application or source that is not included on our list, we provide a framework API for users to write their own plugin. The user can submit a PR request to us, and it will be added it to our list of feeds upon approval. Users can also start their own server by cloning our git repo, and add to the `plugins` folder. User will need to work with the API of the source of the feed to pull the updates into Everything.
 
-  * getSubfeedForm(callback)
-This method is where you can put the JSX for your specific subfeed form. For example, if you were to make a RSS Feed aggregator and wants the user to put an url for every subfeed, this method is where you would put the JSX for that form. The user input of the params you specified will be stored in the database, and you can pass the params back in the callback we provide.
+#### Instructions to write a custom plugin as follows:
+- The plugin must be in its own folder with the snake-cased name of the plugin. It should include at least the two following files: backend.js, and frontend.js. Users can also add css files to customize the look of their plugin feeds.
 
-  * getDisplayHTML(params)
-The method is where you can put what the user will see when they click on a specific subfeed item. For example, for a RSS Feed aggregator, it would be the news content for that specific article. The params that you specify when you send the data over to the framework is passed in for you to use.
+##### `frontend.js`:
+Instantiate a new class `Frontend`, with the following methods that structures the layout of your plugin:
+(** Note: ** Some of the following methods require React syntax. If you are not familiar with React, you can write your plugin layout in HTML and translate it to React with this resource: [Magic React][link])
+[link]: http://magic.reactjs.net/htmltojsx.htm
 
-  * getAuthForm()
-This method is where you can put the auth form needed for your subfeed. For example, if you are connecting the user to youtube, and you need their auth, this method is for you to write the JSX for that form.
+  * `getSubfeedForm(callback, closeModal)`
+In this method, return the JSX components for your subfeed form. For example, if you were to make a RSS Feed plugin and it allows the user of the plugin to input a url, your form would have a field for a url. The params that you specify for this plugin will be stored in the database; make sure to pass the params back in the `callback` that is provided.
+Note that the subfeed name is a required field.
+You may want to write a onSumbit callback for the form in order to pass the data to the backend.
+Make sure to stringify the params and call `closeModal()` at the end
 
-- backend.js:
-It should be in a class, with the following methods:
+    - Example code:
+       ```js
+        return (
+            <form className="add-subfeed-form" onSubmit={this.handleSubfeedAdd.bind(this, cb, closeModal)}>
+              <input type="text" className="subfeed-name"/>
+              //...form content
+            </form>
+        ```
 
-  * initAuth(cb)
-This method is for you to initialize the auth that you would need for your feed. The credentials (ex. access token) will be stored in the database, and you can pass the auth object back in the callback we provide.
+        ```js
+          handleSubfeedAdd(cb, closeModal, e) {
+            e.preventDefault();
+            const subfeedParams =
+            JSON.stringify({
+              //...params
+            });
+            const data = {subfeedName: $('.subfeed-name').val(),
+                          subfeedParams: subfeedParams
+                        };
+            cb(data);
+            closeModal();
+          }
 
-  * getOlderData(n, cb)
-This method is where you can write your fetching of older data. n represents the number of feed items we are showing and the callback is for you to send to the framework back the array of feed items you want to show on the website.
+        ```
+
+  * `getDisplayComponent(params)`
+In this method, return the JSX components for how your plugin's articles will be displayed. For example, for a RSS Feed plugin, the display would have the title, author, and body of a news article. The `params` input here will be from the and is passed in for you to use.
+    - Example code:
+  ```js
+  let params = JSON.parse(params);
+  return (
+    <div>
+      <div className="feed-item-title">{params.title}</div>
+      <div className="feed-item-body">{params.body}</div>  
+    </div>
+  );
+  ```
+
+  * `getAuthForm()`
+This method is only needed if the plugin you are writing requires user to sign in to view user specific contents.
+In this method, return the JSX components for your plugin's authentication form. For example, users are required to sign in to Twitter to view their twitter follows.
+
+##### `backend.js`:
+Instantiate a new class `Backend`, with the following methods:
+
+  * initAuth(callback)
+In this method, initialize the authentication needed for your plugin and pass the auth object back in the `callback` we provide. The credentials (ex. access token) will be stored in the database.
+
+  * `getOlderData(num, callback)`
+In this method, write the code to fetch data from the API of your plugin. `num` represents the number of feed items we are storing in the cache each time this method is called. Pass the result to the `callback` after you have customized the return of the API into feed items.
 Each feed item has to be in the form of an object, with the following keys:
     - title: the title of the specific feed item
-    - img: the image of the feed item
-    - params: the params that you would need to show the content of a specific feed item, in JSON format. ex for a youtube video, you might want to specific videoId, etc.
+    - image: the image of the feed item
+    - params: the params that you would need for content of a specific feed item. ex for a youtube video, you might want to include videoId. Make sure to stringify the params before pasing it to `callback`.
+    - Example code:
+      ```js
 
-  * getNewerData(cb)
-  This method is where you can write your fetching of newer data. When you receive new items, use the callback provided to send us back new feed items.
+      const videoParams =
+      JSON.stringify({
+        title,
+        description,
+        videoId
+      });
+
+      const videoItem =
+      {
+        title,
+        image,
+        params: videoParams
+      }
+
+      callback(videoItem)
+      ```
+
+  * `getNewerData(callback)`
+  In this method, fetch new data from your plugin's API when they are available. When you receive new items, use the callback provided to send us back new feed items. (similar to `getOlderData`)
