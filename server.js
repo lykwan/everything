@@ -107,68 +107,70 @@ function restrictLogin(req, res, next) {
   }
 }
 
-// app.get('subfeeds/:id', function(req, res) {
-//   const subfeedPlugin = req.session.subfeedPlugins[req.params.id];
-//   let startRange, endRange;
-//   client.hgetall(req.params.id, function(err, itemsObj) {
-//     let feedItems = [];
-//     if (itemsObj) {
-//       const min = Math.min.apply(Math, Object.keys(itemsObj));
-//       const max = Math.max.apply(Math, Object.keys(itemsObj));
-//       startRange = itemsPerPage * req.params.page + min;
-//       endRange = itemsPerPage * (req.params.page + 1) + min;
-//       if (itemsObj[endRange - 1] !== undefined) {
-//         for (let i = startRange; i < endRange; i++) {
-//           const feedItem = JSON.parse(itemsObj[i]);
-//           feedItems.push(feedItem);
-//         }
-//       } else {
-//         feedItems = fetchSubfeedData(startRange,
-//                                       endRange,
-//                                       itemsObj,
-//                                       subfeedPlugin,
-//                                       req.params.id,
-//                                       max+1
-//                                     );
-//       }
-//     } else {
-//       startRange = itemsPerPage * req.params.page;
-//       endRange = itemsPerPage * (req.params.page + 1);
-//       feedItems = fetchSubfeedData(startRange,
-//                                     endRange,
-//                                     {},
-//                                     subfeedPlugin,
-//                                     req.params.id,
-//                                     0
-//                                   );
-//     }
-//     res.send({ feedItems: feedItems });
-//   });
-// });
-//
-// function fetchSubfeedData
-//   (startRange, endRange, itemsObj, subfeedPlugin, subfeedId, startIdx) {
-//   let feedItems = [];
-//   subfeedPlugin.getOlderData(itemsPerPage, dataPoints => {
-//     for (let i = 0; i < dataPoints.length; i++) {
-//       const feedItem = dataPoints[i];
-//       feedItems.push(feedItem);
-//       itemsObj[startIdx + i] = JSON.stringify(feedItem);
-//     }
-//   });
-//   client.hmset(subfeedId, itemsObj, function(err, reply) {
-//     if (reply === "OK") {
-//       return feedItems;
-//     }
-//   });
-// }
-//
-//
 app.use(restrictLogin);
 app.use('/users', userRoutes);
 app.use('/plugins', pluginRoutes);
 app.use('/feeds', feedRoutes);
 app.use('/subfeeds', subfeedRoutes);
+
+app.get('/subfeeds/:id', function(req, res) {
+  const subfeedPlugin = req.session.subfeedPlugins[req.params.id];
+  let startRange, endRange;
+  client.hgetall(req.params.id, function(err, itemsObj) {
+    let feedItems = [];
+    if (itemsObj) {
+      const min = Math.min.apply(Math, Object.keys(itemsObj));
+      const max = Math.max.apply(Math, Object.keys(itemsObj));
+      startRange = itemsPerPage * req.params.page + min;
+      endRange = itemsPerPage * (req.params.page + 1) + min;
+      if (itemsObj[endRange - 1] !== undefined) {
+        for (let i = startRange; i < endRange; i++) {
+          const feedItem = JSON.parse(itemsObj[i]);
+          feedItems.push(feedItem);
+        }
+      } else {
+        feedItems = fetchSubfeedData(startRange,
+                                      endRange,
+                                      itemsObj,
+                                      subfeedPlugin,
+                                      req.params.id,
+                                      max+1
+                                    );
+      }
+    } else {
+      startRange = itemsPerPage * req.params.page;
+      endRange = itemsPerPage * (req.params.page + 1);
+      feedItems = fetchSubfeedData(startRange,
+                                    endRange,
+                                    {},
+                                    subfeedPlugin,
+                                    req.params.id,
+                                    0
+                                  );
+    }
+    res.send({ feedItems: feedItems });
+  });
+});
+
+function fetchSubfeedData
+  (startRange, endRange, itemsObj, subfeedPlugin, subfeedId, startIdx) {
+  let feedItems = [];
+  // console.log(subfeedPlugin);
+  subfeedPlugin.getOlderData(itemsPerPage, dataPoints => {
+    for (let i = 0; i < dataPoints.length; i++) {
+      const feedItem = dataPoints[i];
+      feedItems.push(feedItem);
+      itemsObj[startIdx + i] = JSON.stringify(feedItem);
+    }
+  });
+  client.hmset(subfeedId, itemsObj, function(err, reply) {
+    if (reply === "OK") {
+      return feedItems;
+    }
+  });
+}
+
+
 
 app.listen(3000, function () {
   console.log('Everything listening on port 3000!');
