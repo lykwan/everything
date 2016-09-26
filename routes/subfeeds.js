@@ -2,14 +2,17 @@ const models = require('../models/index');
 const express = require('express');
 const router  = express.Router();
 
-router.post('/', function(req, res) {
+router.post('/:plugin_name', function(req, res) {
   let subfeedData;
+  models.Plugin.find()
   models.Feed.findOrCreate({
     pluginId: req.body.pluginId,
     userId: req.session.user.id
   }).then(feed => {
     models.Subfeed.create({
-      feedId: feed
+      feedId: feed.id,
+      name: req.body.name,
+      params: req.body.params
   }).then(subfeed => {
     subfeedData = subfeed;
     models.Plugin.find({ id: req.body.feedId });

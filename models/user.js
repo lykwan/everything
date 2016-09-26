@@ -1,3 +1,4 @@
+'use strict';
 module.exports = function(sequelize, DataTypes) {
   const User = sequelize.define('User', {
     fbId: {
@@ -12,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        User.belongsToMany(models.App, { through: 'UserApp' });
+        User.belongsToMany(models.Feed, { through: 'Feed' });
       },
     }
   });
