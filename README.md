@@ -72,15 +72,15 @@ Make sure to stringify the params and call `closeModal()` at the end
   * `getDisplayComponent(params)`
 In this method, return the JSX components for how your plugin's articles will be displayed. For example, for a RSS Feed plugin, the display would have the title, author, and body of a news article. The `params` input here will be from the and is passed in for you to use.
     - Example code:
-  ```js
-  let params = JSON.parse(params);
-  return (
-    <div>
-      <div className="feed-item-title">{params.title}</div>
-      <div className="feed-item-body">{params.body}</div>  
-    </div>
-  );
-  ```
+      ```js
+      let params = JSON.parse(params);
+      return (
+        <div>
+          <div className="feed-item-title">{params.title}</div>
+          <div className="feed-item-body">{params.body}</div>  
+        </div>
+      );
+      ```
 
   * `getAuthForm()`
 This method is only needed if the plugin you are writing requires user to sign in to view user specific contents.
