@@ -19,6 +19,7 @@ const SessionReducer = (state = preloadedState, action) => {
       return newState;
 
     case Actions.SessionConstants.LOGOUT:
+    
       return preloadedState;
     default:
       return state;

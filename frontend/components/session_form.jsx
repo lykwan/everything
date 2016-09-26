@@ -11,11 +11,7 @@ class SessionForm extends React.Component{
   }
 
   componentDidMount() {
-    if (!this.props.loggedIn) {
-      this.props.requestCurrentUser();
-    } else {
-      this.props.router.push("/dashboard");
-    }
+
     this.FB = this.context.fb;
     this.FB.Event.subscribe('auth.logout',
       this.onLogout.bind(this));
@@ -28,6 +24,7 @@ class SessionForm extends React.Component{
       this.props.router.push("/dashboard");
     }
   }
+
 
   onStatusChange(response) {
 
@@ -68,7 +65,8 @@ class SessionForm extends React.Component{
 
         <div
           className="fb-login-button"
-          data-max-rows="1" data-size="medium">
+          data-max-rows="1" data-size="medium"
+          onClick={this.handleLogin}>
         </div>
 
         <a className="github" href="https://github.com/valerielu/-everything" target="_blank">

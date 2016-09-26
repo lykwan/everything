@@ -17,6 +17,12 @@ class Dashboard extends React.Component{
     this.props.requestUserApps();
   }
 
+  componentDidUpdate() {
+    if (!this.props.currentUser) {
+      this.props.router.push("/");
+    }
+  }
+
   handleLogout() {
     this.props.logout();
   }

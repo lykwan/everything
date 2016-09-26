@@ -25,9 +25,8 @@ const SessionMiddleware = ({getState, dispatch}) => (next) => (action) => {
 
     case Actions.SessionConstants.LOGOUT:
       success = (res) => {
-        console.log("in session reducer");
-        console.log(res.message);
         next(action);
+        window.location.hash = "/";
       };
       API.logout(success);
       break;

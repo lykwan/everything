@@ -22417,6 +22417,7 @@
 	      return newState;
 	
 	    case Actions.SessionConstants.LOGOUT:
+	
 	      return preloadedState;
 	    default:
 	      return state;
@@ -26569,9 +26570,8 @@
 	
 	        case Actions.SessionConstants.LOGOUT:
 	          success = function success(res) {
-	            console.log("in session reducer");
-	            console.log(res.message);
 	            next(action);
+	            window.location.hash = "/";
 	          };
 	          API.logout(success);
 	          break;
@@ -43487,6 +43487,13 @@
 	      this.props.requestUserApps();
 	    }
 	  }, {
+	    key: "componentDidUpdate",
+	    value: function componentDidUpdate() {
+	      if (!this.props.currentUser) {
+	        this.props.router.push("/");
+	      }
+	    }
+	  }, {
 	    key: "handleLogout",
 	    value: function handleLogout() {
 	      this.props.logout();
@@ -56541,11 +56548,7 @@
 	  _createClass(SessionForm, [{
 	    key: "componentDidMount",
 	    value: function componentDidMount() {
-	      if (!this.props.loggedIn) {
-	        this.props.requestCurrentUser();
-	      } else {
-	        this.props.router.push("/dashboard");
-	      }
+	
 	      this.FB = this.context.fb;
 	      this.FB.Event.subscribe('auth.logout', this.onLogout.bind(this));
 	      this.FB.Event.subscribe('auth.statusChange', this.onStatusChange.bind(this));
@@ -56603,7 +56606,8 @@
 	        ),
 	        _react2.default.createElement("div", {
 	          className: "fb-login-button",
-	          "data-max-rows": "1", "data-size": "medium" }),
+	          "data-max-rows": "1", "data-size": "medium",
+	          onClick: this.handleLogin }),
 	        _react2.default.createElement(
 	          "a",
 	          { className: "github", href: "https://github.com/valerielu/-everything", target: "_blank" },
