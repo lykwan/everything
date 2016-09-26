@@ -62,27 +62,8 @@ app.post('/login', function(req, res) {
         res.status(401).json({ error: jsonData.error });
       } else {
         req.session.accessToken = req.body.accessToken;
-        let subfeedsData;
-        models.User.findOrCreate(jsonData)
-          .then(user => {
-            req.session.user = user;
-            // models.Subfeed.find({ userId: user.id });
-          //   user.getSubfeeds
-          // }).then(subfeeds => {// do i write return??
-          //   if (subfeeds.length !== 0) {
-          //     subfeedsData = subfeeds;
-          //     models.Plugin.findBysubfeeds(subfeeds);
-          //   }
-          // }).then(plugins => {
-          //   req.session.subfeedPlugins = {};
-          //   subfeedsData.forEach(subfeed => {
-          //     const plugin = plugins[subfeed.feedId];
-          //     const subfeedPlugin =
-          //       require(`./plugins/${ plugin.path }/backend.js`);
-          //     req.session.subfeedPlugin[subfeed.id] =
-          //       new Plugin(subfeed.params);
-          //   });
-          });
+        req.session.userProfile = jsonData;
+        res.redirect('/users/me');
       }
     });
   }).on('error', (e) => {
@@ -96,7 +77,7 @@ app.delete('/logout', function(req, res) {
 });
 
 function restrictLogin(req, res, next) {
-  if (req.session && req.session.user) {
+  if (req.session && req.session.accessToken) {
     next();
   } else {
     res.status(401).json({ message: 'user must be logged in' });

@@ -12,10 +12,10 @@ const AppMiddleware = ({getState, dispatch}) => (next) => (action) => {
       API.requestUserApps(success);
       break;
 
-    case Actions.AppConstants.ADD_SINGLE_USER_APP:
+    case Actions.AppConstants.ADD_SINGLE_USER_SUBFEED:
       success = (app) => {
-        dispatch(Actions.mergeSingleUserApp(app));};
-      API.addSingleUserApp(action.appId, success);
+        dispatch(Actions.mergeSingleUserSubfeed(app));};
+      API.addSingleUserSubfeed(action.pluginId, action.subfeedData, success);
       break;
 
     case Actions.AppConstants.REQUEST_ALL_APPS:

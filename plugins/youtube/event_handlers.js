@@ -1,8 +1,18 @@
 module.exports = function () {
-  $('#twitter_feed_signup').submit((e) => {
-
+  $('.add_subfeed_form').submit((e) => {
+    e.preventDefault();
+    $.ajax({
+      method: "POST",
+      url: "subfeeds/youtube", //need to send with the plugin name
+      data: {subfeedName: $('.subfeed-name').val(), params:
+        {
+          channel: $('.subfeed-link').val()
+        }
+      },
+      dataType: 'json',
+      success: () => {
+        //somehow add the plugin and subfeed to user
+      }
+    });
   });
-
-  //ajax request to backend to store the auth token
-
 };

@@ -58,14 +58,15 @@ class FeedItem extends React.Component{
     };
 
     // const imgsrc = (this.props.feed.image) ? this.props.feed.image : this.props.feed.logo;
-    
+
     return (
       <div className="feed-item-container">
         <img src={this.props.feed.image}/>
         <a href="#"
           onClick={this.handleFeedClick}>
           {this.props.feed.title}</a>
-        <div>{this.props.feed.appName}</div>
+        <div>{this.props.feed.app.name}</div>
+
 
         <Modal
 

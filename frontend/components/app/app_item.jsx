@@ -23,15 +23,16 @@ openModal() {
 }
 
   componentDidMount() {
-    if (this.props.currentUser.apps.includes(this.props.app)) {
-      this.addDisabled = true;
-    }
+    // if (this.props.currentUser.apps.includes(this.props.app)) {
+    //   this.addDisabled = true;
+    // }
   }
 
   handleAddApp() {
-    this.props.addSingleUserApp(this.props.app.id);
-    const app = require(`../../../plugins/${this.props.app.path}`);
-    this.modalContent = app.addSubFeedForm;
+    debugger
+    const app = require(`../../../plugins/${this.props.app.path}/frontend`);
+    this.modalContent = app.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id));
+
     this.openModal();
   }
 
@@ -65,16 +66,18 @@ openModal() {
       }
     };
 
+
+
     if (this.props.app) {
       return (
         <div className="app-item-container">
-          <div>this.props.app.id</div>
-          <div>this.props.app.name</div>
-          <div>this.props.app.description</div>
+          <div>{this.props.app.id}</div>
+          <div>{this.props.app.name}</div>
           <div>this.props.app.logo</div>
+          <div>this.props.app.description</div>
           <button className="add-plugin-button"
             onClick={this.handleAddApp}>
-            <i className="fa fa-plus-circle" aria-hidden="true"></i>
+            <i className="fa fa-plus-circle" aria-hidden="true"></i>New plugin subfeed
           </button>
 
           <Modal

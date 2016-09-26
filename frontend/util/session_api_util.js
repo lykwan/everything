@@ -26,6 +26,6 @@ export const requestCurrentUser = (success, error) => {
     url: `users/me`,
     dataType: "json",
     success,
-    error: () => {console.log('request current user error');}
+    error
   });
 };

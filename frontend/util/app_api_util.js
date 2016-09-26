@@ -3,18 +3,22 @@ import $ from "jquery";
 export const requestUserApps = (success, error) => {
   $.ajax({
     method: "GET",
-    url: "apps/user",
+    url: "feeds",
     dataType: "json",
     success,
     error: () => {console.log('user apps error');}
   });
 };
 
-export const addSingleUserApp = (appId, success, error) => {
+export const addSingleUserSubfeed = (pluginId, subfeedData, success, error) => {
   $.ajax({
-    method: "GET",
-    url: `userapps/${appId}`,
-    dataType: "json",
+    method: "POST",
+    url: `subfeeds`,
+    data: {
+      pluginId: pluginId,
+      subfeedName: subfeedData.name,
+      subfeedParams: subfeedData.subfeedParams
+    },
     success,
     error: () => {console.log('add user app error');}
   });
@@ -23,7 +27,7 @@ export const addSingleUserApp = (appId, success, error) => {
 export const requestAllApps = (success, error) => {
   $.ajax({
     method: "GET",
-    url: "apps",
+    url: "plugins",
     dataType: "json",
     success,
     error: () => {console.log('all apps error');}

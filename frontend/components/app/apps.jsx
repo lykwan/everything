@@ -1,6 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router";
-import AppItem from "./app_item.jsx";
+import AppItemContainer from "./app_item_container.jsx";
+// import AppItem from "./app_item.jsx";
 
 class Apps extends React.Component{
   constructor(props) {
@@ -20,7 +21,7 @@ class Apps extends React.Component{
     if (this.props.loggedIn && this.props.apps) {
       apps = this.props.apps.map((app, idx) => {
         return (
-          <AppItem app={app}/>
+          <AppItemContainer key={idx} app={app}/>
         );
       });
     } else {

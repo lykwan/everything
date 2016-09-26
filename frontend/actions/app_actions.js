@@ -1,8 +1,8 @@
 export const AppConstants = {
   REQUEST_USER_APPS: "REQUEST_USER_APPS",
   RECEIVE_USER_APPS: "RECEIVE_USER_APPS",
-  ADD_SINGLE_USER_APP: "ADD_SINGLE_USER_APP",
-  MERGE_SINGLE_USER_APP: "MERGE_SINGLE_USER_APP",
+  ADD_SINGLE_USER_SUBFEED: "ADD_SINGLE_USER_SUBFEED",
+  MERGE_SINGLE_USER_SUBFEED: "MERGE_SINGLE_USER_SUBFEED",
   REQUEST_ALL_APPS: "REQUEST_ALL_APPS",
   RECEIVE_ALL_APPS: "RECEIVE_ALL_APPS",
   REQUEST_SINGLE_APP: "REQUEST_SINGLE_APP",
@@ -18,14 +18,15 @@ export const receiveUserApps = (apps) => ({
   apps
 });
 
-export const addSingleUserApp = (appId) => ({
-  type: AppConstants.ADD_SINGLE_USER_APP,
-  appId
+export const addSingleUserSubfeed = (pluginId, subfeedData) => ({
+  type: AppConstants.ADD_SINGLE_USER_SUBFEED,
+  pluginId,
+  subfeedData
 });
 
-export const mergeSingleUserApp = (app) => ({
-  type: AppConstants.MERGE_SINGLE_USER_APP,
-  app
+export const mergeSingleUserSubfeed = (subfeed) => ({
+  type: AppConstants.MERGE_SINGLE_USER_SUBFEED,
+  subfeed
 });
 
 export const requestAllApps = () => ({

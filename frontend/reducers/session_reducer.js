@@ -20,7 +20,7 @@ const SessionReducer = (state = preloadedState, action) => {
     case AppConstants.RECEIVE_USER_APPS:
       newState.currentUser.apps = action.apps;
       return newState;
-    case AppConstants.MERGE_SINGLE_USER_APP:
+    case AppConstants.MERGE_SINGLE_USER_SUBFEED:
       newState.currentUser.apps = [...newState.currentUser.apps, action.app];
       return newState;
 
