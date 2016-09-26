@@ -36,11 +36,22 @@ class Dashboard extends React.Component{
   render() {
 
     let apps;
+// onClick={this.handleAppClick.bind(this, userFeed.id)}
 
-    if (this.props.apps) {
-      apps = this.props.apps.map((app, idx) => {
+    if (this.props.userFeeds) {
+      apps = this.props.userFeeds.map((userFeed, i) => {
+        let subfeeds = userFeed.subfeeds.map((subfeed, j) => {
+          return (<li className="subfeed-item" key={j}>{subfeed}</li>)
+        })
         return (
-          <li key={idx} onClick={this.handleAppClick.bind(this, app.id)}><i className="fa fa-caret-down" aria-hidden="true"></i> app.name</li>
+          <div key={i}>
+            <div className="plugin-name">
+              <i className="fa fa-caret-down" aria-hidden="true"></i>
+              {userFeed.name}
+            </div>
+
+            {subfeeds}
+          </div>
         );
       });
     } else {
@@ -78,7 +89,7 @@ class Dashboard extends React.Component{
               All
             </button>
 
-            <div>list of apps</div>
+            <div>Your feeds</div>
             <ul>{apps}</ul>
             <button className="add-plugin-button"
               onClick={this.handleAddApp}>

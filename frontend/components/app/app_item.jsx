@@ -8,7 +8,7 @@ class AppItem extends React.Component{
     this.handleAddApp = this.handleAddApp.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
-    // this.addDisabled = false; //disabled = {this.addDisabled}  => should we add this when the app is already added?
+
     this.state = {
       ModalOpen: false,
     };
@@ -20,12 +20,6 @@ closeModal() {
 
 openModal() {
   this.setState({ ModalOpen: true });
-}
-
-componentDidMount() {
-  // if (this.props.currentUser.apps.includes(this.props.app)) {
-  //   this.addDisabled = true;
-  // }
 }
 
   handleAddApp() {

@@ -16,7 +16,7 @@ export const addSingleUserSubfeed = (pluginId, subfeedData, success, error) => {
     url: `subfeeds`,
     data: {
       pluginId: pluginId,
-      subfeedName: subfeedData.name,
+      subfeedName: subfeedData.subfeedName,
       subfeedParams: subfeedData.subfeedParams
     },
     success,

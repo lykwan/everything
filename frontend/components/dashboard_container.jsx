@@ -5,7 +5,7 @@ import {requestUserApps} from "../actions/app_actions.js";
 
 const mapStateToProps = (state) => ({
   currentUser: state.session.currentUser,
-  // apps: state.session.currentUser.apps
+  userFeeds: state.apps.userFeeds
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
