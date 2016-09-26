@@ -5,7 +5,6 @@ import {requestAllApps} from "../../actions/app_actions.js";
 
 
 const mapStateToProps = (state) => ({
-  // currentUser: state.session.currentUser,
   loggedIn: state.session.currentUser ? true : false,
   apps: state.apps.allApps
 });

@@ -40,7 +40,7 @@ class Dashboard extends React.Component{
     if (this.props.apps) {
       apps = this.props.apps.map((app, idx) => {
         return (
-          <li key={idx} onClick={this.handleAppClick.bind(this, app.id)}>app.name</li>
+          <li key={idx} onClick={this.handleAppClick.bind(this, app.id)}><i className="fa fa-caret-down" aria-hidden="true"></i> app.name</li>
         );
       });
     } else {
@@ -50,7 +50,7 @@ class Dashboard extends React.Component{
     let name, image;
     if (this.props.currentUser) {
       let link = `http://graph.facebook.com/${this.props.currentUser.fbId}/picture/`;
-      image = (<img src={link}/>);
+      image = (<img className="user-profile-image" src={link}/>);
       name = this.props.currentUser.name;
     } else {
       image = (<i className="fa fa-spinner fa-pulse fa-3x fa-fw"></i>);
@@ -58,23 +58,37 @@ class Dashboard extends React.Component{
     }
 
     return (
-      <div>
+      <div className="dashboard-container">
         <div className="side-bar-container">
-          <div>Hello from Dashboard</div>
-          <div>{name}</div>
-          <div>{image}</div>
 
-          <button className="logout-button" onClick={this.handleLogout}>LOGOUT</button>
-          <button className="all-button" onClick={this.handleShowAll}>All feeds</button>
-          <div>list of apps</div>
-          <ul>{apps}</ul>
-          <button className="add-plugin-button"
-            onClick={this.handleAddApp}>
-            <i className="fa fa-plus-circle" aria-hidden="true"></i>
-            Add a new app
-          </button>
-          <div className="children">{this.props.children}</div>
+          <div className="user-container">
+            {image}
+            <div className="user-name">{name} / via Facebook</div>
+            <button className="logout-button" onClick={this.handleLogout}>
+              <i className="fa fa-sign-out" aria-hidden="true"></i>
+            </button>
+          </div>
+
+          <div className="sidebar-feeds-container">
+
+            <button
+              className="all-button"
+              onClick={this.handleShowAll}>
+              <i className="fa fa-bars" aria-hidden="true"></i>
+              All
+            </button>
+
+            <div>list of apps</div>
+            <ul>{apps}</ul>
+            <button className="add-plugin-button"
+              onClick={this.handleAddApp}>
+              <i className="fa fa-plus-circle" aria-hidden="true"></i>
+              Add a new feed
+            </button>
+          </div>
+
         </div>
+        <div className="children">{this.props.children}</div>
       </div>
     );
   }

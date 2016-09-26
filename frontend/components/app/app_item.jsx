@@ -22,16 +22,15 @@ openModal() {
   this.setState({ ModalOpen: true });
 }
 
-  componentDidMount() {
-    // if (this.props.currentUser.apps.includes(this.props.app)) {
-    //   this.addDisabled = true;
-    // }
-  }
+componentDidMount() {
+  // if (this.props.currentUser.apps.includes(this.props.app)) {
+  //   this.addDisabled = true;
+  // }
+}
 
   handleAddApp() {
-    debugger
-    const app = require(`../../../plugins/${this.props.app.path}/frontend`);
-    this.modalContent = app.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id));
+    // const app = require(`../../../plugins/${this.props.app.path}/frontend`);
+    // this.modalContent = app.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id));
 
     this.openModal();
   }
@@ -86,7 +85,9 @@ openModal() {
             onRequestClose={this.closeModal}
             style={style} >
 
-            {this.modalContent}
+            <div>modal content</div>
+            <div>{this.modalContent}</div>
+
 
           </Modal>
 

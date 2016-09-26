@@ -14,7 +14,7 @@ class SessionForm extends React.Component{
     if (!this.props.loggedIn) {
       this.props.requestCurrentUser();
     } else {
-      this.props.router.push("/dashboard");
+      // this.props.router.push("/dashboard");
     }
     this.FB = this.context.fb;
     this.FB.Event.subscribe('auth.logout',
@@ -61,12 +61,24 @@ class SessionForm extends React.Component{
      });
   }
 
-
+// data-auto-logout-link="true"
+//data-show-faces="false"
   render() {
     return (
-      <div>
-        <div className="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="true"></div>
-        <div>{this.state.message}</div>
+      <div className="login-container">
+
+        <div className="logo">#Everything</div>
+        <div className="tagline">All your feeds, one place</div>
+
+        <div
+          className="fb-login-button"
+          data-max-rows="1" data-size="medium">
+        </div>
+
+        <a className="github" href="https://github.com/valerielu/-everything" target="_blank">
+          <i className="fa fa-github" aria-hidden="true"></i></a>
+
+        <div className="login-message">{this.state.message}</div>
 
       </div>
     );

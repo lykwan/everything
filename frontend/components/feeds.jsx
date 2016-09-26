@@ -19,11 +19,11 @@ class Feeds extends React.Component{
 
     let feeds;
     if (this.props.loggedIn && this.props.feeds) {
-      feeds = this.props.feeds.map((feed, idx) => {
-        return (
-          <FeedItem feed={feed}/>
-        );
-      });
+      // feeds = this.props.feeds.map((feed, idx) => {
+      //   return (
+      //     <FeedItem feed={feed}/>
+      //   );
+      // });
       feeds = (<div>no feeds yet</div>);
     } else {
       feeds = (<div>fetching feeds</div>);
@@ -32,7 +32,7 @@ class Feeds extends React.Component{
     return (
       <div className="feeds-container">
         <div>Hello from feeds!!</div>
-        <ul>{feeds}</ul>
+        <ul className="feeds-list">{feeds}</ul>
       </div>
     );
   }

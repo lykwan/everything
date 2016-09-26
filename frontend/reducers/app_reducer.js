@@ -10,6 +10,16 @@ const AppReducer = (state = {}, action) => {
     case Actions.AppConstants.RECEIVE_SINGLE_APP:
       newState["app"] = action.app;
       return newState;
+    case Actions.AppConstants.RECEIVE_USER_APPS:
+    console.log("in app reducer, all user apps");
+    console.log(action.apps);
+      newState["userFeeds"] = action.apps;
+      return newState;
+    case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
+    console.log("in app reducer, add one app");
+    console.log(action.subfeed);
+      newState.userFeeds[action.subfeed.pluginId].subfeeds.push(action.subfeed.name);
+      return newState;
     default:
       return state;
   }

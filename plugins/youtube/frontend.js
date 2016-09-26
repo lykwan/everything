@@ -28,9 +28,10 @@ class Frontend {
     e.preventDefault();
     const subfeedParams =
     JSON.stringify({
+      subfeedName: $('.subfeed-name').val(),
       channelName: $('.subfeed-link').val(),
     });
-    const data = {name: $('.subfeed-name').val(),
+    const data = {subfeedName: $('.subfeed-name').val(),
                   subfeedParams: subfeedParams
                 };
     cb(data);
@@ -38,6 +39,7 @@ class Frontend {
 
 
   getDisplayHTML(params) {
+    let params = JSON.parse(params);
     const opts = {
        height: '360',
        width: '480',

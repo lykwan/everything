@@ -17,12 +17,6 @@ const SessionReducer = (state = preloadedState, action) => {
     case Actions.SessionConstants.RECEIVE_ERRORS:
       newState.errors = JSON.parse(action.errors.responseText);
       return newState;
-    case AppConstants.RECEIVE_USER_APPS:
-      newState.currentUser.apps = action.apps;
-      return newState;
-    case AppConstants.MERGE_SINGLE_USER_SUBFEED:
-      newState.currentUser.apps = [...newState.currentUser.apps, action.app];
-      return newState;
 
     case Actions.SessionConstants.LOGOUT:
       return preloadedState;

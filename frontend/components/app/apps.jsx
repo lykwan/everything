@@ -1,7 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router";
 import AppItemContainer from "./app_item_container.jsx";
-// import AppItem from "./app_item.jsx";
 
 class Apps extends React.Component{
   constructor(props) {
