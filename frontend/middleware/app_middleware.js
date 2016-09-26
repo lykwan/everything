@@ -14,7 +14,10 @@ const AppMiddleware = ({getState, dispatch}) => (next) => (action) => {
 
     case Actions.AppConstants.ADD_SINGLE_USER_SUBFEED:
       success = (subfeed) => {
+        console.log("success callback");
+        console.log(subfeed);
         dispatch(Actions.mergeSingleUserSubfeed(subfeed));};
+      console.log("in apps middlesware adding single feed");
       API.addSingleUserSubfeed(action.pluginId, action.subfeedData, success);
       break;
 

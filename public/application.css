@@ -113,7 +113,7 @@ button:hover {
   font-weight: 300;
 }
 
-.logout-button:hover {
+.fa-sign-out:hover {
   color: black;
 }
 
@@ -126,6 +126,14 @@ button:hover {
   margin: 5px 0;
 }
 
+.all-button:hover .fa-bars {
+  color: black;
+}
+
+.add-plugin-button:hover .fa-plus-circle {
+  color: black;
+}
+
 .fa {
   color: #909090;
   margin: 0 5px;
@@ -133,4 +141,63 @@ button:hover {
 
 .feeds-container, .apps-container {
   padding: 40px 40px;
+}
+
+.apps-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.app-item-container > * {
+  margin: 5px 0;
+}
+
+.app-item-container {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px 25px;
+  margin: 10px;
+}
+
+.app-name {
+  font-weight: bold;
+}
+
+.add-subfeed-modal {
+  font-weight: 300;
+}
+
+.add-subfeed-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-subfeed-form > input {
+  margin: 10px;
+}
+
+.plugin-name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subfeed-name, .subfeed-link {
+  border-bottom: 1px solid black;
+  display: flex;
+}
+
+.subfeed-button {
+  background: none;
+  font-weight: bold;
+  color: #909090;
+}
+
+.subfeed-button:hover {
+  color: black;
+  cursor: pointer;
+}
+
+.add-subfeed-note {
+  font-size: 10px;
 }

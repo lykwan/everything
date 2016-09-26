@@ -1,30 +1,32 @@
 import React from "react";
-import Iframe from "react-iframe";
 import Youtube from "react-youtube";
+import $ from "jquery";
 
 class Frontend {
   constructor() {
 
   }
 
-  getSubFeedForm(cb) {
+  getSubFeedForm(cb, closeModal) {
     return (
-        <form className="add_subfeed_form" onSubmit={this.handleSubfeedAdd.bind(this, cb)}>
+        <form className="add-subfeed-form" onSubmit={this.handleSubfeedAdd.bind(this, cb, closeModal)}>
           <div className="plugin-name">Youtube</div>
 
-          <div className="add-subfeed-label">Name: </div>
-          <input className="subfeed-name" type="text" />
+          <div className="add-subfeed-label">Name: (required)</div>
+          <input type="text" className="subfeed-name"/>
 
-          <div className="add-subfeed-label">Channel: </div>
-          <input type="text" className="subfeed-link"/>
+          <div className="add-subfeed-label">Channel: (optional)</div>
+          <input type="text" className="subfeed-link" placeholder="(case sensitive)"/>
 
-          <input type="submit" className="subfeed-button" value="submit"/>
+          <input type="submit" className="subfeed-button" value="SUBMIT"/>
+
+          <div className="add-subfeed-note">Note: If you do not specify a channel, the Youtube most popular playlist will be added instead</div>
         </form>
     );
   }
 
 
-  handleSubfeedAdd(e, cb) {
+  handleSubfeedAdd(cb, closeModal, e) {
     e.preventDefault();
     const subfeedParams =
     JSON.stringify({
@@ -35,11 +37,12 @@ class Frontend {
                   subfeedParams: subfeedParams
                 };
     cb(data);
+    closeModal();
   }
 
 
   getDisplayHTML(params) {
-    let params = JSON.parse(params);
+    let info = JSON.parse(params);
     const opts = {
        height: '360',
        width: '480',
@@ -50,10 +53,10 @@ class Frontend {
 
     return (
       <div>
-        <div className="feed-item-title">{params.title}</div>
+        <div className="feed-item-title">{info.title}</div>
 
           <YouTube
-            videoId={params.videoId}
+            videoId={info.videoId}
             className="ytplayer"
             opts={opts}
             onReady={this.handleYoutubePlayer}
@@ -66,7 +69,7 @@ class Frontend {
             onPlaybackQualityChange={this.handleYoutubePlayer}
           />
 
-          <div className="feed-item-description">{params.description}</div>
+          <div className="feed-item-description">{info.description}</div>
       </div>
     );
   }

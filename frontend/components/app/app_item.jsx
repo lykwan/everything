@@ -29,8 +29,10 @@ componentDidMount() {
 }
 
   handleAddApp() {
-    // const app = require(`../../../plugins/${this.props.app.path}/frontend`);
-    // this.modalContent = app.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id));
+    const app = require(`../../../plugins/${this.props.app.path}/frontend`);
+    const frontend = new app();
+
+    this.modalContent = frontend.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id), this.closeModal);
 
     this.openModal();
   }
@@ -50,10 +52,10 @@ componentDidMount() {
       },
       content : {
         position        : 'fixed',
-        top             : '200px',
+        top             : '150px',
         left            : '200px',
         right           : '200px',
-        bottom          : '200px',
+        bottom          : '150px',
         border          : '2px solid #000',
         boxShadow       : '0 0 10px #909090',
         padding         : '25px',
@@ -65,27 +67,27 @@ componentDidMount() {
       }
     };
 
-
+    // <div>{this.props.app.id}</div>
+    // <div>this.props.app.logo</div>
+    // <div>this.props.app.description</div>
 
     if (this.props.app) {
       return (
         <div className="app-item-container">
-          <div>{this.props.app.id}</div>
-          <div>{this.props.app.name}</div>
-          <div>this.props.app.logo</div>
-          <div>this.props.app.description</div>
+          <div className="app-name">{this.props.app.name}</div>
+
           <button className="add-plugin-button"
             onClick={this.handleAddApp}>
-            <i className="fa fa-plus-circle" aria-hidden="true"></i>New plugin subfeed
+            <i className="fa fa-plus-circle" aria-hidden="true"></i>Add
           </button>
 
           <Modal
 
             isOpen={this.state.ModalOpen}
             onRequestClose={this.closeModal}
-            style={style} >
+            style={style}
+            className="add-subfeed-modal" >
 
-            <div>modal content</div>
             <div>{this.modalContent}</div>
 
 

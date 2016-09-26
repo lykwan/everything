@@ -29,8 +29,7 @@ class Apps extends React.Component{
 
     return (
       <div className="apps-container">
-        <div>Hello from apps!!</div>
-        <ul>{apps}</ul>
+          <ul className="apps-list">{apps}</ul>
       </div>
     );
   }

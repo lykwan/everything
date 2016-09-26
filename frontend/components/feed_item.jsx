@@ -22,8 +22,8 @@ class FeedItem extends React.Component{
   }
 
   handleFeedClick() {
-    // const app = require(`../../plugins/${this.props.feed.app.path}/frontend`);
-    // this.modalContent = app.getDisplayHTML(this.props.feed.params);
+    const app = require(`../../plugins/${this.props.feed.app.path}/frontend`);
+    this.modalContent = app.getDisplayHTML(this.props.feed.params);
     this.openModal();
   }
 
