@@ -53,14 +53,15 @@ module.exports = function(app, client) {
       if (itemsObj) {
         const min = Math.min.apply(Math, Object.keys(itemsObj));
         const max = Math.max.apply(Math, Object.keys(itemsObj));
-        console.log(max);
-        console.log(max + 5);
-        startRange = itemsPerPage * parseInt(req.query.page) + min;
-        endRange = itemsPerPage * (parseInt(req.query.page) + 1) + min;
-        console.log('page', req.query.page);
-        console.log('min', min);
-        console.log('startRange', startRange);
-        console.log('endRange', endRange);
+        startRange = (req.query.lastItemId) ?
+                      parseInt(req.query.lastItemId) + 1 :
+                      min;
+        endRange = startRange + itemsPerPage;
+        if (startRange < min) {
+          res.send({ feedItems: [] });
+          return;
+        }
+
         if (itemsObj[endRange - 1] !== undefined) {
           console.log('in this if block');
           for (let i = startRange; i < endRange; i++) {
@@ -81,8 +82,8 @@ module.exports = function(app, client) {
         }
       } else {
         console.log('in the else block, fetching completely new data');
-        startRange = itemsPerPage * req.query.page;
-        endRange = itemsPerPage * (req.query.page + 1);
+        startRange = 0;
+        endRange = startRange + itemsPerPage;
         fetchSubfeedData(startRange,
                           endRange,
                           {},
@@ -106,11 +107,18 @@ module.exports = function(app, client) {
         itemsObj[startIdx + i] = JSON.stringify(feedItem);
       }
     // });
+    console.log('before setting itemsObj');
     client.hmset(subfeedId, itemsObj, function(setErr, reply) {
       if (reply === "OK") {
+        console.log('after setting itemsObj');
         client.hgetall(subfeedId, function(getErr, fetchedItemsObj) {
+          console.log('after getting itemsObj');
           let fetchedFeedItems = [];
           for (let i = startRange; i < endRange; i++) {
+            if (!fetchedItemsObj[i]) {
+              res.send({ feedItems: [] });
+              return;
+            }
             const feedItem = JSON.parse(fetchedItemsObj[i]);
             fetchedFeedItems.push(feedItem);
           }

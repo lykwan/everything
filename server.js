@@ -52,9 +52,7 @@ app.locals.makeNewBlockQueue = function(subfeedId) {
 
       let newItemsObj = itemsObj || {};
       newItemsObj[min - 1] = JSON.stringify(dataPoint);
-      console.log(subfeedId, newItemsObj);
       client.hmset(subfeedId, newItemsObj, function(setErr) {
-        console.log('put something in there');
         done();
       });
     });
