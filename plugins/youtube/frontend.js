@@ -7,9 +7,9 @@ class Frontend {
 
   }
 
-  getSubFeedForm(cb, closeModal) {
+  getSubFeedForm(cb) {
     return (
-        <form className="add-subfeed-form" onSubmit={this.handleSubfeedAdd.bind(this, cb, closeModal)}>
+        <form className="add-subfeed-form" onSubmit={this.handleSubfeedAdd.bind(this, cb)}>
           <div className="plugin-name">Youtube</div>
 
           <div className="add-subfeed-label">Name: (required)</div>
@@ -26,7 +26,7 @@ class Frontend {
   }
 
 
-  handleSubfeedAdd(cb, closeModal, e) {
+  handleSubfeedAdd(cb, e) {
     e.preventDefault();
     const subfeedParams =
     JSON.stringify({
@@ -37,7 +37,6 @@ class Frontend {
                   subfeedParams: subfeedParams
                 };
     cb(data);
-    closeModal();
   }
 
 

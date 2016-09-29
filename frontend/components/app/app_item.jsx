@@ -8,28 +8,35 @@ class AppItem extends React.Component{
     this.handleAddApp = this.handleAddApp.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.requestFeeds = this.requestFeeds.bind(this);
 
     this.state = {
       ModalOpen: false,
     };
   }
 
-closeModal() {
-  this.setState({ ModalOpen: false });
-}
+  closeModal() {
+    this.setState({ ModalOpen: false });
+  }
 
-openModal() {
-  this.setState({ ModalOpen: true });
-}
+  openModal() {
+    this.setState({ ModalOpen: true });
+  }
 
   handleAddApp() {
     const app = require(`../../../plugins/${this.props.app.path}/frontend`);
     const frontend = new app();
 
-    this.modalContent = frontend.getSubFeedForm(this.props.addSingleUserSubfeed.bind(this, this.props.app.id), this.closeModal);
+    this.modalContent = frontend.getSubFeedForm(this.requestFeeds);
 
     this.openModal();
   }
+
+  requestFeeds(data) {
+    this.props.addSingleUserSubfeed(this.props.app.id, data);
+    this.closeModal();
+  }
+
 
 
   render() {
