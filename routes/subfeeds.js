@@ -27,9 +27,12 @@ router.post('/', function(req, res) {
   }).then(subfeed => {
     const plugin = subfeed.Feed.Plugin;
     const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
-    req.session.subfeedPlugins[subfeed.id] =
-      new SubfeedPlugin(subfeed.params);
-    req.session.subfeedPlugins[subfeed.id].initAuth();
+    const pluginInstance = new SubfeedPlugin(subfeed.params);
+    console.log(pluginInstance.initAuth);
+    console.log(pluginInstance);
+    req.session.subfeedPlugins[subfeed.id] = pluginInstance;
+    console.log(req.session.subfeedPlugins[subfeed.id]);
+    console.log(req.session.subfeedPlugins[subfeed.id].initAuth);
     res.json(subfeed);
   });
 });

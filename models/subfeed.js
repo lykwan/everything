@@ -35,6 +35,7 @@ module.exports = function(sequelize, DataTypes) {
           require(`../plugins/${ plugin.path }/backend.js`);
         subfeedPlugins[this.id] =
           new SubfeedPlugin(this.params);
+          
       }
     }
   });
