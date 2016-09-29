@@ -1,6 +1,7 @@
 const models = require('../models/index');
 const express = require('express');
 const router  = express.Router();
+const blockQueue = require('block-queue');
 
 const itemsPerPage = 3;
 
@@ -12,7 +13,6 @@ module.exports = function(app, client) {
         userId: req.session.user.id
       }
     }).spread(feed => {
-      console.log(feed.id);
       return models.Subfeed.create({
         feedId: feed.id,
         name: req.body.subfeedName,
@@ -30,7 +30,9 @@ module.exports = function(app, client) {
     }).then(subfeed => {
       const plugin = subfeed.Feed.Plugin;
       const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
+      const queue = app.locals.makeNewBlockQueue(subfeed.id);
       const pluginInstance = new SubfeedPlugin(subfeed.params);
+      pluginInstance.getNewerData(queue);
       app.locals.subfeedPlugins[subfeed.id] = pluginInstance;
       res.json(subfeed);
     });
@@ -51,6 +53,8 @@ module.exports = function(app, client) {
       if (itemsObj) {
         const min = Math.min.apply(Math, Object.keys(itemsObj));
         const max = Math.max.apply(Math, Object.keys(itemsObj));
+        console.log(max);
+        console.log(max + 5);
         startRange = itemsPerPage * parseInt(req.query.page) + min;
         endRange = itemsPerPage * (parseInt(req.query.page) + 1) + min;
         console.log('page', req.query.page);

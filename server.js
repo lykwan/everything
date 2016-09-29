@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const redis = require('redis');
 const async = require('async');
+const blockQueue = require('block-queue');
 
 const client = redis.createClient();
 client.on('connect', function() {
@@ -37,6 +38,31 @@ app.use(session({
 let files = fs.readdirSync(path.join(__dirname, 'plugins'));
 models.Plugin.addNewPlugins(files);
 models.Plugin.cleanUpOldPlugins(files);
+
+// defining the blockqueue for
+app.locals.makeNewBlockQueue = function(subfeedId) {
+  const queue = blockQueue(1, function(dataPoint, done) {
+    client.hgetall(subfeedId, function(getErr, itemsObj) {
+      let min;
+      if (itemsObj) {
+        min = Math.min.apply(Math, Object.keys(itemsObj));
+      } else {
+        min = 0;
+      }
+
+      let newItemsObj = itemsObj || {};
+      newItemsObj[min - 1] = JSON.stringify(dataPoint);
+      console.log(subfeedId, newItemsObj);
+      client.hmset(subfeedId, newItemsObj, function(setErr) {
+        console.log('put something in there');
+        done();
+      });
+    });
+
+  });
+
+  return queue;
+};
 
 
 
@@ -84,7 +110,9 @@ app.post('/login', function(req, res) {
           );
         }).then(subfeeds => {
           subfeeds.forEach(subfeed => {
-            subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins);
+            subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
+                                           app.locals.makeNewBlockQueue
+                                          );
           });
 
           res.send(req.session.user);

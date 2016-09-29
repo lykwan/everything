@@ -1,3 +1,5 @@
+const blockQueue = require('block-queue');
+
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Subfeed = sequelize.define('Subfeed', {
@@ -29,13 +31,15 @@ module.exports = function(sequelize, DataTypes) {
     },
 
     instanceMethods: {
-      createNewSubfeedPlugin: function(subfeedPlugins) {
+      createNewSubfeedPlugin: function(subfeedPlugins, makeNewBlockQueue) {
         const plugin = this.Feed.Plugin;
         const SubfeedPlugin =
           require(`../plugins/${ plugin.path }/backend.js`);
-        subfeedPlugins[this.id] =
-          new SubfeedPlugin(this.params);
-          
+
+        const queue = makeNewBlockQueue(this.id);
+        const pluginInstance = new SubfeedPlugin(this.params);
+        subfeedPlugins[this.id] = pluginInstance;
+        pluginInstance.getNewerData(queue);
       }
     }
   });
