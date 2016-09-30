@@ -86,6 +86,10 @@ app.locals.makeNewBlockQueue = function(subfeedId) {
 app.locals.subfeedPlugins = {};
 
 app.post('/login', function(req, res) {
+  if (req.body.accessToken === "guest") {
+    guestLogin(req, res);
+  }
+
   https.get(
     `https://graph.facebook.com/me?fields=id,name&access_token=${req.body.accessToken}`,
     (fbRes) => {
@@ -95,25 +99,11 @@ app.post('/login', function(req, res) {
         res.status(401).json({ error: userProfile.error });
       } else {
         req.session.accessToken = req.body.accessToken;
-        let subfeedsData;
         models.User.findOrCreate({
           where: { fbId: userProfile.id },
           defaults: { name: userProfile.name }
         }).spread(user => {
-          req.session.user = user;
-          return user.getFeeds();
-        }).then(feeds => {
-          return models.Subfeed.findPluginsFromFeeds(
-            feeds, models.Feed, models.Plugin
-          );
-        }).then(subfeeds => {
-          subfeeds.forEach(subfeed => {
-            subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
-                                           app.locals.makeNewBlockQueue
-                                          );
-          });
-
-          res.send(req.session.user);
+          login(req, res, user);
         });
       }
     }).on('error', (e) => {
@@ -121,6 +111,34 @@ app.post('/login', function(req, res) {
     });
   });
 });
+
+function guestLogin(req, res) {
+  models.User.findOrCreate({
+    where: { fbId: "guest" },
+    defaults: { name: "Guest" }
+  }).spread(user => {
+    login(req, res, user);
+  });
+}
+
+function login(req, res, user) {
+  let subfeedsData;
+  req.session.user = user;
+  user.getFeeds()
+  .then(feeds => {
+    return models.Subfeed.findPluginsFromFeeds(
+      feeds, models.Feed, models.Plugin
+    );
+  }).then(subfeeds => {
+    subfeeds.forEach(subfeed => {
+      subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
+                                     app.locals.makeNewBlockQueue
+                                    );
+    });
+
+    res.send(req.session.user);
+  });
+}
 
 app.delete('/logout', function(req, res) {
   req.session.destroy();
