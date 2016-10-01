@@ -28,6 +28,7 @@ module.exports = function(app, client) {
         ]
       });
     }).then(subfeed => {
+      //TODO: fix this using subfeed method
       const plugin = subfeed.Feed.Plugin;
       const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
       const queue = app.locals.makeNewBlockQueue(subfeed.id);
@@ -57,6 +58,7 @@ module.exports = function(app, client) {
                       parseInt(req.query.lastItemId) + 1 :
                       min;
         endRange = startRange + itemsPerPage;
+
         if (startRange < min) {
           res.send({ feedItems: [] });
           return;
@@ -103,8 +105,10 @@ module.exports = function(app, client) {
     const dataPoints = [{ title: 'hey1', img: 'blah' }, { title: 'what2', img: 'blah again' }, { title: 'whattttt3', img: 'blah againaayy' }, { title: 'whaaaaat4', img: 'yuppp again' }];
       for (let i = 0; i < dataPoints.length; i++) {
         const feedItem = dataPoints[i];
+        const feedItemId = startIdx + i;
+        feedItem.id = feedItemId;
         feedItems.push(feedItem);
-        itemsObj[startIdx + i] = JSON.stringify(feedItem);
+        itemsObj[feedItemId] = JSON.stringify(feedItem);
       }
     // });
     console.log('before setting itemsObj');

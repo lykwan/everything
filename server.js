@@ -14,6 +14,7 @@ const path = require('path');
 const redis = require('redis');
 const async = require('async');
 const blockQueue = require('block-queue');
+const test = require('./test.js');
 
 const client = redis.createClient();
 client.on('connect', function() {
@@ -39,7 +40,7 @@ let files = fs.readdirSync(path.join(__dirname, 'plugins'));
 models.Plugin.addNewPlugins(files);
 models.Plugin.cleanUpOldPlugins(files);
 
-// defining the blockqueue for
+// defining the blockqueue for fetching new data from plugins
 app.locals.makeNewBlockQueue = function(subfeedId) {
   const queue = blockQueue(1, function(dataPoint, done) {
     client.hgetall(subfeedId, function(getErr, itemsObj) {
@@ -51,7 +52,9 @@ app.locals.makeNewBlockQueue = function(subfeedId) {
       }
 
       let newItemsObj = itemsObj || {};
-      newItemsObj[min - 1] = JSON.stringify(dataPoint);
+      const feedItemId = min - 1;
+      dataPoint.id = feedItemId;
+      newItemsObj[feedItemId] = JSON.stringify(dataPoint);
       client.hmset(subfeedId, newItemsObj, function(setErr) {
         done();
       });
@@ -62,32 +65,13 @@ app.locals.makeNewBlockQueue = function(subfeedId) {
   return queue;
 };
 
-
-
-// var findDocuments = function(db) {
-//   return new Promise(function (resolve, reject) {
-//     // Get the documents collection
-//     var collection = db.collection('documents');
-//     // Find some documents
-//     collection.find({'a': 3}).toArray(function(err, docs) {
-//       assert.equal(err, null);
-//       console.log("Found the following records");
-//       console.log(docs);
-//       resolve(docs);
-//     });
-//   }).then(function (docs) {
-//     return docs.map(functionfdsklfmd)
-//   }).then(function (modifiedDocs) {
-//
-//   }).error(function
-// }
-
 // keeping all the subfeed plugin instances in app.locals
 app.locals.subfeedPlugins = {};
 
 app.post('/login', function(req, res) {
   if (req.body.accessToken === "guest") {
     guestLogin(req, res);
+    return;
   }
 
   https.get(
@@ -131,9 +115,11 @@ function login(req, res, user) {
     );
   }).then(subfeeds => {
     subfeeds.forEach(subfeed => {
-      subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
-                                     app.locals.makeNewBlockQueue
-                                    );
+      if (!app.locals.subfeedPlugins[subfeed.id]) {
+        subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
+                                       app.locals.makeNewBlockQueue
+                                      );
+      }
     });
 
     res.send(req.session.user);
