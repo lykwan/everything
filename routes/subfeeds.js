@@ -3,7 +3,7 @@ const express = require('express');
 const router  = express.Router();
 const blockQueue = require('block-queue');
 
-const itemsPerPage = 3;
+const itemsPerPage = 5;
 
 module.exports = function(app, client) {
   router.post('/', function(req, res) {
@@ -28,13 +28,12 @@ module.exports = function(app, client) {
         ]
       });
     }).then(subfeed => {
-      //TODO: fix this using subfeed method
-      const plugin = subfeed.Feed.Plugin;
-      const SubfeedPlugin = require(`../plugins/${ plugin.path }/backend.js`);
-      const queue = app.locals.makeNewBlockQueue(subfeed.id);
-      const pluginInstance = new SubfeedPlugin(subfeed.params);
-      pluginInstance.getNewerData(queue);
-      app.locals.subfeedPlugins[subfeed.id] = pluginInstance;
+      if (!app.locals.subfeedPlugins[subfeed.id]) {
+        subfeed.createNewSubfeedPlugin(app.locals.subfeedPlugins,
+                                       app.locals.makeNewBlockQueue
+                                      );
+      }
+
       res.json(subfeed);
     });
   });
@@ -48,12 +47,11 @@ module.exports = function(app, client) {
   router.get('/:id', function(req, res) {
     const subfeedPlugin = app.locals.subfeedPlugins[req.params.id];
     let startRange, endRange;
-    client.hgetall(req.params.id, function(err, itemsObj) {
+    client.hgetall(req.params.id, function(err, itemsDict) {
       let feedItems = [];
-      console.log('itemsObj', itemsObj);
-      if (itemsObj) {
-        const min = Math.min.apply(Math, Object.keys(itemsObj));
-        const max = Math.max.apply(Math, Object.keys(itemsObj));
+      if (itemsDict) {
+        const min = Math.min.apply(Math, Object.keys(itemsDict));
+        const max = Math.max.apply(Math, Object.keys(itemsDict));
         startRange = (req.query.lastItemId) ?
                       parseInt(req.query.lastItemId) + 1 :
                       min;
@@ -64,10 +62,10 @@ module.exports = function(app, client) {
           return;
         }
 
-        if (itemsObj[endRange - 1] !== undefined) {
+        if (itemsDict[endRange - 1] !== undefined) {
           console.log('in this if block');
           for (let i = startRange; i < endRange; i++) {
-            const feedItem = JSON.parse(itemsObj[i]);
+            const feedItem = JSON.parse(itemsDict[i]);
             feedItems.push(feedItem);
           }
           res.send({ feedItems: feedItems });
@@ -75,7 +73,7 @@ module.exports = function(app, client) {
           console.log('in this else block, fetching more data');
           fetchSubfeedData(startRange,
                             endRange,
-                            itemsObj,
+                            itemsDict,
                             subfeedPlugin,
                             req.params.id,
                             max+1,
@@ -99,42 +97,48 @@ module.exports = function(app, client) {
   });
 
   function fetchSubfeedData
-    (startRange, endRange, itemsObj, subfeedPlugin, subfeedId, startIdx, res) {
-    let feedItems = [];
-    // subfeedPlugin.getOlderData(itemsPerPage, dataPoints => {
-    const dataPoints = [{ title: 'hey1', img: 'blah' }, { title: 'what2', img: 'blah again' }, { title: 'whattttt3', img: 'blah againaayy' }, { title: 'whaaaaat4', img: 'yuppp again' }];
-      for (let i = 0; i < dataPoints.length; i++) {
-        const feedItem = dataPoints[i];
-        const feedItemId = startIdx + i;
-        feedItem.id = feedItemId;
-        feedItems.push(feedItem);
-        itemsObj[feedItemId] = JSON.stringify(feedItem);
+    (startRange, endRange, itemsDict, subfeedPlugin, subfeedId, startIdx, res) {
+
+    const putDataInDict = function(dataPoints) {
+      if (dataPoints === null) {
+        noMoreData = true;
+        return;
       }
-    // });
-    console.log('before setting itemsObj');
-    client.hmset(subfeedId, itemsObj, function(setErr, reply) {
+
+      dataPoints.forEach((dataPoint) => {
+        dataPoint.id = feedItemId;
+        itemsDict[feedItemId] = JSON.stringify(dataPoint);
+        feedItemId++;
+      });
+
+    };
+
+    let feedItemId = startIdx;
+    let noMoreData = false;
+    while (!itemsDict[endRange - 1] && !noMoreData) {
+      // fetching older data points from the plugin
+      subfeedPlugin.getOlderData(itemsPerPage, putDataInDict);
+    }
+
+    // putting the updated feed items dict in cache, and
+    // fetching the feed items needed to send a response
+    client.hmset(subfeedId, itemsDict, function(setErr, reply) {
       if (reply === "OK") {
-        console.log('after setting itemsObj');
-        client.hgetall(subfeedId, function(getErr, fetchedItemsObj) {
-          console.log('after getting itemsObj');
-          let fetchedFeedItems = [];
+        client.hgetall(subfeedId, function(getErr, fetchedItemsDict) {
+          let feedItems = [];
           for (let i = startRange; i < endRange; i++) {
-            if (!fetchedItemsObj[i]) {
-              res.send({ feedItems: [] });
-              return;
+            if (!fetchedItemsDict[i]) {
+              break;
             }
-            const feedItem = JSON.parse(fetchedItemsObj[i]);
-            fetchedFeedItems.push(feedItem);
+            const feedItem = JSON.parse(fetchedItemsDict[i]);
+            feedItems.push(feedItem);
           }
 
-          res.send({ feedItems: fetchedFeedItems });
-          return feedItems;
+          res.send({ feedItems: feedItems });
         });
       }
     });
   }
 
-
   return router;
-
 };

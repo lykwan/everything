@@ -10,14 +10,6 @@ router.get('/', function(req, res) {
       { model: models.Subfeed, attributes: ['id', 'name', 'feedId'] }
     ]
   }).then(feeds => {
-    // const result = feeds.map(feed => {
-    //   const feedObj = Object.assign({}, feed);
-    //   feedObj.name = feed.Plugin.name;
-    //   feedObj.subfeeds = feed.Subfeeds;
-    //   delete feedObj.Subfeeds;
-    //   return feedObj;
-    // });
-    // console.log(result);
     res.json(feeds);
   });
 });
