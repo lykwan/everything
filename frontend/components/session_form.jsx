@@ -11,7 +11,6 @@ class SessionForm extends React.Component{
   }
 
   componentDidMount() {
-
     this.FB = this.context.fb;
     this.FB.Event.subscribe('auth.logout',
       this.onLogout.bind(this));
@@ -23,6 +22,9 @@ class SessionForm extends React.Component{
     if (this.props.loggedIn){
       this.props.router.push("/dashboard");
     }
+    // else {
+    //   this.props.requestCurrentUser();
+    // }
   }
 
 

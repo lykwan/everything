@@ -15,12 +15,10 @@ class Frontend {
           <div className="add-subfeed-label">Name: (required)</div>
           <input type="text" className="subfeed-name"/>
 
-          <div className="add-subfeed-label">Channel: (optional)</div>
+          <div className="add-subfeed-label">Channel: (required)</div>
           <input type="text" className="subfeed-link" placeholder="(case sensitive)"/>
 
           <input type="submit" className="subfeed-button" value="SUBMIT"/>
-
-          <div className="add-subfeed-note">Note: If you do not specify a channel, the Youtube most popular playlist will be added instead</div>
         </form>
     );
   }
@@ -28,10 +26,14 @@ class Frontend {
 
   handleSubfeedAdd(cb, e) {
     e.preventDefault();
+    let channelName = $('.subfeed-link').val();
+    if (channelName.length === 0) {
+      channelName = "SesameStreet";
+    }
     const subfeedParams =
     JSON.stringify({
       subfeedName: $('.subfeed-name').val(),
-      channelName: $('.subfeed-link').val(),
+      channelName: channelName,
     });
     const data = {subfeedName: $('.subfeed-name').val(),
                   subfeedParams: subfeedParams

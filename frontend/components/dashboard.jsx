@@ -1,5 +1,6 @@
 import React from "react";
 import {withRouter} from "react-router";
+import SubfeedItem from "./subfeed_item.jsx";
 
 class Dashboard extends React.Component{
   constructor(props) {
@@ -46,8 +47,8 @@ class Dashboard extends React.Component{
     if (this.props.userFeeds) {
       apps = Object.keys(this.props.userFeeds).map((userFeedKey, i) => {
         let subfeeds = this.props.userFeeds[userFeedKey].subfeeds.map((subfeed, j) => {
-          return (<li className="subfeed-item" key={j}>{subfeed}</li>)
-        })
+          return (<SubfeedItem className="subfeed-item" key={j} subfeed={subfeed}/>);
+        });
         return (
           <div key={i}>
             <div className="plugin-name">

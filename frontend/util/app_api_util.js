@@ -33,13 +33,3 @@ export const requestAllApps = (success, error) => {
     error: () => {console.log('all apps error');}
   });
 };
-
-export const requestSingleApp = (appId, success, error) => {
-  $.ajax({
-    method: "GET",
-    url: `apps/${appId}`,
-    dataType: "json",
-    success,
-    error: () => {console.log('show one app details (feeds) error');}
-  });
-};

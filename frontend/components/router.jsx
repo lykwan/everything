@@ -4,7 +4,7 @@ import App from "./app.jsx";
 import DashboardContainer from "./dashboard_container.jsx";
 import FeedsContainer from "./feeds_container.jsx";
 import AppsContainer from "./app/apps_container.jsx";
-import AppDetailsContainer from "./app/app_details_container.jsx";
+import SubfeedsContainer from "./subfeed_container.jsx";
 import SessionFormContainer from './session_form_container.jsx';
 
 
@@ -45,7 +45,7 @@ class AppRouter extends React.Component{
           <Route path="/dashboard" component={ DashboardContainer }>
             <IndexRoute component={ FeedsContainer } />
             <Route path="/dashboard/apps" component={ AppsContainer }/>
-            <Route path="/dashboard/apps/:appId" component={ AppDetailsContainer }/>
+            <Route path="/dashboard/subfeeds/:subfeedId" component={ SubfeedsContainer }/>
           </Route>
         </Route>
       </Router>

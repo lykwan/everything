@@ -1,18 +1,17 @@
-import Feeds from "./feeds.jsx";
+import Subfeed from "./subfeed.jsx";
 import {connect} from "react-redux";
 import {requestCurrentUser} from "../actions/session_actions.js";
-import {requestUserFeeds} from "../actions/feed_actions.js";
+import {requestSubfeeds} from "../actions/feed_actions.js";
 
 
 const mapStateToProps = (state) => ({
   currentUser: state.session.currentUser,
-  loggedIn: state.session.currentUser ? true : false,
-  feeds: state.feeds.allFeeds
+  subfeeds: state.feeds.subfeeds
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   requestCurrentUser: () => dispatch(requestCurrentUser()),
-  requestUserFeeds: () => dispatch(requestUserFeeds()),
+  requestSubfeeds: (subfeedId) => dispatch(requestSubfeeds(subfeedId))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Feeds);
+export default connect(mapStateToProps, mapDispatchToProps)(Subfeed);

@@ -32,7 +32,7 @@ input, button, textarea {
 }
 
 ol, ul {
-	list-style: none;
+	list-style-type: disc;
 }
 
 button {
