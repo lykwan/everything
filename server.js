@@ -14,7 +14,6 @@ const path = require('path');
 const redis = require('redis');
 const async = require('async');
 const blockQueue = require('block-queue');
-const test = require('./test.js');
 
 const client = redis.createClient();
 client.on('connect', function() {
