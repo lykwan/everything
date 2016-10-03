@@ -74,8 +74,7 @@ app.post('/login', function(req, res) {
   }
 
   https.get(
-    `https://graph.facebook.com/
-      me?fields=id,name&access_token=${req.body.accessToken}`,
+    `https://graph.facebook.com/me?fields=id,name&access_token=${req.body.accessToken}`,
     (fbRes) => {
     fbRes.on('data', (data) => {
       const userProfile = JSON.parse(data);
