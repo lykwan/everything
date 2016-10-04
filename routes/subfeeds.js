@@ -23,7 +23,7 @@ module.exports = function(app, client) {
         where: { id: subfeed.id },
         include: [
           { model: models.Feed, attributes: ['pluginId'], include: [
-            { model: models.Plugin, attributes: ['path'] }
+            { model: models.Plugin, attributes: ['path', 'name'] }
           ]}
         ]
       });
