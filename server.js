@@ -42,20 +42,33 @@ models.Plugin.cleanUpOldPlugins(files);
 // defining the blockqueue for fetching new data from plugins
 app.locals.makeNewBlockQueue = function(subfeedId) {
   const queue = blockQueue(1, function(dataPoint, done) {
-    client.hgetall(subfeedId, function(getErr, itemsObj) {
-      let min;
-      if (itemsObj) {
-        min = Math.min.apply(Math, Object.keys(itemsObj));
-      } else {
-        min = 0;
-      }
+    models.Subfeed.find({
+      where: { id: subfeedId },
+      include: [
+        { model: models.Feed, attributes: ['pluginId'], include: [
+          { model: models.Plugin, attributes: ['path'] }
+        ]}
+      ]
+    }).then(subfeed => {
+      const pluginPath = subfeed.Feed.Plugin.path;
 
-      let newItemsObj = itemsObj || {};
-      const feedItemId = min - 1;
-      dataPoint.id = feedItemId;
-      newItemsObj[feedItemId] = JSON.stringify(dataPoint);
-      client.hmset(subfeedId, newItemsObj, function(setErr) {
-        done();
+      client.hgetall(subfeedId, function(getErr, itemsObj) {
+        let min;
+        if (itemsObj) {
+          min = Math.min.apply(Math, Object.keys(itemsObj));
+        } else {
+          min = 0;
+        }
+
+        let newItemsObj = itemsObj || {};
+        const feedItemId = min - 1;
+        dataPoint.id = feedItemId;
+        dataPoint.subfeedId = subfeedId;
+        dataPoint.pluginPath = pluginPath;
+        newItemsObj[feedItemId] = JSON.stringify(dataPoint);
+        client.hmset(subfeedId, newItemsObj, function(setErr) {
+          done();
+        });
       });
     });
 

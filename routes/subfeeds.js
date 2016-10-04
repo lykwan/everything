@@ -98,46 +98,57 @@ module.exports = function(app, client) {
 
   function fetchSubfeedData
     (startRange, endRange, itemsDict, subfeedPlugin, subfeedId, startIdx, res) {
+    models.Subfeed.find({
+      where: { id: subfeedId },
+      include: [
+        { model: models.Feed, attributes: ['pluginId'], include: [
+          { model: models.Plugin, attributes: ['path'] }
+        ]}
+      ]
+    }).then(subfeed => {
+      const pluginPath = subfeed.Feed.Plugin.path;
+      const putDataInDict = function(dataPoints) {
+        if (dataPoints === null) {
+          noMoreData = true;
+          return;
+        }
 
-    const putDataInDict = function(dataPoints) {
-      if (dataPoints === null) {
-        noMoreData = true;
-        return;
-      }
-
-      dataPoints.forEach((dataPoint) => {
-        dataPoint.id = feedItemId;
-        itemsDict[feedItemId] = JSON.stringify(dataPoint);
-        feedItemId++;
-      });
-
-    };
-
-    let feedItemId = startIdx;
-    let noMoreData = false;
-    while (!itemsDict[endRange - 1] && !noMoreData) {
-      // fetching older data points from the plugin
-      subfeedPlugin.getOlderData(itemsPerPage, putDataInDict);
-    }
-
-    // putting the updated feed items dict in cache, and
-    // fetching the feed items needed to send a response
-    client.hmset(subfeedId, itemsDict, function(setErr, reply) {
-      if (reply === "OK") {
-        client.hgetall(subfeedId, function(getErr, fetchedItemsDict) {
-          let feedItems = [];
-          for (let i = startRange; i < endRange; i++) {
-            if (!fetchedItemsDict[i]) {
-              break;
-            }
-            const feedItem = JSON.parse(fetchedItemsDict[i]);
-            feedItems.push(feedItem);
-          }
-
-          res.send({ feedItems: feedItems });
+        dataPoints.forEach((dataPoint) => {
+          dataPoint.id = feedItemId;
+          dataPoint.pluginPath = pluginPath;
+          itemsDict[feedItemId] = JSON.stringify(dataPoint);
+          feedItemId++;
         });
+
+      };
+
+      let feedItemId = startIdx;
+      let noMoreData = false;
+      while (!itemsDict[endRange - 1] && !noMoreData) {
+        // fetching older data points from the plugin
+        subfeedPlugin.getOlderData(itemsPerPage, putDataInDict);
       }
+
+      // putting the updated feed items dict in cache, and
+      // fetching the feed items needed to send a response
+      client.hmset(subfeedId, itemsDict, function(setErr, reply) {
+        if (reply === "OK") {
+          client.hgetall(subfeedId, function(getErr, fetchedItemsDict) {
+            let feedItems = [];
+            for (let i = startRange; i < endRange; i++) {
+              if (!fetchedItemsDict[i]) {
+                break;
+              }
+              const feedItem = JSON.parse(fetchedItemsDict[i]);
+              feedItems.push(feedItem);
+            }
+
+            res.send({ feedItems: feedItems });
+          });
+        }
+      });
     });
+
   }
 
   return router;
