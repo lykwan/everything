@@ -19,7 +19,8 @@ export const requestSubfeeds = (subfeedId) => ({
   subfeedId
 });
 
-export const receiveSubfeeds = (subfeeds) => ({
+export const receiveSubfeeds = (subfeedId, subfeeds) => ({
   type: FeedConstants.RECEIVE_SUBFEEDS,
+  subfeedId,
   subfeeds
 });

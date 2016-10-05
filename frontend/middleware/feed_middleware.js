@@ -15,7 +15,7 @@ const FeedMiddleware = ({getState, dispatch}) => (next) => (action) => {
 
     case Actions.FeedConstants.REQUEST_SUBFEEDS:
       success = (subfeeds) => {
-        dispatch(Actions.receiveSubfeeds(subfeeds));};
+        dispatch(Actions.receiveSubfeeds(action.subfeedId, subfeeds));};
       API.requestSubfeeds(action.subfeedId, success);
       break;
     default:

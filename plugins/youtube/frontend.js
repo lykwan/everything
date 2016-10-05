@@ -27,15 +27,19 @@ class Frontend {
   handleSubfeedAdd(cb, e) {
     e.preventDefault();
     let channelName = $('.subfeed-link').val();
+    let subfeedName = $('.subfeed-name').val();
     if (channelName.length === 0) {
       channelName = "SesameStreet";
     }
+    if (subfeedName.length === 0) {
+      subfeedName = "Sesame Street";
+    }
     const subfeedParams =
     JSON.stringify({
-      subfeedName: $('.subfeed-name').val(),
-      channelName: channelName,
+      subfeedName: subfeedName,
+      channelName: channelName
     });
-    const data = {subfeedName: $('.subfeed-name').val(),
+    const data = {subfeedName: subfeedName,
                   subfeedParams: subfeedParams
                 };
     cb(data);

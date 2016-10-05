@@ -28,7 +28,9 @@ const AppReducer = (state = {}, action) => {
       return newState;
 
     case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
-      let pluginName = action.subfeed.Feed.Plugin.path;
+    
+    console.log(action.subfeed);
+      let pluginName = action.subfeed.Feed.Plugin.name;
       let subfeeds = {
         name: action.subfeed.name,
         id: action.subfeed.id

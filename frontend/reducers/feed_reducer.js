@@ -9,7 +9,11 @@ const FeedReducer = (state = {}, action) => {
       return newState;
 
     case Actions.FeedConstants.RECEIVE_SUBFEEDS:
-      newState["subfeeds"] = action.subfeeds;
+      if (!newState["subfeeds"]) {
+        newState["subfeeds"] = {};
+      }
+      newState["subfeeds"]["feedItems"] = action.subfeeds.feedItems;
+      newState["subfeeds"]["subfeedId"] = action.subfeedId;
       return newState;
 
     default:

@@ -1,4 +1,4 @@
-import React from "react";
+  import React from "react";
 import {withRouter} from "react-router";
 import Modal from "react-modal";
 
@@ -22,7 +22,7 @@ class FeedItem extends React.Component{
   }
 
   handleFeedClick() {
-    const app = require(`../../plugins/${this.props.feed.app.path}/frontend`);
+    const app = require(`../../plugins/${this.props.feed.path}/frontend`);
     this.modalContent = app.getDisplayComponent(this.props.feed.params);
     this.openModal();
   }
@@ -59,11 +59,12 @@ class FeedItem extends React.Component{
 
     return (
       <div className="feed-item-container">
-        <img src={this.props.feed.image}/>
+        <img src={this.props.feed.image}
+          onClick={this.handleFeedClick}/>
         <a href="#"
           onClick={this.handleFeedClick}>
           {this.props.feed.title}</a>
-        <div>{this.props.feed.app.name}</div>
+        <div>{this.props.feed.subfeedName}</div>
 
 
         <Modal

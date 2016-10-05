@@ -14,8 +14,7 @@ class SubfeedItem extends React.Component{
   }
 
   render() {
-    console.log("in subfeeds item");
-    console.log(this.props.subfeed);
+
     return (
       <div className="subfeeds-list-item" onClick={this.handleSubfeedClick.bind(this, this.props.subfeed.id)}>
         {this.props.subfeed.name}

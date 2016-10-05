@@ -11,10 +11,16 @@ class Backend {
   getNewerData(queue) {
     let url, channelId;
     if (!this.isDone) {
+      console.log(this.params.channelName);
       const req1 = https.get(`https://www.googleapis.com/youtube/v3/channels?key=AIzaSyB3SiawekvPegKNcefPRoYlbgVl9vaxQr0&forUsername=${this.params.channelName}&part=id`, (res) => {
         res.on('data', (data) => {
           const channelIdData = JSON.parse(data);
-          channelId = channelIdData.items[0].id;
+          console.log(channelIdData);
+          if (channelIdData.items.length === 0) {
+            channelId = "UCoookXUzPciGrEZEXmh4Jjg";
+          } else {
+            channelId = channelIdData.items[0].id;
+          }
           url = `https://www.googleapis.com/youtube/v3/search?pageToken=${this.nextPageToken}&part=snippet&channelId=${channelId}&maxResults=50&type=video&key=AIzaSyB3SiawekvPegKNcefPRoYlbgVl9vaxQr0&order=date`;
 
           const req2 = https.get(url, (res2) => {
@@ -30,7 +36,7 @@ class Backend {
               console.log(videos);
               console.log("num vids");
               console.log(videos.length);
-              for (var i = 0; i < videos.length; i++) {
+              for (var i = videos.length - 1; i >= 0; i--) {
                 queue.push(videos[i]);
               }
             });
@@ -85,7 +91,7 @@ class Backend {
       return {
         subfeedName: this.params.subfeedName,
         title: item.snippet.title,
-        image: item.snippet.thumbnails.medium.url,
+        image: item.snippet.thumbnails.default.url,
         params: videoParams
       };
     });

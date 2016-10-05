@@ -11,18 +11,30 @@ class Subfeed extends React.Component{
     if (!this.props.currentUser) {
       this.props.requestCurrentUser();
     }
-    this.props.requestSubfeeds(this.props.params.subfeedId);
+    if (!this.props.subfeeds) {
+      this.props.requestSubfeeds(this.props.params.subfeedId);
+    }
   }
+
+  componentWillUpdate (nextProps) {
+    if (this.props.subfeeds && this.props.subfeeds.subfeedId !== nextProps.params.subfeedId) {
+      console.log("requesting");
+      this.props.requestSubfeeds(nextProps.params.subfeedId);
+    }
+  }
+
 
   render() {
 
     let feeds;
-
     if (this.props.currentUser && this.props.subfeeds) {
-      feeds = this.props.subfeeds.map((feed, idx) => {
-        return (
-          <FeedItem feed={feed}/>
-        );
+      console.log(this.props.subfeeds);
+      feeds = this.props.subfeeds.feedItems.map((feed, idx) => {
+
+          return (
+            <FeedItem key={idx} feed={feed}/>
+          );
+
       });
     } else {
       feeds = (<div>no subfeeds yet</div>);

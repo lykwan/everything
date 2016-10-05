@@ -51,7 +51,10 @@ button:hover {
 .children {
   width: 100%;
   font-weight: 300;
+  left: 30%;
 }
+
+/*login page*/
 
 .login-container{
   margin: auto auto;
@@ -82,6 +85,8 @@ button:hover {
   color: black;
 }
 
+/*dashboard sidebar*/
+
 .dashboard-container {
   display: flex;
   width: 100%;
@@ -91,6 +96,7 @@ button:hover {
   height: 100%;
   background-color: #eee;
   width: 30%;
+  position: fixed;
 }
 
 .user-container {
@@ -163,6 +169,13 @@ button:hover {
   font-weight: bold;
 }
 
+.subfeeds-list-item:hover {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/*add subfeed modal*/
+
 .add-subfeed-modal {
   font-weight: 300;
 }
@@ -199,6 +212,14 @@ button:hover {
   cursor: pointer;
 }
 
+
 .add-subfeed-note {
   font-size: 10px;
+}
+
+/*feed items*/
+
+.feed-item-container {
+  display: flex;
+  flex-direction: column;
 }

@@ -7,7 +7,7 @@ const RootReducer = combineReducers(
   {
     session: SessionReducer,
     apps: AppReducer,
-    feeds: AppReducer
+    feeds: FeedReducer
   }
 );
 
