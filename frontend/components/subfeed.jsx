@@ -18,7 +18,6 @@ class Subfeed extends React.Component{
 
   componentWillUpdate (nextProps) {
     if (this.props.subfeeds && this.props.subfeeds.subfeedId !== nextProps.params.subfeedId) {
-      console.log("requesting");
       this.props.requestSubfeeds(nextProps.params.subfeedId);
     }
   }
@@ -26,9 +25,9 @@ class Subfeed extends React.Component{
 
   render() {
 
-    let feeds;
+    let feeds, name;
     if (this.props.currentUser && this.props.subfeeds) {
-      console.log(this.props.subfeeds);
+  
       feeds = this.props.subfeeds.feedItems.map((feed, idx) => {
 
           return (
@@ -36,14 +35,18 @@ class Subfeed extends React.Component{
           );
 
       });
+      name = this.props.subfeeds.feedItems[0].subfeedName;
     } else {
-      feeds = (<div>no subfeeds yet</div>);
+      name = "Loading";
+      feeds = (<div></div>);
     }
 
     return (
-      <div className="feeds-container">
-        <div>Hello from subfeeds page</div>
-        <ul>{feeds}</ul>
+      <div className="subfeeds-container">
+        <div className="subfeeds-name">{name}</div>
+        <ul className="subfeeds-list-container" >
+          {feeds}
+        </ul>
       </div>
     );
   }

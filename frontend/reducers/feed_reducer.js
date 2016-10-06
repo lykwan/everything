@@ -12,6 +12,7 @@ const FeedReducer = (state = {}, action) => {
       if (!newState["subfeeds"]) {
         newState["subfeeds"] = {};
       }
+      
       newState["subfeeds"]["feedItems"] = action.subfeeds.feedItems;
       newState["subfeeds"]["subfeedId"] = action.subfeedId;
       return newState;

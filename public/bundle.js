@@ -26136,6 +26136,7 @@
 	      if (!newState["subfeeds"]) {
 	        newState["subfeeds"] = {};
 	      }
+	
 	      newState["subfeeds"]["feedItems"] = action.subfeeds.feedItems;
 	      newState["subfeeds"]["subfeedId"] = action.subfeedId;
 	      return newState;
@@ -36774,6 +36775,7 @@
 	
 	        case Actions.FeedConstants.REQUEST_SUBFEEDS:
 	          success = function success(subfeeds) {
+	            console.log("request success");
 	            dispatch(Actions.receiveSubfeeds(action.subfeedId, subfeeds));
 	          };
 	          API.requestSubfeeds(action.subfeedId, success);
@@ -42469,6 +42471,8 @@
 	};
 	
 	var requestSubfeeds = exports.requestSubfeeds = function requestSubfeeds(subfeedId, success, error) {
+	  console.log("in api");
+	  console.log(subfeedId);
 	  _jquery2.default.ajax({
 	    method: "GET",
 	    url: "subfeeds/" + subfeedId,
@@ -43540,10 +43544,10 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      var apps = void 0;
+	      var userFeeds = void 0;
 	
 	      if (this.props.userFeeds) {
-	        apps = Object.keys(this.props.userFeeds).map(function (userFeedKey, i) {
+	        userFeeds = Object.keys(this.props.userFeeds).map(function (userFeedKey, i) {
 	          var subfeeds = _this2.props.userFeeds[userFeedKey].subfeeds.map(function (subfeed, j) {
 	            return _react2.default.createElement(_subfeed_item2.default, { className: "subfeed-item", key: j, subfeed: subfeed });
 	          });
@@ -43560,7 +43564,7 @@
 	          );
 	        });
 	      } else {
-	        apps = _react2.default.createElement("div", null);
+	        userFeeds = _react2.default.createElement("div", null);
 	      }
 	
 	      var name = void 0,
@@ -43610,12 +43614,12 @@
 	            _react2.default.createElement(
 	              "div",
 	              null,
-	              "Your feeds"
+	              "Your subscriptions"
 	            ),
 	            _react2.default.createElement(
 	              "ul",
 	              null,
-	              apps
+	              userFeeds
 	            ),
 	            _react2.default.createElement(
 	              "button",
@@ -43876,8 +43880,10 @@
 	    var _this = _possibleConstructorReturn(this, (FeedItem.__proto__ || Object.getPrototypeOf(FeedItem)).call(this, props));
 	
 	    _this.handleFeedClick = _this.handleFeedClick.bind(_this);
+	    _this.handleSubfeedClick = _this.handleSubfeedClick.bind(_this);
 	    _this.closeModal = _this.closeModal.bind(_this);
 	    _this.openModal = _this.openModal.bind(_this);
+	    _this.modalContent;
 	    _this.state = {
 	      ModalOpen: false
 	    };
@@ -43897,9 +43903,17 @@
 	  }, {
 	    key: "handleFeedClick",
 	    value: function handleFeedClick() {
-	      var app = __webpack_require__(418)("./" + this.props.feed.path + "/frontend");
-	      this.modalContent = app.getDisplayComponent(this.props.feed.params);
+	
+	      var app = __webpack_require__(418)("./" + this.props.feed.pluginPath + "/frontend");
+	      var frontend = new app();
+	      this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
 	      this.openModal();
+	      debugger;
+	    }
+	  }, {
+	    key: "handleSubfeedClick",
+	    value: function handleSubfeedClick() {
+	      this.props.router.push("/dashboard/subfeeds/" + this.props.feed.subfeedId);
 	    }
 	  }, {
 	    key: "render",
@@ -43935,18 +43949,31 @@
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "feed-item-container" },
-	        _react2.default.createElement("img", { src: this.props.feed.image,
-	          onClick: this.handleFeedClick }),
 	        _react2.default.createElement(
-	          "a",
-	          { href: "#",
-	            onClick: this.handleFeedClick },
-	          this.props.feed.title
+	          "div",
+	          { className: "feed-item-div" },
+	          _react2.default.createElement("img", { className: "feed-item-image",
+	            src: this.props.feed.image }),
+	          _react2.default.createElement(
+	            "div",
+	            { className: "feed-item-title-container" },
+	            _react2.default.createElement(
+	              "a",
+	              { className: "feed-item-title", href: "#",
+	                onClick: this.handleFeedClick },
+	              this.props.feed.title
+	            )
+	          )
 	        ),
 	        _react2.default.createElement(
 	          "div",
-	          null,
-	          this.props.feed.subfeedName
+	          { className: "feed-item-div" },
+	          _react2.default.createElement(
+	            "div",
+	            { className: "feed-item-subfeed-name",
+	              onClick: this.handleSubfeedClick },
+	            this.props.feed.subfeedName
+	          )
 	        ),
 	        _react2.default.createElement(
 	          _reactModal2.default,
@@ -46022,7 +46049,7 @@
 	        { className: "add-subfeed-form", onSubmit: this.handleSubfeedAdd.bind(this, cb) },
 	        _react2.default.createElement(
 	          "div",
-	          { className: "plugin-name" },
+	          { className: "subfeed-form-plugin-name" },
 	          "Youtube"
 	        ),
 	        _react2.default.createElement(
@@ -46030,22 +46057,22 @@
 	          { className: "add-subfeed-label" },
 	          "Name: (required)"
 	        ),
-	        _react2.default.createElement("input", { type: "text", className: "subfeed-name" }),
+	        _react2.default.createElement("input", { type: "text", className: "subfeed-form-name" }),
 	        _react2.default.createElement(
 	          "div",
 	          { className: "add-subfeed-label" },
 	          "Channel: (required)"
 	        ),
-	        _react2.default.createElement("input", { type: "text", className: "subfeed-link", placeholder: "(case sensitive)" }),
-	        _react2.default.createElement("input", { type: "submit", className: "subfeed-button", value: "SUBMIT" })
+	        _react2.default.createElement("input", { type: "text", className: "subfeed-form-link", placeholder: "(case sensitive; omit spaces)" }),
+	        _react2.default.createElement("input", { type: "submit", className: "subfeed-form-submit-button", value: "SUBMIT" })
 	      );
 	    }
 	  }, {
 	    key: "handleSubfeedAdd",
 	    value: function handleSubfeedAdd(cb, e) {
 	      e.preventDefault();
-	      var channelName = (0, _jquery2.default)('.subfeed-link').val();
-	      var subfeedName = (0, _jquery2.default)('.subfeed-name').val();
+	      var channelName = (0, _jquery2.default)('.subfeed-form-link').val();
+	      var subfeedName = (0, _jquery2.default)('.subfeed-form-name').val();
 	      if (channelName.length === 0) {
 	        channelName = "SesameStreet";
 	      }
@@ -46064,40 +46091,43 @@
 	  }, {
 	    key: "getDisplayComponent",
 	    value: function getDisplayComponent(params) {
-	      var info = JSON.parse(params);
-	      var opts = {
-	        height: '360',
-	        width: '480',
-	        playerVars: {
-	          autoplay: 1
-	        }
-	      };
+	      //
+	      // let info = JSON.parse(params);
+	      // console.log(info);
+	      // const opts = {
+	      //    height: '360',
+	      //    width: '480',
+	      //    playerVars: {
+	      //      autoplay: 1
+	      //    }
+	      //  };
+	      //  debugger
 	
+	      // <YouTube
+	      //   videoId={info.videoId}
+	      //   className="ytplayer"
+	      //   opts={opts}
+	      //   onReady={this.handleYoutubePlayer}
+	      //   onPlay={this.handleYoutubePlayer}
+	      //   onPause={this.handleYoutubePlayer}
+	      //   onEnd={this.handleYoutubePlayer}
+	      //   onError={this.handleYoutubePlayer}
+	      //   onStateChange={this.handleYoutubePlayer}
+	      //   onPlaybackRateChange={this.handleYoutubePlayer}
+	      //   onPlaybackQualityChange={this.handleYoutubePlayer}
+	      // />
 	      return _react2.default.createElement(
 	        "div",
 	        null,
 	        _react2.default.createElement(
 	          "div",
 	          { className: "feed-item-title" },
-	          info.title
+	          "hi"
 	        ),
-	        _react2.default.createElement(YouTube, {
-	          videoId: info.videoId,
-	          className: "ytplayer",
-	          opts: opts,
-	          onReady: this.handleYoutubePlayer,
-	          onPlay: this.handleYoutubePlayer,
-	          onPause: this.handleYoutubePlayer,
-	          onEnd: this.handleYoutubePlayer,
-	          onError: this.handleYoutubePlayer,
-	          onStateChange: this.handleYoutubePlayer,
-	          onPlaybackRateChange: this.handleYoutubePlayer,
-	          onPlaybackQualityChange: this.handleYoutubePlayer
-	        }),
 	        _react2.default.createElement(
 	          "div",
 	          { className: "feed-item-description" },
-	          info.description
+	          "got here"
 	        )
 	      );
 	    }
@@ -56337,9 +56367,7 @@
 	    value: function handleAddApp() {
 	      var app = __webpack_require__(418)("./" + this.props.app.path + "/frontend");
 	      var frontend = new app();
-	
 	      this.modalContent = frontend.getSubFeedForm(this.requestFeeds);
-	
 	      this.openModal();
 	    }
 	  }, {
@@ -56379,44 +56407,36 @@
 	        }
 	      };
 	
-	      if (this.props.app) {
-	        return _react2.default.createElement(
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "app-item-container" },
+	        _react2.default.createElement(
 	          "div",
-	          { className: "app-item-container" },
+	          { className: "app-name" },
+	          this.props.app.name
+	        ),
+	        _react2.default.createElement(
+	          "button",
+	          { className: "add-plugin-button",
+	            onClick: this.handleAddApp },
+	          _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" }),
+	          "Add"
+	        ),
+	        _react2.default.createElement(
+	          _reactModal2.default,
+	          {
+	
+	            isOpen: this.state.ModalOpen,
+	            onRequestClose: this.closeModal,
+	            style: style,
+	            className: "add-subfeed-modal" },
 	          _react2.default.createElement(
 	            "div",
-	            { className: "app-name" },
-	            this.props.app.name
-	          ),
-	          _react2.default.createElement(
-	            "button",
-	            { className: "add-plugin-button",
-	              onClick: this.handleAddApp },
-	            _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" }),
-	            "Add"
-	          ),
-	          _react2.default.createElement(
-	            _reactModal2.default,
-	            {
-	
-	              isOpen: this.state.ModalOpen,
-	              onRequestClose: this.closeModal,
-	              style: style,
-	              className: "add-subfeed-modal" },
-	            _react2.default.createElement(
-	              "div",
-	              null,
-	              this.modalContent
-	            )
+	            null,
+	            this.modalContent
 	          )
-	        );
-	      } else {
-	        return _react2.default.createElement(
-	          "div",
-	          null,
-	          "no app item"
-	        );
-	      }
+	        )
+	      );
 	    }
 	  }]);
 	
@@ -56520,7 +56540,6 @@
 	    key: "componentWillUpdate",
 	    value: function componentWillUpdate(nextProps) {
 	      if (this.props.subfeeds && this.props.subfeeds.subfeedId !== nextProps.params.subfeedId) {
-	        console.log("requesting");
 	        this.props.requestSubfeeds(nextProps.params.subfeedId);
 	      }
 	    }
@@ -56528,32 +56547,31 @@
 	    key: "render",
 	    value: function render() {
 	
-	      var feeds = void 0;
+	      var feeds = void 0,
+	          name = void 0;
 	      if (this.props.currentUser && this.props.subfeeds) {
-	        console.log(this.props.subfeeds);
+	
 	        feeds = this.props.subfeeds.feedItems.map(function (feed, idx) {
 	
 	          return _react2.default.createElement(_feed_item2.default, { key: idx, feed: feed });
 	        });
+	        name = this.props.subfeeds.feedItems[0].subfeedName;
 	      } else {
-	        feeds = _react2.default.createElement(
-	          "div",
-	          null,
-	          "no subfeeds yet"
-	        );
+	        name = "Loading";
+	        feeds = _react2.default.createElement("div", null);
 	      }
 	
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "feeds-container" },
+	        { className: "subfeeds-container" },
 	        _react2.default.createElement(
 	          "div",
-	          null,
-	          "Hello from subfeeds page"
+	          { className: "subfeeds-name" },
+	          name
 	        ),
 	        _react2.default.createElement(
 	          "ul",
-	          null,
+	          { className: "subfeeds-list-container" },
 	          feeds
 	        )
 	      );
@@ -56657,9 +56675,6 @@
 	      if (this.props.loggedIn) {
 	        this.props.router.push("/dashboard");
 	      }
-	      // else {
-	      //   this.props.requestCurrentUser();
-	      // }
 	    }
 	  }, {
 	    key: "onStatusChange",

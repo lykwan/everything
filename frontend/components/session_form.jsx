@@ -22,9 +22,6 @@ class SessionForm extends React.Component{
     if (this.props.loggedIn){
       this.props.router.push("/dashboard");
     }
-    // else {
-    //   this.props.requestCurrentUser();
-    // }
   }
 
 

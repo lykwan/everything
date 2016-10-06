@@ -1,4 +1,4 @@
-  import React from "react";
+import React from "react";
 import {withRouter} from "react-router";
 import Modal from "react-modal";
 
@@ -6,8 +6,10 @@ class FeedItem extends React.Component{
   constructor(props) {
     super(props);
     this.handleFeedClick = this.handleFeedClick.bind(this);
+    this.handleSubfeedClick = this.handleSubfeedClick.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
+    this.modalContent;
     this.state = {
       ModalOpen: false,
     };
@@ -22,9 +24,16 @@ class FeedItem extends React.Component{
   }
 
   handleFeedClick() {
-    const app = require(`../../plugins/${this.props.feed.path}/frontend`);
-    this.modalContent = app.getDisplayComponent(this.props.feed.params);
+
+    const app = require(`../../plugins/${this.props.feed.pluginPath}/frontend`);
+    const frontend = new app();
+    this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
     this.openModal();
+    debugger;
+  }
+
+  handleSubfeedClick() {
+    this.props.router.push(`/dashboard/subfeeds/${this.props.feed.subfeedId}`);
   }
 
 
@@ -59,12 +68,22 @@ class FeedItem extends React.Component{
 
     return (
       <div className="feed-item-container">
-        <img src={this.props.feed.image}
-          onClick={this.handleFeedClick}/>
-        <a href="#"
-          onClick={this.handleFeedClick}>
-          {this.props.feed.title}</a>
-        <div>{this.props.feed.subfeedName}</div>
+        <div className="feed-item-div">
+          <img className="feed-item-image"
+               src={this.props.feed.image}/>
+          <div className="feed-item-title-container">
+            <a className="feed-item-title" href="#"
+              onClick={this.handleFeedClick}>
+              {this.props.feed.title}
+            </a>
+          </div>
+        </div>
+        <div className="feed-item-div">
+          <div className="feed-item-subfeed-name"
+            onClick={this.handleSubfeedClick}>
+            {this.props.feed.subfeedName}
+          </div>
+        </div>
 
 
         <Modal

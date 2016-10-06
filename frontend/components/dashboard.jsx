@@ -42,10 +42,10 @@ class Dashboard extends React.Component{
 
   render() {
 
-    let apps;
+    let userFeeds;
 
     if (this.props.userFeeds) {
-      apps = Object.keys(this.props.userFeeds).map((userFeedKey, i) => {
+      userFeeds = Object.keys(this.props.userFeeds).map((userFeedKey, i) => {
         let subfeeds = this.props.userFeeds[userFeedKey].subfeeds.map((subfeed, j) => {
           return (<SubfeedItem className="subfeed-item" key={j} subfeed={subfeed}/>);
         });
@@ -61,7 +61,7 @@ class Dashboard extends React.Component{
         );
       });
     } else {
-      apps = (<div></div>);
+      userFeeds = (<div></div>);
     }
 
     let name, image;
@@ -95,8 +95,8 @@ class Dashboard extends React.Component{
               All
             </button>
 
-            <div>Your feeds</div>
-            <ul>{apps}</ul>
+            <div>Your subscriptions</div>
+            <ul>{userFeeds}</ul>
             <button className="add-plugin-button"
               onClick={this.handleAddApp}>
               <i className="fa fa-plus-circle" aria-hidden="true"></i>

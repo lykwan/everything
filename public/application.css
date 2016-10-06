@@ -51,7 +51,11 @@ button:hover {
 .children {
   width: 100%;
   font-weight: 300;
-  left: 30%;
+  left: 20%;
+  padding: 40px;
+  width: 80%;
+  display: flex;
+  justify-content: center;
 }
 
 /*login page*/
@@ -90,19 +94,22 @@ button:hover {
 .dashboard-container {
   display: flex;
   width: 100%;
+  color: white;
 }
 
 .side-bar-container {
   height: 100%;
-  background-color: #eee;
-  width: 30%;
+  /*background-color: #93E2D5;*/
+  background-color: #0191C8;
+  /*background-color: rgba(0, 0, 0, 0.5);*/
+  width: 20%;
   position: fixed;
 }
 
 .user-container {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid white;
   padding: 10px;
 }
 
@@ -117,7 +124,13 @@ button:hover {
 .user-name {
   font-size: 12px;
   font-weight: 300;
+  color: white;
 }
+
+.fa-sign-out {
+  color: white;
+}
+
 
 .fa-sign-out:hover {
   color: black;
@@ -141,17 +154,18 @@ button:hover {
 }
 
 .fa {
-  color: #909090;
+  color: white;
   margin: 0 5px;
 }
 
 .feeds-container, .apps-container {
-  padding: 40px 40px;
+  /*padding: 40px 40px;*/
 }
 
 .apps-list {
   display: flex;
   flex-wrap: wrap;
+
 }
 
 .app-item-container > * {
@@ -174,6 +188,10 @@ button:hover {
   font-weight: bold;
 }
 
+.subfeeds-list-item {
+  padding-left: 20px;
+}
+
 /*add subfeed modal*/
 
 .add-subfeed-modal {
@@ -190,24 +208,31 @@ button:hover {
   margin: 10px;
 }
 
-.plugin-name {
+.subfeed-form-plugin-name {
   font-weight: bold;
   margin-bottom: 10px;
   color: #808080;
 }
 
-.subfeed-name, .subfeed-link {
-  border-bottom: 1px solid black;
-  display: flex;
+.plugin-name {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.subfeed-button {
+
+.subfeed-form-name, .subfeed-form-link {
+  border-bottom: 1px solid black;
+  display: flex;
+
+}
+
+.subfeed-form-submit-button {
   background: none;
   font-weight: bold;
   color: #909090;
 }
 
-.subfeed-button:hover {
+.subfeed-form-submit-button:hover {
   color: black;
   cursor: pointer;
 }
@@ -217,9 +242,65 @@ button:hover {
   font-size: 10px;
 }
 
+/*subfeeds container*/
+
+.subfeeds-container {
+  /*display: flex;*/
+}
+
+.subfeeds-name {
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-left: 15px;
+}
+
+.subfeeds-list-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 /*feed items*/
 
 .feed-item-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  width: 250px;
+  border: 0.5px solid #ccc;
+  border-radius: 2px;
+  margin: 15px;
+
+}
+
+.feed-item-title-container {
+  margin: 10px;
+}
+
+.feed-item-title {
+  font-weight: bold;
+  color: #505050;
+}
+
+.feed-item-title:hover {
+  cursor: pointer;
+}
+
+.feed-item-subfeed-name {
+  margin: 10px;
+}
+
+.feed-item-image {
+  width: 100%;
+  height: auto;
+}
+
+.feed-item-subfeed-name {
+  font-size: 15px;
+  color: #9e9e9e;
+}
+
+.feed-item-subfeed-name:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

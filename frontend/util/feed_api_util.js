@@ -3,7 +3,7 @@ import $ from "jquery";
 export const requestUserFeeds = (success, error) => {
   $.ajax({
     method: "GET",
-    url: "all",
+    url: "subfeeds/all",
     dataType: "json",
     success,
     error: () => {console.log('all feeds error');}
@@ -11,6 +11,8 @@ export const requestUserFeeds = (success, error) => {
 };
 
 export const requestSubfeeds = (subfeedId, success, error) => {
+  console.log("in api");
+  console.log(subfeedId);
   $.ajax({
     method: "GET",
     url: `subfeeds/${subfeedId}`,

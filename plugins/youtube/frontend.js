@@ -10,15 +10,15 @@ class Frontend {
   getSubFeedForm(cb) {
     return (
         <form className="add-subfeed-form" onSubmit={this.handleSubfeedAdd.bind(this, cb)}>
-          <div className="plugin-name">Youtube</div>
+          <div className="subfeed-form-plugin-name">Youtube</div>
 
           <div className="add-subfeed-label">Name: (required)</div>
-          <input type="text" className="subfeed-name"/>
+          <input type="text" className="subfeed-form-name"/>
 
           <div className="add-subfeed-label">Channel: (required)</div>
-          <input type="text" className="subfeed-link" placeholder="(case sensitive)"/>
+          <input type="text" className="subfeed-form-link" placeholder="(case sensitive; omit spaces)"/>
 
-          <input type="submit" className="subfeed-button" value="SUBMIT"/>
+          <input type="submit" className="subfeed-form-submit-button" value="SUBMIT"/>
         </form>
     );
   }
@@ -26,8 +26,8 @@ class Frontend {
 
   handleSubfeedAdd(cb, e) {
     e.preventDefault();
-    let channelName = $('.subfeed-link').val();
-    let subfeedName = $('.subfeed-name').val();
+    let channelName = $('.subfeed-form-link').val();
+    let subfeedName = $('.subfeed-form-name').val();
     if (channelName.length === 0) {
       channelName = "SesameStreet";
     }
@@ -47,34 +47,37 @@ class Frontend {
 
 
   getDisplayComponent(params) {
-    let info = JSON.parse(params);
-    const opts = {
-       height: '360',
-       width: '480',
-       playerVars: {
-         autoplay: 1
-       }
-     };
+    //
+    // let info = JSON.parse(params);
+    // console.log(info);
+    // const opts = {
+    //    height: '360',
+    //    width: '480',
+    //    playerVars: {
+    //      autoplay: 1
+    //    }
+    //  };
+    //  debugger
 
+     // <YouTube
+     //   videoId={info.videoId}
+     //   className="ytplayer"
+     //   opts={opts}
+     //   onReady={this.handleYoutubePlayer}
+     //   onPlay={this.handleYoutubePlayer}
+     //   onPause={this.handleYoutubePlayer}
+     //   onEnd={this.handleYoutubePlayer}
+     //   onError={this.handleYoutubePlayer}
+     //   onStateChange={this.handleYoutubePlayer}
+     //   onPlaybackRateChange={this.handleYoutubePlayer}
+     //   onPlaybackQualityChange={this.handleYoutubePlayer}
+     // />
     return (
       <div>
-        <div className="feed-item-title">{info.title}</div>
+        <div className="feed-item-title">hi</div>
 
-          <YouTube
-            videoId={info.videoId}
-            className="ytplayer"
-            opts={opts}
-            onReady={this.handleYoutubePlayer}
-            onPlay={this.handleYoutubePlayer}
-            onPause={this.handleYoutubePlayer}
-            onEnd={this.handleYoutubePlayer}
-            onError={this.handleYoutubePlayer}
-            onStateChange={this.handleYoutubePlayer}
-            onPlaybackRateChange={this.handleYoutubePlayer}
-            onPlaybackQualityChange={this.handleYoutubePlayer}
-          />
 
-          <div className="feed-item-description">{info.description}</div>
+          <div className="feed-item-description">got here</div>
       </div>
     );
   }

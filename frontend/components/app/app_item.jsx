@@ -26,9 +26,7 @@ class AppItem extends React.Component{
   handleAddApp() {
     const app = require(`../../../plugins/${this.props.app.path}/frontend`);
     const frontend = new app();
-
     this.modalContent = frontend.getSubFeedForm(this.requestFeeds);
-
     this.openModal();
   }
 
@@ -69,33 +67,30 @@ class AppItem extends React.Component{
     };
 
 
-    if (this.props.app) {
-      return (
-        <div className="app-item-container">
-          <div className="app-name">{this.props.app.name}</div>
 
-          <button className="add-plugin-button"
-            onClick={this.handleAddApp}>
-            <i className="fa fa-plus-circle" aria-hidden="true"></i>Add
-          </button>
+    return (
+      <div className="app-item-container">
+        <div className="app-name">{this.props.app.name}</div>
 
-          <Modal
+        <button className="add-plugin-button"
+          onClick={this.handleAddApp}>
+          <i className="fa fa-plus-circle" aria-hidden="true"></i>Add
+        </button>
 
-            isOpen={this.state.ModalOpen}
-            onRequestClose={this.closeModal}
-            style={style}
-            className="add-subfeed-modal" >
+        <Modal
 
-            <div>{this.modalContent}</div>
+          isOpen={this.state.ModalOpen}
+          onRequestClose={this.closeModal}
+          style={style}
+          className="add-subfeed-modal" >
+
+          <div>{this.modalContent}</div>
 
 
-          </Modal>
+        </Modal>
 
-        </div>
-      );
-    } else {
-      return (<div>no app item</div>);
-    }
+      </div>
+    );
   }
 }
 

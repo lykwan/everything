@@ -91,7 +91,7 @@ class Backend {
       return {
         subfeedName: this.params.subfeedName,
         title: item.snippet.title,
-        image: item.snippet.thumbnails.default.url,
+        image: item.snippet.thumbnails.medium.url,
         params: videoParams
       };
     });
