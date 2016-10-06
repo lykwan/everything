@@ -4,3 +4,4 @@ bundle.js
 bundle.js.map
 db/dev_database.sqlite
 .DS_Store
+dump.rdb
