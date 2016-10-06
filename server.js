@@ -120,6 +120,7 @@ function guestLogin(req, res) {
 function login(req, res, user) {
   let subfeedsData;
   req.session.user = user;
+  // user.getSubfeeds(models).then(subfeeds => console.log(subfeeds));
   user.getFeeds()
   .then(feeds => {
     return models.Subfeed.findPluginsFromFeeds(

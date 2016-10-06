@@ -19,7 +19,8 @@ module.exports = function(sequelize, DataTypes) {
         const feedIds = feeds.map(feed => {
           return feed.id;
         });
-        return Subfeed.findAll({
+        // console.log('hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
+        let subfeeds = Subfeed.findAll({
           where: { feedId: { in: feedIds }},
           include: [
             { model: Feed, attributes: ['pluginId'], include: [
@@ -27,6 +28,7 @@ module.exports = function(sequelize, DataTypes) {
             ]}
           ]
         });
+        return subfeeds;
       }
     },
 

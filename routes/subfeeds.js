@@ -3,7 +3,7 @@ const express = require('express');
 const router  = express.Router();
 const blockQueue = require('block-queue');
 
-const itemsPerPage = 5;
+const itemsPerPage = 20;
 
 module.exports = function(app, client) {
   router.post('/', function(req, res) {
@@ -42,23 +42,61 @@ module.exports = function(app, client) {
   // get the auth form string, pass it to frontend??
 
   // router.post('/:id/login', ) {
-
+  //
+  router.get('/', function(req, res) {
+    models.User.find({
+      where: { id: req.session.user.id }
+    }).then(user => {
+      return user.getFeeds();
+    }).then(feeds => {
+      return models.Subfeed.findPluginsFromFeeds(
+        feeds, models.Feed, models.Plugin
+      );
+    }).then(subfeeds => {
+      const subfeedIds = subfeeds.map(subfeed => subfeed.id);
+      const numSubfeeds = subfeedIds.length;
+      const numItemsPerSubfeed = Math.floor(itemsPerPage / numSubfeeds) + 1;
+      let allFeedItems = {};
+      let numSubfeedsGottenBack = 0;
+      subfeedIds.forEach(id => {
+        let lastItemId = req.body.lastItemIds ?
+                          req.body.lastItemIds[id] :
+                          null;
+        // push all the feed items to the all feed items arr, then send it
+        // when all of the fetching is done
+        getFeedItems(id, lastItemId, numItemsPerSubfeed, feedItems => {
+          numSubfeedsGottenBack++;
+          allFeedItems[id] = feedItems;
+          if (numSubfeedsGottenBack === numSubfeeds) {
+            res.send({ feedItems: allFeedItems });
+          }
+        });
+      });
+    });
+  });
 
   router.get('/:id', function(req, res) {
-    const subfeedPlugin = app.locals.subfeedPlugins[req.params.id];
+    getFeedItems(req.params.id, req.body.lastItemId, itemsPerPage,
+      (feedItems) => {
+        res.send({ feedItems: feedItems });
+    });
+  });
+
+  function getFeedItems(subfeedId, lastItemId, numfeedItems, sendFeedItems) {
+    const subfeedPlugin = app.locals.subfeedPlugins[subfeedId];
     let startRange, endRange;
-    client.hgetall(req.params.id, function(err, itemsDict) {
+    client.hgetall(subfeedId, function(err, itemsDict) {
       let feedItems = [];
       if (itemsDict) {
         const min = Math.min.apply(Math, Object.keys(itemsDict));
         const max = Math.max.apply(Math, Object.keys(itemsDict));
-        startRange = (req.query.lastItemId) ?
-                      parseInt(req.query.lastItemId) + 1 :
+        startRange = (lastItemId) ?
+                      parseInt(lastItemId) + 1 :
                       min;
         endRange = startRange + itemsPerPage;
 
         if (startRange < min) {
-          res.send({ feedItems: [] });
+          sendFeedItems([]);
           return;
         }
 
@@ -68,16 +106,16 @@ module.exports = function(app, client) {
             const feedItem = JSON.parse(itemsDict[i]);
             feedItems.push(feedItem);
           }
-          res.send({ feedItems: feedItems });
+          sendFeedItems(feedItems);
         } else {
           console.log('in this else block, fetching more data');
           fetchSubfeedData(startRange,
                             endRange,
                             itemsDict,
                             subfeedPlugin,
-                            req.params.id,
+                            subfeedId,
                             max+1,
-                            res
+                            sendFeedItems
                           );
         }
       } else {
@@ -88,16 +126,17 @@ module.exports = function(app, client) {
                           endRange,
                           {},
                           subfeedPlugin,
-                          req.params.id,
+                          subfeedId,
                           0,
-                          res
+                          sendFeedItems
                         );
       }
     });
-  });
+  }
 
   function fetchSubfeedData
-    (startRange, endRange, itemsDict, subfeedPlugin, subfeedId, startIdx, res) {
+    (startRange, endRange, itemsDict, subfeedPlugin, subfeedId,
+      startIdx, sendFeedItems) {
     models.Subfeed.find({
       where: { id: subfeedId },
       include: [
@@ -143,7 +182,7 @@ module.exports = function(app, client) {
               feedItems.push(feedItem);
             }
 
-            res.send({ feedItems: feedItems });
+            sendFeedItems(feedItems);
           });
         }
       });
