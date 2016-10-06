@@ -43,7 +43,7 @@ module.exports = function(app, client) {
 
   // router.post('/:id/login', ) {
   //
-  router.get('/', function(req, res) {
+  router.get('/all', function(req, res) {
     models.User.find({
       where: { id: req.session.user.id }
     }).then(user => {
