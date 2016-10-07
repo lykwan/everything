@@ -26129,6 +26129,8 @@
 	  var newState = (0, _merge2.default)({}, state);
 	  switch (action.type) {
 	    case Actions.FeedConstants.RECEIVE_USER_FEEDS:
+	      console.log(action.feeds);
+	      debugger;
 	      newState["allFeeds"] = action.feeds;
 	      return newState;
 	
@@ -42459,9 +42461,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds(success, error) {
+	
 	  _jquery2.default.ajax({
 	    method: "GET",
-	    url: "all",
+	    url: "subfeeds/all",
 	    dataType: "json",
 	    success: success,
 	    error: function error() {

@@ -1,6 +1,7 @@
 import $ from "jquery";
 
 export const requestUserFeeds = (success, error) => {
+  
   $.ajax({
     method: "GET",
     url: "subfeeds/all",

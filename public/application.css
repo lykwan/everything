@@ -149,12 +149,15 @@ button:hover {
   color: black;
 }
 
+.add-plugin-button {
+  color: black;
+}
+
 .add-plugin-button:hover .fa-plus-circle {
   color: black;
 }
 
 .fa {
-  color: white;
   margin: 0 5px;
 }
 
@@ -181,6 +184,7 @@ button:hover {
 
 .app-name {
   font-weight: bold;
+  color:
 }
 
 .subfeeds-list-item:hover {
@@ -253,6 +257,7 @@ button:hover {
   font-weight: bold;
   text-transform: uppercase;
   margin-left: 15px;
+  color: black;
 }
 
 .subfeeds-list-container {
