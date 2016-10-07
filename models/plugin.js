@@ -1,4 +1,6 @@
 const async = require('async');
+const config = require('../plugins/config.json');
+console.log(config);
 
 'use strict';
 module.exports = function(sequelize, DataTypes) {
@@ -12,6 +14,9 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true
+    },
+    logo: {
+      type: DataTypes.STRING
     }
   }, {
     classMethods: {
@@ -22,18 +27,28 @@ module.exports = function(sequelize, DataTypes) {
 
       addNewPlugins: function(files) {
         async.each(files, function(file) {
-          Plugin.find({
-            where: {
-              path: file
-            }
-          }).then(plugin => {
-            if (!plugin) {
-              Plugin.create({
-                name: file,
+          if (file !== "config.json") {
+            Plugin.find({
+              where: {
                 path: file
-              });
-            }
-          });
+              }
+            }).then(plugin => {
+              if (!plugin) {
+                let name = config[file] && config[file].name ?
+                            config[file].name :
+                            file;
+                let logo = config[file] && config[file].logo ?
+                            config[file].logo :
+                            null;
+                            console.log(logo);
+                Plugin.create({
+                  name: name,
+                  logo: logo,
+                  path: file
+                });
+              }
+            });
+          }
         });
       },
 
