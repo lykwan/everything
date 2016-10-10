@@ -5,6 +5,7 @@ import FeedItem from "./feed_item.jsx";
 class Subfeed extends React.Component{
   constructor(props) {
     super(props);
+    this.handleInfiniteScroll = this.handleInfiniteScroll.bind(this);
   }
 
   componentDidMount() {
@@ -22,12 +23,16 @@ class Subfeed extends React.Component{
     }
   }
 
+  handleInfiniteScroll() {
+
+  }
+
 
   render() {
 
     let feeds, name;
     if (this.props.currentUser && this.props.subfeeds) {
-  
+
       feeds = this.props.subfeeds.feedItems.map((feed, idx) => {
 
           return (

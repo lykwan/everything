@@ -26122,16 +26122,57 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	var FeedReducer = function FeedReducer() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
 	
 	  var newState = (0, _merge2.default)({}, state);
+	  var subfeeds = void 0,
+	      count = void 0,
+	      feeds = void 0;
 	  switch (action.type) {
 	    case Actions.FeedConstants.RECEIVE_USER_FEEDS:
-	      console.log(action.feeds);
-	      debugger;
-	      newState["allFeeds"] = action.feeds;
+	      subfeeds = Object.keys(action.feeds.feedItems);
+	      count = 0;
+	
+	      subfeeds.forEach(function (Id) {
+	        count += action.feeds.feedItems[Id].length;
+	      });
+	      feeds = [];
+	      while (count > 0) {
+	        var randSubfeed = subfeeds[Math.floor(Math.random() * subfeeds.length)];
+	        if (action.feeds.feedItems[randSubfeed].length === 0) {
+	          var idx = subfeeds.indexOf(randSubfeed);
+	          subfeeds.splice(idx, 1);
+	          continue;
+	        }
+	        feeds.push(action.feeds.feedItems[randSubfeed].shift());
+	        count -= 1;
+	      }
+	      newState["allFeeds"] = feeds;
+	      return newState;
+	
+	    case Actions.FeedConstants.RECEIVE_MORE_USER_FEEDS:
+	      subfeeds = Object.keys(action.feeds.feedItems);
+	      count = 0;
+	
+	      subfeeds.forEach(function (Id) {
+	        count += action.feeds.feedItems[Id].length;
+	      });
+	      feeds = [];
+	      while (count > 0) {
+	        var _randSubfeed = subfeeds[Math.floor(Math.random() * subfeeds.length)];
+	        if (action.feeds.feedItems[_randSubfeed].length === 0) {
+	          var _idx = subfeeds.indexOf(_randSubfeed);
+	          subfeeds.splice(_idx, 1);
+	          continue;
+	        }
+	        feeds.push(action.feeds.feedItems[_randSubfeed].shift());
+	        count -= 1;
+	      }
+	      newState.allFeeds = [].concat(_toConsumableArray(newState.allFeeds), [feeds]);
 	      return newState;
 	
 	    case Actions.FeedConstants.RECEIVE_SUBFEEDS:
@@ -26141,6 +26182,13 @@
 	
 	      newState["subfeeds"]["feedItems"] = action.subfeeds.feedItems;
 	      newState["subfeeds"]["subfeedId"] = action.subfeedId;
+	      newState["subfeeds"]["lastItemId"] = action.subfeeds.feedItems[action.subfeeds.feedItems.length - 1].id;
+	      return newState;
+	
+	    case Actions.FeedConstants.RECEIVE_MORE_SUBFEEDS:
+	      newState.subfeeds.feedItems = [].concat(_toConsumableArray(newState.subfeeds.feedItems), [action.subfeeds.feedItems]);
+	      newState.subfeeds.lastItemId = action.subfeeds.feedItems[action.subfeeds.feedItems.length - 1].id;
+	      // newState["subfeeds"]["subfeedId"] = action.subfeedId;
 	      return newState;
 	
 	    default:
@@ -26162,8 +26210,12 @@
 	var FeedConstants = exports.FeedConstants = {
 	  REQUEST_USER_FEEDS: "REQUEST_USER_FEEDS",
 	  RECEIVE_USER_FEEDS: "RECEIVE_USER_FEEDS",
+	  REQUEST_MORE_USER_FEEDS: "REQUEST_MORE_USER_FEEDS",
+	  RECEIVE_MORE_USER_FEEDS: "RECEIVE_MORE_USER_FEEDS",
 	  REQUEST_SUBFEEDS: "REQUEST_SUBFEEDS",
-	  RECEIVE_SUBFEEDS: "RECEIVE_SUBFEEDS"
+	  RECEIVE_SUBFEEDS: "RECEIVE_SUBFEEDS",
+	  REQUEST_MORE_SUBFEEDS: "REQUEST_MORE_SUBFEEDS",
+	  RECEIVE_MORE_SUBFEEDS: "RECEIVE_MORE_SUBFEEDS"
 	};
 	
 	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds() {
@@ -26172,9 +26224,23 @@
 	  };
 	};
 	
+	var requestMoreUserFeeds = exports.requestMoreUserFeeds = function requestMoreUserFeeds(lastItemIds) {
+	  return {
+	    type: FeedConstants.REQUEST_MORE_USER_FEEDS,
+	    lastItemIds: lastItemIds
+	  };
+	};
+	
 	var receiveUserFeeds = exports.receiveUserFeeds = function receiveUserFeeds(feeds) {
 	  return {
 	    type: FeedConstants.RECEIVE_USER_FEEDS,
+	    feeds: feeds
+	  };
+	};
+	
+	var receiveMoreUserFeeds = exports.receiveMoreUserFeeds = function receiveMoreUserFeeds(feeds) {
+	  return {
+	    type: FeedConstants.REQUEST_MORE_USER_FEEDS,
 	    feeds: feeds
 	  };
 	};
@@ -26186,9 +26252,25 @@
 	  };
 	};
 	
+	var requestMoreSubfeeds = exports.requestMoreSubfeeds = function requestMoreSubfeeds(subfeedId, lastItemId) {
+	  return {
+	    type: FeedConstants.REQUEST_MORE_SUBFEEDS,
+	    subfeedId: subfeedId,
+	    lastItemId: lastItemId
+	  };
+	};
+	
 	var receiveSubfeeds = exports.receiveSubfeeds = function receiveSubfeeds(subfeedId, subfeeds) {
 	  return {
 	    type: FeedConstants.RECEIVE_SUBFEEDS,
+	    subfeedId: subfeedId,
+	    subfeeds: subfeeds
+	  };
+	};
+	
+	var receiveMoreSubfeeds = exports.receiveMoreSubfeeds = function receiveMoreSubfeeds(subfeedId, subfeeds) {
+	  return {
+	    type: FeedConstants.RECEIVE_MORE_SUBFEEDS,
 	    subfeedId: subfeedId,
 	    subfeeds: subfeeds
 	  };
@@ -36775,12 +36857,25 @@
 	          API.requestUserFeeds(success);
 	          break;
 	
+	        case Actions.FeedConstants.REQUEST_MORE_USER_FEEDS:
+	          success = function success(feeds) {
+	            dispatch(Actions.receiveMoreUserFeeds(feeds));
+	          };
+	          API.requestMoreUserFeeds(action.lastItemIds, success);
+	          break;
+	
 	        case Actions.FeedConstants.REQUEST_SUBFEEDS:
 	          success = function success(subfeeds) {
-	            console.log("request success");
 	            dispatch(Actions.receiveSubfeeds(action.subfeedId, subfeeds));
 	          };
 	          API.requestSubfeeds(action.subfeedId, success);
+	          break;
+	
+	        case Actions.FeedConstants.REQUEST_MORE_SUBFEEDS:
+	          success = function success(subfeeds) {
+	            dispatch(Actions.receiveMoreSubfeeds(action.subfeedId, subfeeds));
+	          };
+	          API.requestMoreSubfeeds(action.subfeedId, action.lastItemId, success);
 	          break;
 	        default:
 	          return next(action);
@@ -42460,11 +42555,12 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds(success, error) {
+	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds(lastItemIds, success, error) {
 	
 	  _jquery2.default.ajax({
 	    method: "GET",
 	    url: "subfeeds/all",
+	    data: { lastItemIds: lastItemIds },
 	    dataType: "json",
 	    success: success,
 	    error: function error() {
@@ -42473,13 +42569,14 @@
 	  });
 	};
 	
-	var requestSubfeeds = exports.requestSubfeeds = function requestSubfeeds(subfeedId, success, error) {
+	var requestSubfeeds = exports.requestSubfeeds = function requestSubfeeds(subfeedId, lastItemId, success, error) {
 	  console.log("in api");
 	  console.log(subfeedId);
 	  _jquery2.default.ajax({
 	    method: "GET",
 	    url: "subfeeds/" + subfeedId,
 	    dataType: "json",
+	    data: { lastItemId: lastItemId },
 	    success: success,
 	    error: function error() {
 	      console.log('show one app details (feeds) error');
@@ -43745,6 +43842,9 @@
 	    },
 	    requestUserFeeds: function requestUserFeeds() {
 	      return dispatch((0, _feed_actions.requestUserFeeds)());
+	    },
+	    requestMoreUserFeeds: function requestMoreUserFeeds(lastItemIds) {
+	      return dispatch((0, _feed_actions.requestMoreUserFeeds)(lastItemIds));
 	    }
 	  };
 	};
@@ -43804,16 +43904,10 @@
 	
 	      var feeds = void 0;
 	      if (this.props.loggedIn && this.props.feeds) {
-	        // feeds = this.props.feeds.map((feed, idx) => {
-	        //   return (
-	        //     <FeedItem feed={feed}/>
-	        //   );
-	        // });
-	        feeds = _react2.default.createElement(
-	          "div",
-	          null,
-	          "no feeds yet"
-	        );
+	
+	        feeds = this.props.feeds.map(function (feed, idx) {
+	          return _react2.default.createElement(_feed_item2.default, { key: idx, feed: feed });
+	        });
 	      } else {
 	        feeds = _react2.default.createElement(
 	          "div",
@@ -43825,14 +43919,10 @@
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "feeds-container" },
-	        _react2.default.createElement(
-	          "div",
-	          null,
-	          "Hello from feeds!!"
-	        ),
+	        "}",
 	        _react2.default.createElement(
 	          "ul",
-	          { className: "feeds-list" },
+	          { className: "feeds-list-container" },
 	          feeds
 	        )
 	      );
@@ -56418,6 +56508,7 @@
 	          { className: "app-name" },
 	          this.props.app.name
 	        ),
+	        _react2.default.createElement("img", { className: "app-logo", src: this.props.app.logo }),
 	        _react2.default.createElement(
 	          "button",
 	          { className: "add-plugin-button",
@@ -56484,7 +56575,11 @@
 	    },
 	    requestSubfeeds: function requestSubfeeds(subfeedId) {
 	      return dispatch((0, _feed_actions.requestSubfeeds)(subfeedId));
+	    },
+	    requestMoreSubfeeds: function requestMoreSubfeeds(subfeedId, lastItemId) {
+	      return dispatch((0, _feed_actions.requestSubfeeds)(subfeedId, lastItemId));
 	    }
+	
 	  };
 	};
 	
@@ -56526,7 +56621,10 @@
 	  function Subfeed(props) {
 	    _classCallCheck(this, Subfeed);
 	
-	    return _possibleConstructorReturn(this, (Subfeed.__proto__ || Object.getPrototypeOf(Subfeed)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Subfeed.__proto__ || Object.getPrototypeOf(Subfeed)).call(this, props));
+	
+	    _this.handleInfiniteScroll = _this.handleInfiniteScroll.bind(_this);
+	    return _this;
 	  }
 	
 	  _createClass(Subfeed, [{
@@ -56546,6 +56644,9 @@
 	        this.props.requestSubfeeds(nextProps.params.subfeedId);
 	      }
 	    }
+	  }, {
+	    key: "handleInfiniteScroll",
+	    value: function handleInfiniteScroll() {}
 	  }, {
 	    key: "render",
 	    value: function render() {

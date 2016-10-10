@@ -1,7 +1,7 @@
 import Subfeed from "./subfeed.jsx";
 import {connect} from "react-redux";
 import {requestCurrentUser} from "../actions/session_actions.js";
-import {requestSubfeeds} from "../actions/feed_actions.js";
+import {requestSubfeeds, requestMoreSubfeeds} from "../actions/feed_actions.js";
 
 
 const mapStateToProps = (state) => ({
@@ -11,7 +11,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   requestCurrentUser: () => dispatch(requestCurrentUser()),
-  requestSubfeeds: (subfeedId) => dispatch(requestSubfeeds(subfeedId))
+  requestSubfeeds: (subfeedId) => dispatch(requestSubfeeds(subfeedId)),
+  requestMoreSubfeeds: (subfeedId, lastItemId) => dispatch(requestSubfeeds(subfeedId, lastItemId))
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Subfeed);

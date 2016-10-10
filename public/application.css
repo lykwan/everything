@@ -94,7 +94,7 @@ button:hover {
 .dashboard-container {
   display: flex;
   width: 100%;
-  color: white;
+  /*color: white;*/
 }
 
 .side-bar-container {
@@ -187,6 +187,11 @@ button:hover {
   color:
 }
 
+.app-logo {
+  width: 150px;
+  height: auto;
+}
+
 .subfeeds-list-item:hover {
   cursor: pointer;
   font-weight: bold;
@@ -260,7 +265,7 @@ button:hover {
   color: black;
 }
 
-.subfeeds-list-container {
+.subfeeds-list-container, .feeds-list-container {
   display: flex;
   flex-wrap: wrap;
 }

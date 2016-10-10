@@ -19,20 +19,19 @@ class Feeds extends React.Component{
 
     let feeds;
     if (this.props.loggedIn && this.props.feeds) {
-      // feeds = this.props.feeds.map((feed, idx) => {
-      //   return (
-      //     <FeedItem feed={feed}/>
-      //   );
-      // });
-      feeds = (<div>no feeds yet</div>);
+
+      feeds = this.props.feeds.map((feed, idx) => {
+        return (
+          <FeedItem key={idx} feed={feed}/>
+        );
+      });
     } else {
       feeds = (<div>fetching feeds</div>);
     }
 
     return (
-      <div className="feeds-container">
-        <div>Hello from feeds!!</div>
-        <ul className="feeds-list">{feeds}</ul>
+      <div className="feeds-container">}
+        <ul className="feeds-list-container">{feeds}</ul>
       </div>
     );
   }

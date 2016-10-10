@@ -1,7 +1,7 @@
 import Feeds from "./feeds.jsx";
 import {connect} from "react-redux";
 import {requestCurrentUser} from "../actions/session_actions.js";
-import {requestUserFeeds} from "../actions/feed_actions.js";
+import {requestUserFeeds, requestMoreUserFeeds} from "../actions/feed_actions.js";
 
 
 const mapStateToProps = (state) => ({
@@ -13,6 +13,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   requestCurrentUser: () => dispatch(requestCurrentUser()),
   requestUserFeeds: () => dispatch(requestUserFeeds()),
+  requestMoreUserFeeds: (lastItemIds) => dispatch(requestMoreUserFeeds(lastItemIds))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Feeds);

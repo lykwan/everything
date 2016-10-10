@@ -71,6 +71,7 @@ class AppItem extends React.Component{
     return (
       <div className="app-item-container">
         <div className="app-name">{this.props.app.name}</div>
+        <img className="app-logo" src={this.props.app.logo} />
 
         <button className="add-plugin-button"
           onClick={this.handleAddApp}>
