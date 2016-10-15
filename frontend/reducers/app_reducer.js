@@ -13,7 +13,7 @@ const AppReducer = (state = {}, action) => {
       if (!newState["userFeeds"]) {
         newState["userFeeds"] = {};
       }
-      console.log(action.apps);
+
       action.apps.forEach(app => {
         let subfeeds = app.Subfeeds.map(subfeed => ({
           name: subfeed.name,
@@ -29,7 +29,6 @@ const AppReducer = (state = {}, action) => {
 
     case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
     
-    console.log(action.subfeed);
       let pluginName = action.subfeed.Feed.Plugin.name;
       let subfeeds = {
         name: action.subfeed.name,

@@ -25,7 +25,11 @@ const FeedReducer = (state = {}, action) => {
         feeds.push(action.feeds.feedItems[randSubfeed].shift());
         count -= 1;
       }
-      newState["allFeeds"] = feeds;
+
+      if (!newState["allFeeds"]) {
+        newState["allFeeds"] = {};
+      }
+      newState["allFeeds"]["feedItems"] = feeds;
       newState["allFeeds"]["lastItemIds"] = lastItemIds;
       return newState;
 
@@ -49,7 +53,7 @@ const FeedReducer = (state = {}, action) => {
         feeds.push(action.feeds.feedItems[randSubfeed].shift());
         count -= 1;
       }
-      newState.allFeeds = newState.allFeeds.concat(feeds);
+      newState.allFeeds.feedItems = newState.allFeeds.feedItems.concat(feeds);
       newState.allFeeds.lastItemIds = lastItemIds;
       return newState;
 

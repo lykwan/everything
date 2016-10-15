@@ -26152,7 +26152,11 @@
 	        feeds.push(action.feeds.feedItems[randSubfeed].shift());
 	        count -= 1;
 	      }
-	      newState["allFeeds"] = feeds;
+	
+	      if (!newState["allFeeds"]) {
+	        newState["allFeeds"] = {};
+	      }
+	      newState["allFeeds"]["feedItems"] = feeds;
 	      newState["allFeeds"]["lastItemIds"] = lastItemIds;
 	      return newState;
 	
@@ -26176,7 +26180,7 @@
 	        feeds.push(action.feeds.feedItems[_randSubfeed].shift());
 	        count -= 1;
 	      }
-	      newState.allFeeds = newState.allFeeds.concat(feeds);
+	      newState.allFeeds.feedItems = newState.allFeeds.feedItems.concat(feeds);
 	      newState.allFeeds.lastItemIds = lastItemIds;
 	      return newState;
 	
@@ -26245,7 +26249,7 @@
 	
 	var receiveMoreUserFeeds = exports.receiveMoreUserFeeds = function receiveMoreUserFeeds(feeds) {
 	  return {
-	    type: FeedConstants.REQUEST_MORE_USER_FEEDS,
+	    type: FeedConstants.RECEIVE_MORE_USER_FEEDS,
 	    feeds: feeds
 	  };
 	};
@@ -26318,7 +26322,7 @@
 	      if (!newState["userFeeds"]) {
 	        newState["userFeeds"] = {};
 	      }
-	      console.log(action.apps);
+	
 	      action.apps.forEach(function (app) {
 	        var subfeeds = app.Subfeeds.map(function (subfeed) {
 	          return {
@@ -26336,7 +26340,6 @@
 	
 	    case Actions.AppConstants.MERGE_SINGLE_USER_SUBFEED:
 	
-	      console.log(action.subfeed);
 	      var pluginName = action.subfeed.Feed.Plugin.name;
 	      var subfeeds = {
 	        name: action.subfeed.name,
@@ -43935,6 +43938,7 @@
 	      }
 	      this.props.requestUserFeeds();
 	      window.scrollTo(0, 0);
+	      (0, _jquery2.default)(window).off("scroll");
 	      (0, _jquery2.default)(window).scroll(this.handleInfiniteScroll);
 	    }
 	  }, {
@@ -43943,7 +43947,9 @@
 	      if ((0, _jquery2.default)(window).scrollTop() + (0, _jquery2.default)(window).height() >= (0, _jquery2.default)(document).height()) {
 	        console.log("bottom!");
 	        if (this.props.feeds) {
-	          // this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
+	          console.log("requesting feeds");
+	          console.log(this.props.feeds.lastItemIds);
+	          this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
 	        }
 	      }
 	    }
@@ -43954,7 +43960,7 @@
 	      var feeds = void 0;
 	      if (this.props.loggedIn && this.props.feeds) {
 	
-	        feeds = this.props.feeds.map(function (feed, idx) {
+	        feeds = this.props.feeds.feedItems.map(function (feed, idx) {
 	          return _react2.default.createElement(_feed_item2.default, { key: idx, feed: feed });
 	        });
 	      } else {
@@ -44020,10 +44026,10 @@
 	
 	    var _this = _possibleConstructorReturn(this, (FeedItem.__proto__ || Object.getPrototypeOf(FeedItem)).call(this, props));
 	
-	    _this.closeModal = _this.closeModal.bind(_this);
-	    _this.openModal = _this.openModal.bind(_this);
 	    _this.handleFeedClick = _this.handleFeedClick.bind(_this);
 	    _this.handleSubfeedClick = _this.handleSubfeedClick.bind(_this);
+	    _this.closeModal = _this.closeModal.bind(_this);
+	    _this.openModal = _this.openModal.bind(_this);
 	
 	    _this.state = {
 	      ModalOpen: false
@@ -44045,9 +44051,9 @@
 	    key: "handleFeedClick",
 	    value: function handleFeedClick() {
 	
-	      var app = __webpack_require__(418)("./" + this.props.feed.pluginPath + "/frontend");
-	      var frontend = new app();
-	      this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
+	      // const app = require(`../../plugins/${this.props.feed.pluginPath}/frontend`);
+	      // const frontend = new app();
+	      // this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
 	      this.openModal();
 	    }
 	  }, {
@@ -44100,7 +44106,7 @@
 	            _react2.default.createElement(
 	              "a",
 	              { className: "feed-item-title", href: "#",
-	                onClick: this.handleFeedClick },
+	                onClick: this.openModal },
 	              this.props.feed.title
 	            )
 	          )
@@ -44126,7 +44132,7 @@
 	          _react2.default.createElement(
 	            "div",
 	            null,
-	            this.modalContent
+	            "in modal"
 	          )
 	        )
 	      );
@@ -44135,6 +44141,8 @@
 	
 	  return FeedItem;
 	}(_react2.default.Component);
+	
+	// <div>{this.modalContent}</div>
 	
 	exports.default = (0, _reactRouter.withRouter)(FeedItem);
 
@@ -56682,6 +56690,7 @@
 	      }
 	      this.props.requestSubfeeds(this.props.params.subfeedId);
 	      window.scrollTo(0, 0);
+	      (0, _jquery2.default)(window).off("scroll");
 	      (0, _jquery2.default)(window).scroll(this.handleInfiniteScroll);
 	    }
 	  }, {

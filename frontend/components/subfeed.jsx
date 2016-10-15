@@ -15,6 +15,7 @@ class Subfeed extends React.Component{
     }
     this.props.requestSubfeeds(this.props.params.subfeedId);
     window.scrollTo(0,0);
+    $(window).off("scroll");
     $(window).scroll(this.handleInfiniteScroll);
   }
 

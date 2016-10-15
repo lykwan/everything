@@ -16,6 +16,7 @@ class Feeds extends React.Component{
     }
     this.props.requestUserFeeds();
     window.scrollTo(0,0);
+    $(window).off("scroll");
     $(window).scroll(this.handleInfiniteScroll);
   }
 
@@ -24,7 +25,9 @@ class Feeds extends React.Component{
     if($(window).scrollTop() + $(window).height() >= $(document).height()) {
       console.log("bottom!");
       if (this.props.feeds) {
-        // this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
+        console.log("requesting feeds");
+        console.log(this.props.feeds.lastItemIds);
+        this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
       }
     }
   }
@@ -34,7 +37,7 @@ class Feeds extends React.Component{
     let feeds;
     if (this.props.loggedIn && this.props.feeds) {
 
-      feeds = this.props.feeds.map((feed, idx) => {
+      feeds = this.props.feeds.feedItems.map((feed, idx) => {
         return (
           <FeedItem key={idx} feed={feed}/>
         );

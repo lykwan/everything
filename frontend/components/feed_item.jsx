@@ -5,10 +5,10 @@ import Modal from "react-modal";
 class FeedItem extends React.Component{
   constructor(props) {
     super(props);
-    this.closeModal = this.closeModal.bind(this);
-    this.openModal = this.openModal.bind(this);
     this.handleFeedClick = this.handleFeedClick.bind(this);
     this.handleSubfeedClick = this.handleSubfeedClick.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.openModal = this.openModal.bind(this);
 
     this.state = {
       ModalOpen: false
@@ -25,9 +25,9 @@ class FeedItem extends React.Component{
 
   handleFeedClick() {
 
-    const app = require(`../../plugins/${this.props.feed.pluginPath}/frontend`);
-    const frontend = new app();
-    this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
+    // const app = require(`../../plugins/${this.props.feed.pluginPath}/frontend`);
+    // const frontend = new app();
+    // this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
     this.openModal();
   }
 
@@ -72,7 +72,7 @@ class FeedItem extends React.Component{
                src={this.props.feed.image}/>
           <div className="feed-item-title-container">
             <a className="feed-item-title" href="#"
-              onClick={this.handleFeedClick}>
+              onClick={this.openModal}>
               {this.props.feed.title}
             </a>
           </div>
@@ -92,12 +92,16 @@ class FeedItem extends React.Component{
           style={style}
           className="feed-item-content-modal" >
 
-          <div>{this.modalContent}</div>
+          <div>
+            in modal
+          </div>
 
         </Modal>
       </div>
     );
   }
 }
+
+  // <div>{this.modalContent}</div>
 
 export default withRouter(FeedItem);

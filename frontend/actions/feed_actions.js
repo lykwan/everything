@@ -24,7 +24,7 @@ export const receiveUserFeeds = (feeds) => ({
 });
 
 export const receiveMoreUserFeeds = (feeds) => ({
-  type: FeedConstants.REQUEST_MORE_USER_FEEDS,
+  type: FeedConstants.RECEIVE_MORE_USER_FEEDS,
   feeds
 });
 
