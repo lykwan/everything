@@ -203,7 +203,7 @@ button:hover {
 
 /*add subfeed modal*/
 
-.add-subfeed-modal {
+.add-subfeed-modal, .feed-item-content-modal {
   font-weight: 300;
 }
 

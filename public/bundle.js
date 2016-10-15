@@ -26122,8 +26122,6 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
 	var FeedReducer = function FeedReducer() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 	  var action = arguments[1];
@@ -26131,14 +26129,17 @@
 	  var newState = (0, _merge2.default)({}, state);
 	  var subfeeds = void 0,
 	      count = void 0,
-	      feeds = void 0;
+	      feeds = void 0,
+	      lastItemIds = void 0;
 	  switch (action.type) {
 	    case Actions.FeedConstants.RECEIVE_USER_FEEDS:
 	      subfeeds = Object.keys(action.feeds.feedItems);
 	      count = 0;
+	      lastItemIds = {};
 	
 	      subfeeds.forEach(function (Id) {
 	        count += action.feeds.feedItems[Id].length;
+	        lastItemIds[Id] = action.feeds.feedItems[Id][action.feeds.feedItems[Id].length - 1].id;
 	      });
 	      feeds = [];
 	      while (count > 0) {
@@ -26152,14 +26153,17 @@
 	        count -= 1;
 	      }
 	      newState["allFeeds"] = feeds;
+	      newState["allFeeds"]["lastItemIds"] = lastItemIds;
 	      return newState;
 	
 	    case Actions.FeedConstants.RECEIVE_MORE_USER_FEEDS:
 	      subfeeds = Object.keys(action.feeds.feedItems);
 	      count = 0;
+	      lastItemIds = {};
 	
 	      subfeeds.forEach(function (Id) {
 	        count += action.feeds.feedItems[Id].length;
+	        lastItemIds[Id] = action.feeds.feedItems[Id][action.feeds.feedItems[Id].length - 1].id;
 	      });
 	      feeds = [];
 	      while (count > 0) {
@@ -26172,7 +26176,8 @@
 	        feeds.push(action.feeds.feedItems[_randSubfeed].shift());
 	        count -= 1;
 	      }
-	      newState.allFeeds = [].concat(_toConsumableArray(newState.allFeeds), [feeds]);
+	      newState.allFeeds = newState.allFeeds.concat(feeds);
+	      newState.allFeeds.lastItemIds = lastItemIds;
 	      return newState;
 	
 	    case Actions.FeedConstants.RECEIVE_SUBFEEDS:
@@ -26186,7 +26191,7 @@
 	      return newState;
 	
 	    case Actions.FeedConstants.RECEIVE_MORE_SUBFEEDS:
-	      newState.subfeeds.feedItems = [].concat(_toConsumableArray(newState.subfeeds.feedItems), [action.subfeeds.feedItems]);
+	      newState.subfeeds.feedItems = newState.subfeeds.feedItems.concat(action.subfeeds.feedItems);
 	      newState.subfeeds.lastItemId = action.subfeeds.feedItems[action.subfeeds.feedItems.length - 1].id;
 	      // newState["subfeeds"]["subfeedId"] = action.subfeedId;
 	      return newState;
@@ -42547,7 +42552,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.requestSubfeeds = exports.requestUserFeeds = undefined;
+	exports.requestMoreSubfeeds = exports.requestSubfeeds = exports.requestMoreUserFeeds = exports.requestUserFeeds = undefined;
 	
 	var _jquery = __webpack_require__(314);
 	
@@ -42555,12 +42560,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds(lastItemIds, success, error) {
+	var requestUserFeeds = exports.requestUserFeeds = function requestUserFeeds(success, error) {
 	
 	  _jquery2.default.ajax({
 	    method: "GET",
 	    url: "subfeeds/all",
-	    data: { lastItemIds: lastItemIds },
 	    dataType: "json",
 	    success: success,
 	    error: function error() {
@@ -42569,9 +42573,34 @@
 	  });
 	};
 	
-	var requestSubfeeds = exports.requestSubfeeds = function requestSubfeeds(subfeedId, lastItemId, success, error) {
-	  console.log("in api");
-	  console.log(subfeedId);
+	var requestMoreUserFeeds = exports.requestMoreUserFeeds = function requestMoreUserFeeds(lastItemIds, success, error) {
+	
+	  _jquery2.default.ajax({
+	    method: "GET",
+	    url: "subfeeds/all",
+	    data: { lastItemIds: JSON.stringify(lastItemIds) },
+	    dataType: "json",
+	    success: success,
+	    error: function error() {
+	      console.log('all feeds error');
+	    }
+	  });
+	};
+	
+	var requestSubfeeds = exports.requestSubfeeds = function requestSubfeeds(subfeedId, success, error) {
+	  _jquery2.default.ajax({
+	    method: "GET",
+	    url: "subfeeds/" + subfeedId,
+	    dataType: "json",
+	    success: success,
+	    error: function error() {
+	      console.log('show one app details (feeds) error');
+	    }
+	  });
+	};
+	
+	var requestMoreSubfeeds = exports.requestMoreSubfeeds = function requestMoreSubfeeds(subfeedId, lastItemId, success, error) {
+	
 	  _jquery2.default.ajax({
 	    method: "GET",
 	    url: "subfeeds/" + subfeedId,
@@ -43615,9 +43644,9 @@
 	  }, {
 	    key: "componentDidUpdate",
 	    value: function componentDidUpdate() {
-	      if (!this.props.currentUser) {
-	        this.props.router.push("/");
-	      }
+	      // if (!this.props.currentUser) {
+	      //   this.props.router.push("/");
+	      // }
 	    }
 	  }, {
 	    key: "handleLogout",
@@ -43675,7 +43704,7 @@
 	        name = this.props.currentUser.name;
 	      } else {
 	        image = _react2.default.createElement("i", { className: "fa fa-spinner fa-pulse fa-3x fa-fw" });
-	        name = "User fb name";
+	        name = "User name";
 	      }
 	
 	      return _react2.default.createElement(
@@ -43873,6 +43902,10 @@
 	
 	var _feed_item2 = _interopRequireDefault(_feed_item);
 	
+	var _jquery = __webpack_require__(314);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -43887,7 +43920,11 @@
 	  function Feeds(props) {
 	    _classCallCheck(this, Feeds);
 	
-	    return _possibleConstructorReturn(this, (Feeds.__proto__ || Object.getPrototypeOf(Feeds)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Feeds.__proto__ || Object.getPrototypeOf(Feeds)).call(this, props));
+	
+	    _this.handleInfiniteScroll = _this.handleInfiniteScroll.bind(_this);
+	
+	    return _this;
 	  }
 	
 	  _createClass(Feeds, [{
@@ -43897,6 +43934,18 @@
 	        this.props.requestCurrentUser();
 	      }
 	      this.props.requestUserFeeds();
+	      window.scrollTo(0, 0);
+	      (0, _jquery2.default)(window).scroll(this.handleInfiniteScroll);
+	    }
+	  }, {
+	    key: "handleInfiniteScroll",
+	    value: function handleInfiniteScroll() {
+	      if ((0, _jquery2.default)(window).scrollTop() + (0, _jquery2.default)(window).height() >= (0, _jquery2.default)(document).height()) {
+	        console.log("bottom!");
+	        if (this.props.feeds) {
+	          // this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
+	        }
+	      }
 	    }
 	  }, {
 	    key: "render",
@@ -43912,14 +43961,13 @@
 	        feeds = _react2.default.createElement(
 	          "div",
 	          null,
-	          "fetching feeds"
+	          "No feeds added yet"
 	        );
 	      }
 	
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "feeds-container" },
-	        "}",
 	        _react2.default.createElement(
 	          "ul",
 	          { className: "feeds-list-container" },
@@ -43972,11 +44020,11 @@
 	
 	    var _this = _possibleConstructorReturn(this, (FeedItem.__proto__ || Object.getPrototypeOf(FeedItem)).call(this, props));
 	
-	    _this.handleFeedClick = _this.handleFeedClick.bind(_this);
-	    _this.handleSubfeedClick = _this.handleSubfeedClick.bind(_this);
 	    _this.closeModal = _this.closeModal.bind(_this);
 	    _this.openModal = _this.openModal.bind(_this);
-	    _this.modalContent;
+	    _this.handleFeedClick = _this.handleFeedClick.bind(_this);
+	    _this.handleSubfeedClick = _this.handleSubfeedClick.bind(_this);
+	
 	    _this.state = {
 	      ModalOpen: false
 	    };
@@ -44001,7 +44049,6 @@
 	      var frontend = new app();
 	      this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
 	      this.openModal();
-	      debugger;
 	    }
 	  }, {
 	    key: "handleSubfeedClick",
@@ -44074,12 +44121,8 @@
 	
 	            isOpen: this.state.ModalOpen,
 	            onRequestClose: this.closeModal,
-	            style: style },
-	          _react2.default.createElement(
-	            "div",
-	            null,
-	            "modal content"
-	          ),
+	            style: style,
+	            className: "feed-item-content-modal" },
 	          _react2.default.createElement(
 	            "div",
 	            null,
@@ -46170,7 +46213,7 @@
 	        channelName = "SesameStreet";
 	      }
 	      if (subfeedName.length === 0) {
-	        subfeedName = "Sesame Street";
+	        subfeedName = "Subfeed";
 	      }
 	      var subfeedParams = JSON.stringify({
 	        subfeedName: subfeedName,
@@ -56577,7 +56620,7 @@
 	      return dispatch((0, _feed_actions.requestSubfeeds)(subfeedId));
 	    },
 	    requestMoreSubfeeds: function requestMoreSubfeeds(subfeedId, lastItemId) {
-	      return dispatch((0, _feed_actions.requestSubfeeds)(subfeedId, lastItemId));
+	      return dispatch((0, _feed_actions.requestMoreSubfeeds)(subfeedId, lastItemId));
 	    }
 	
 	  };
@@ -56607,6 +56650,10 @@
 	
 	var _feed_item2 = _interopRequireDefault(_feed_item);
 	
+	var _jquery = __webpack_require__(314);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -56633,20 +56680,35 @@
 	      if (!this.props.currentUser) {
 	        this.props.requestCurrentUser();
 	      }
-	      if (!this.props.subfeeds) {
-	        this.props.requestSubfeeds(this.props.params.subfeedId);
-	      }
+	      this.props.requestSubfeeds(this.props.params.subfeedId);
+	      window.scrollTo(0, 0);
+	      (0, _jquery2.default)(window).scroll(this.handleInfiniteScroll);
 	    }
 	  }, {
 	    key: "componentWillUpdate",
 	    value: function componentWillUpdate(nextProps) {
 	      if (this.props.subfeeds && this.props.subfeeds.subfeedId !== nextProps.params.subfeedId) {
 	        this.props.requestSubfeeds(nextProps.params.subfeedId);
+	        window.scrollTo(0, 0);
 	      }
 	    }
 	  }, {
 	    key: "handleInfiniteScroll",
-	    value: function handleInfiniteScroll() {}
+	    value: function handleInfiniteScroll() {
+	      // console.log("got to infinite scroll");
+	      // console.log("document height");
+	      // console.log($(document).height());
+	      // console.log("scroll top height");
+	      // console.log($(window).scrollTop());
+	      // console.log("window height");
+	      // console.log($(window).height());
+	      if ((0, _jquery2.default)(window).scrollTop() + (0, _jquery2.default)(window).height() >= (0, _jquery2.default)(document).height()) {
+	        console.log("bottom!");
+	        if (this.props.subfeeds) {
+	          this.props.requestMoreSubfeeds(this.props.subfeeds.subfeedId, this.props.subfeeds.lastItemId);
+	        }
+	      }
+	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
@@ -56661,7 +56723,7 @@
 	        });
 	        name = this.props.subfeeds.feedItems[0].subfeedName;
 	      } else {
-	        name = "Loading";
+	        name = "Loading...";
 	        feeds = _react2.default.createElement("div", null);
 	      }
 	
@@ -56762,6 +56824,7 @@
 	
 	    _this.onLogout = _this.onLogout.bind(_this);
 	    _this.onStatusChange = _this.onStatusChange.bind(_this);
+	    _this.handleGuestLogin = _this.handleGuestLogin.bind(_this);
 	    _this.state = { message: "" };
 	    return _this;
 	  }
@@ -56802,6 +56865,11 @@
 	      }
 	    }
 	  }, {
+	    key: "handleGuestLogin",
+	    value: function handleGuestLogin() {
+	      this.props.login("guest");
+	    }
+	  }, {
 	    key: "onLogout",
 	    value: function onLogout(response) {
 	      this.setState({
@@ -56828,6 +56896,12 @@
 	          className: "fb-login-button",
 	          "data-max-rows": "1", "data-size": "medium",
 	          onClick: this.handleLogin }),
+	        _react2.default.createElement(
+	          "div",
+	          { className: "guest-login-button",
+	            onClick: this.handleGuestLogin },
+	          "Guest Login"
+	        ),
 	        _react2.default.createElement(
 	          "a",
 	          { className: "github", href: "https://github.com/valerielu/-everything", target: "_blank" },

@@ -59,8 +59,8 @@ module.exports = function(app, client) {
       let allFeedItems = {};
       let numSubfeedsGottenBack = 0;
       subfeedIds.forEach(id => {
-        let lastItemId = req.body.lastItemIds ?
-                          req.body.lastItemIds[id] :
+        let lastItemId = req.query.lastItemIds ?
+                          JSON.parse(req.query.lastItemIds)[id] :
                           null;
         // push all the feed items to the all feed items arr, then send it
         // when all of the fetching is done
@@ -76,7 +76,10 @@ module.exports = function(app, client) {
   });
 
   router.get('/:id', function(req, res) {
-    getFeedItems(req.params.id, req.body.lastItemId, itemsPerPage,
+    console.log(`lastItemId with query ${req.query.lastItemId}`);
+    console.log(req.query.lastItemId);
+
+    getFeedItems(req.params.id, req.query.lastItemId, itemsPerPage,
       (feedItems) => {
         res.send({ feedItems: feedItems });
     });

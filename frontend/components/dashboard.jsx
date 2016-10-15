@@ -19,9 +19,9 @@ class Dashboard extends React.Component{
   }
 
   componentDidUpdate() {
-    if (!this.props.currentUser) {
-      this.props.router.push("/");
-    }
+    // if (!this.props.currentUser) {
+    //   this.props.router.push("/");
+    // }
   }
 
   handleLogout() {
@@ -71,7 +71,7 @@ class Dashboard extends React.Component{
       name = this.props.currentUser.name;
     } else {
       image = (<i className="fa fa-spinner fa-pulse fa-3x fa-fw"></i>);
-      name = "User fb name";
+      name = "User name";
     }
 
     return (

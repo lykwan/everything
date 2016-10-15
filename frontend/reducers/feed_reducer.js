@@ -3,14 +3,16 @@ import * as Actions from "../actions/feed_actions.js";
 
 const FeedReducer = (state = {}, action) => {
     let newState = merge({}, state);
-    let subfeeds, count, feeds;
+    let subfeeds, count, feeds, lastItemIds;
   switch (action.type) {
     case Actions.FeedConstants.RECEIVE_USER_FEEDS:
       subfeeds = Object.keys(action.feeds.feedItems);
       count = 0;
+      lastItemIds = {};
 
       subfeeds.forEach(Id => {
         count += action.feeds.feedItems[Id].length;
+        lastItemIds[Id] = action.feeds.feedItems[Id][action.feeds.feedItems[Id].length - 1].id;
       });
       feeds = [];
       while (count > 0) {
@@ -24,14 +26,17 @@ const FeedReducer = (state = {}, action) => {
         count -= 1;
       }
       newState["allFeeds"] = feeds;
+      newState["allFeeds"]["lastItemIds"] = lastItemIds;
       return newState;
 
     case Actions.FeedConstants.RECEIVE_MORE_USER_FEEDS:
       subfeeds = Object.keys(action.feeds.feedItems);
       count = 0;
+      lastItemIds = {};
 
       subfeeds.forEach(Id => {
         count += action.feeds.feedItems[Id].length;
+        lastItemIds[Id] = action.feeds.feedItems[Id][action.feeds.feedItems[Id].length - 1].id;
       });
       feeds = [];
       while (count > 0) {
@@ -44,7 +49,8 @@ const FeedReducer = (state = {}, action) => {
         feeds.push(action.feeds.feedItems[randSubfeed].shift());
         count -= 1;
       }
-      newState.allFeeds = [...newState.allFeeds, feeds];
+      newState.allFeeds = newState.allFeeds.concat(feeds);
+      newState.allFeeds.lastItemIds = lastItemIds;
       return newState;
 
     case Actions.FeedConstants.RECEIVE_SUBFEEDS:
@@ -58,7 +64,7 @@ const FeedReducer = (state = {}, action) => {
       return newState;
 
     case Actions.FeedConstants.RECEIVE_MORE_SUBFEEDS:
-      newState.subfeeds.feedItems = [...newState.subfeeds.feedItems, action.subfeeds.feedItems];
+      newState.subfeeds.feedItems = newState.subfeeds.feedItems.concat(action.subfeeds.feedItems);
       newState.subfeeds.lastItemId = action.subfeeds.feedItems[action.subfeeds.feedItems.length - 1].id;
       // newState["subfeeds"]["subfeedId"] = action.subfeedId;
       return newState;

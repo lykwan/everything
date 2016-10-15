@@ -12,7 +12,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   requestCurrentUser: () => dispatch(requestCurrentUser()),
   requestSubfeeds: (subfeedId) => dispatch(requestSubfeeds(subfeedId)),
-  requestMoreSubfeeds: (subfeedId, lastItemId) => dispatch(requestSubfeeds(subfeedId, lastItemId))
+  requestMoreSubfeeds: (subfeedId, lastItemId) => dispatch(requestMoreSubfeeds(subfeedId, lastItemId))
 
 });
 

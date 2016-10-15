@@ -1,10 +1,12 @@
 import React from "react";
 import {withRouter} from "react-router";
 import FeedItem from "./feed_item.jsx";
+import $ from "jquery";
 
 class Feeds extends React.Component{
   constructor(props) {
     super(props);
+    this.handleInfiniteScroll = this.handleInfiniteScroll.bind(this);
 
   }
 
@@ -13,6 +15,18 @@ class Feeds extends React.Component{
       this.props.requestCurrentUser();
     }
     this.props.requestUserFeeds();
+    window.scrollTo(0,0);
+    $(window).scroll(this.handleInfiniteScroll);
+  }
+
+
+  handleInfiniteScroll() {
+    if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+      console.log("bottom!");
+      if (this.props.feeds) {
+        // this.props.requestMoreUserFeeds(this.props.feeds.lastItemIds);
+      }
+    }
   }
 
   render() {
@@ -26,11 +40,11 @@ class Feeds extends React.Component{
         );
       });
     } else {
-      feeds = (<div>fetching feeds</div>);
+      feeds = (<div>No feeds added yet</div>);
     }
 
     return (
-      <div className="feeds-container">}
+      <div className="feeds-container">
         <ul className="feeds-list-container">{feeds}</ul>
       </div>
     );

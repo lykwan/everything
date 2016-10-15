@@ -5,13 +5,13 @@ import Modal from "react-modal";
 class FeedItem extends React.Component{
   constructor(props) {
     super(props);
-    this.handleFeedClick = this.handleFeedClick.bind(this);
-    this.handleSubfeedClick = this.handleSubfeedClick.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.openModal = this.openModal.bind(this);
-    this.modalContent;
+    this.handleFeedClick = this.handleFeedClick.bind(this);
+    this.handleSubfeedClick = this.handleSubfeedClick.bind(this);
+
     this.state = {
-      ModalOpen: false,
+      ModalOpen: false
     };
   }
 
@@ -29,7 +29,6 @@ class FeedItem extends React.Component{
     const frontend = new app();
     this.modalContent = frontend.getDisplayComponent(this.props.feed.params);
     this.openModal();
-    debugger;
   }
 
   handleSubfeedClick() {
@@ -90,9 +89,9 @@ class FeedItem extends React.Component{
 
           isOpen={this.state.ModalOpen}
           onRequestClose={this.closeModal}
-          style={style} >
+          style={style}
+          className="feed-item-content-modal" >
 
-          <div>modal content</div>
           <div>{this.modalContent}</div>
 
         </Modal>

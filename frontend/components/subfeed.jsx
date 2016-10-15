@@ -1,6 +1,7 @@
 import React from "react";
 import {withRouter} from "react-router";
 import FeedItem from "./feed_item.jsx";
+import $ from "jquery";
 
 class Subfeed extends React.Component{
   constructor(props) {
@@ -12,19 +13,32 @@ class Subfeed extends React.Component{
     if (!this.props.currentUser) {
       this.props.requestCurrentUser();
     }
-    if (!this.props.subfeeds) {
-      this.props.requestSubfeeds(this.props.params.subfeedId);
-    }
+    this.props.requestSubfeeds(this.props.params.subfeedId);
+    window.scrollTo(0,0);
+    $(window).scroll(this.handleInfiniteScroll);
   }
 
   componentWillUpdate (nextProps) {
     if (this.props.subfeeds && this.props.subfeeds.subfeedId !== nextProps.params.subfeedId) {
       this.props.requestSubfeeds(nextProps.params.subfeedId);
+      window.scrollTo(0,0);
     }
   }
 
   handleInfiniteScroll() {
-
+    // console.log("got to infinite scroll");
+    // console.log("document height");
+    // console.log($(document).height());
+    // console.log("scroll top height");
+    // console.log($(window).scrollTop());
+    // console.log("window height");
+    // console.log($(window).height());
+    if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+      console.log("bottom!");
+      if (this.props.subfeeds) {
+        this.props.requestMoreSubfeeds(this.props.subfeeds.subfeedId, this.props.subfeeds.lastItemId);
+      }
+    }
   }
 
 
@@ -42,7 +56,7 @@ class Subfeed extends React.Component{
       });
       name = this.props.subfeeds.feedItems[0].subfeedName;
     } else {
-      name = "Loading";
+      name = "Loading...";
       feeds = (<div></div>);
     }
 

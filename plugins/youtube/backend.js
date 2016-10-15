@@ -30,7 +30,6 @@ class Backend {
             }).on('end', () => {
               var buffer = Buffer.concat(dataArr);
               const videoData = JSON.parse(buffer.toString());
-              // console.log(videoData);
               this.nextPageToken = videoData.nextPageToken;
               let videos = this.parseFetchedData(videoData);
               console.log(videos);

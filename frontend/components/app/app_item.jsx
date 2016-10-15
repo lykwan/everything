@@ -11,7 +11,7 @@ class AppItem extends React.Component{
     this.requestFeeds = this.requestFeeds.bind(this);
 
     this.state = {
-      ModalOpen: false,
+      ModalOpen: false
     };
   }
 
@@ -34,7 +34,6 @@ class AppItem extends React.Component{
     this.props.addSingleUserSubfeed(this.props.app.id, data);
     this.closeModal();
   }
-
 
 
   render() {

@@ -7,6 +7,7 @@ class SessionForm extends React.Component{
 
     this.onLogout = this.onLogout.bind(this);
     this.onStatusChange = this.onStatusChange.bind(this);
+    this.handleGuestLogin = this.handleGuestLogin.bind(this);
     this.state = {message: ""};
   }
 
@@ -49,6 +50,10 @@ class SessionForm extends React.Component{
      }
   }
 
+  handleGuestLogin() {
+    this.props.login("guest");
+  }
+
   onLogout(response) {
      this.setState({
         message: ""
@@ -67,6 +72,10 @@ class SessionForm extends React.Component{
           data-max-rows="1" data-size="medium"
           onClick={this.handleLogin}>
         </div>
+
+        <div className="guest-login-button"
+          onClick={this.handleGuestLogin}>
+          Guest Login</div>
 
         <a className="github" href="https://github.com/valerielu/-everything" target="_blank">
           <i className="fa fa-github" aria-hidden="true"></i></a>

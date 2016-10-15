@@ -32,7 +32,7 @@ class Frontend {
       channelName = "SesameStreet";
     }
     if (subfeedName.length === 0) {
-      subfeedName = "Sesame Street";
+      subfeedName = "Subfeed";
     }
     const subfeedParams =
     JSON.stringify({
@@ -76,8 +76,7 @@ class Frontend {
       <div>
         <div className="feed-item-title">hi</div>
 
-
-          <div className="feed-item-description">got here</div>
+        <div className="feed-item-description">got here</div>
       </div>
     );
   }
