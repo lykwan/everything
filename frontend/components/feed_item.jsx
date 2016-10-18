@@ -72,7 +72,7 @@ class FeedItem extends React.Component{
                src={this.props.feed.image}/>
           <div className="feed-item-title-container">
             <a className="feed-item-title" href="#"
-              onClick={this.openModal}>
+              onClick={this.handleFeedClick}>
               {this.props.feed.title}
             </a>
           </div>

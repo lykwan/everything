@@ -1,10 +1,14 @@
 {
   "rss_feed": {
-    "name": "Rss Feed",
+    "name": "RSS Feed",
     "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Generic_Feed-icon.svg/500px-Generic_Feed-icon.svg.png"
   },
   "youtube": {
     "name": "Youtube",
     "logo": "https://www.youtube.com/yt/brand/media/image/YouTube-icon-full_color.png"
+  },
+  "twitter": {
+    "name": "Twitter",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/9/9f/Twitter_bird_logo_2012.svg"
   }
 }

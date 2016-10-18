@@ -76,9 +76,8 @@ module.exports = function(app, client) {
   });
 
   router.get('/:id', function(req, res) {
-    console.log(`lastItemId with query ${req.query.lastItemId}`);
-    console.log(req.query.lastItemId);
 
+    //grabbing the last item id for infinite scrolling
     getFeedItems(req.params.id, req.query.lastItemId, itemsPerPage,
       (feedItems) => {
         res.send({ feedItems: feedItems });

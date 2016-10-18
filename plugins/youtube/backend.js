@@ -23,25 +23,30 @@ class Backend {
           }
           url = `https://www.googleapis.com/youtube/v3/search?pageToken=${this.nextPageToken}&part=snippet&channelId=${channelId}&maxResults=50&type=video&key=AIzaSyB3SiawekvPegKNcefPRoYlbgVl9vaxQr0&order=date`;
 
-          const req2 = https.get(url, (res2) => {
-            let dataArr = [];
-            res2.on('data', (data2) => {
-              dataArr.push(data2);
-            }).on('end', () => {
-              var buffer = Buffer.concat(dataArr);
-              const videoData = JSON.parse(buffer.toString());
-              this.nextPageToken = videoData.nextPageToken;
-              let videos = this.parseFetchedData(videoData);
-              console.log(videos);
-              console.log("num vids");
-              console.log(videos.length);
-              for (var i = videos.length - 1; i >= 0; i--) {
-                queue.push(videos[i]);
-              }
+            const req2 = https.get(url, (res2) => {
+              let dataArr = [];
+              res2.on('data', (data2) => {
+                dataArr.push(data2);
+              }).on('end', () => {
+                var buffer = Buffer.concat(dataArr);
+                const videoData = JSON.parse(buffer.toString());
+                this.nextPageToken = videoData.nextPageToken;
+                if (this.nextPageToken === undefined) {
+                  this.isDone = true;
+                }
+                console.log(this.nextPageToken);
+                let videos = this.parseFetchedData(videoData);
+                // console.log(videos);
+                // console.log("num vids");
+                // console.log(videos.length);
+                for (var i = videos.length - 1; i >= 0; i--) {
+                  queue.push(videos[i]);
+                }
+              });
             });
-          });
+            req2.end();
 
-          req2.end();
+
         });
 
         req1.end();
@@ -74,9 +79,6 @@ class Backend {
   }
 
   parseFetchedData(res) {
-    if (this.nextPageToken === undefined) {
-      this.isDone = true;
-    }
 
     return res.items.map((item, idx) => {
 
