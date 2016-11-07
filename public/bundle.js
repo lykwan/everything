@@ -43702,7 +43702,13 @@
 	      var name = void 0,
 	          image = void 0;
 	      if (this.props.currentUser) {
-	        var link = "http://graph.facebook.com/" + this.props.currentUser.fbId + "/picture/";
+	        var link = void 0;
+	        if (this.props.currentUser.fbId === "guest") {
+	          link = "http://soarmedical.com/wp-content/uploads/2012/01/headshot-placeholder.png";
+	        } else {
+	          link = "http://graph.facebook.com/" + this.props.currentUser.fbId + "/picture/";
+	        }
+	
 	        image = _react2.default.createElement("img", { className: "user-profile-image", src: link });
 	        name = this.props.currentUser.name;
 	      } else {
@@ -43723,12 +43729,11 @@
 	            _react2.default.createElement(
 	              "div",
 	              { className: "user-name" },
-	              name,
-	              " / via Facebook"
+	              name
 	            ),
 	            _react2.default.createElement(
 	              "button",
-	              { className: "logout-button", onClick: this.handleLogout },
+	              { className: "logout-button", onClick: this.handleLogout, title: "Logout" },
 	              _react2.default.createElement("i", { className: "fa fa-sign-out", "aria-hidden": "true" })
 	            )
 	          ),
@@ -46363,7 +46368,9 @@
 	          { className: "add-plugin-button",
 	            onClick: this.handleAddApp },
 	          _react2.default.createElement("i", { className: "fa fa-plus-circle", "aria-hidden": "true" }),
-	          "Add"
+	          "Add a ",
+	          this.props.app.name,
+	          " subfeed"
 	        ),
 	        _react2.default.createElement(
 	          _reactModal2.default,
@@ -46413,11 +46420,21 @@
 
 /***/ },
 /* 423 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _jquery = __webpack_require__(314);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -46429,44 +46446,46 @@
 	  _createClass(Frontend, [{
 	    key: "getSubFeedForm",
 	    value: function getSubFeedForm(cb) {
-	      return React.createElement(
+	      return _react2.default.createElement(
 	        "form",
 	        { className: "add-subfeed-form", onSubmit: this.handleSubfeedAdd.bind(this, cb) },
-	        React.createElement(
+	        _react2.default.createElement(
 	          "div",
 	          { className: "subfeed-form-plugin-name" },
 	          "RSS Feed"
 	        ),
-	        React.createElement(
+	        _react2.default.createElement(
 	          "div",
 	          { className: "add-subfeed-label" },
 	          "Name: (required)"
 	        ),
-	        React.createElement("input", { type: "text", className: "subfeed-form-name" }),
-	        React.createElement(
+	        _react2.default.createElement("input", { type: "text", className: "subfeed-form-name" }),
+	        _react2.default.createElement(
 	          "div",
 	          { className: "add-subfeed-label" },
 	          "RSS Feed link: (required)"
 	        ),
-	        React.createElement("input", { type: "text", className: "subfeed-form-link", placeholder: "(case sensitive; omit spaces)" }),
-	        React.createElement("input", { type: "submit", className: "subfeed-form-submit-button", value: "SUBMIT" })
+	        _react2.default.createElement("input", { type: "text", className: "subfeed-form-link" }),
+	        _react2.default.createElement("input", { type: "submit", className: "subfeed-form-submit-button", value: "Add Subfeed" })
 	      );
 	    }
 	  }, {
 	    key: "handleSubfeedAdd",
 	    value: function handleSubfeedAdd(cb, e) {
 	      e.preventDefault();
-	      var channelName = $('.subfeed-form-link').val();
-	      var subfeedName = $('.subfeed-form-name').val();
-	      if (channelName.length === 0) {
-	        channelName = "SesameStreet";
+	
+	      var rssfeedLink = (0, _jquery2.default)('.subfeed-form-link').val();
+	      var subfeedName = (0, _jquery2.default)('.subfeed-form-name').val();
+	      if (rssfeedLink.length === 0) {
+	        rssfeedLink = "http://www.nintendolife.com/feeds/news";
 	      }
 	      if (subfeedName.length === 0) {
 	        subfeedName = "Subfeed";
 	      }
+	
 	      var subfeedParams = JSON.stringify({
 	        subfeedName: subfeedName,
-	        channelName: channelName
+	        rssfeedLink: rssfeedLink
 	      });
 	      var data = { subfeedName: subfeedName,
 	        subfeedParams: subfeedParams
@@ -46501,15 +46520,15 @@
 	      //   onPlaybackRateChange={this.handleYoutubePlayer}
 	      //   onPlaybackQualityChange={this.handleYoutubePlayer}
 	      // />
-	      return React.createElement(
+	      return _react2.default.createElement(
 	        "div",
 	        null,
-	        React.createElement(
+	        _react2.default.createElement(
 	          "div",
 	          { className: "feed-item-title" },
 	          "hi"
 	        ),
-	        React.createElement(
+	        _react2.default.createElement(
 	          "div",
 	          { className: "feed-item-description" },
 	          "got here"
@@ -46617,7 +46636,7 @@
 	          "Channel: (required)"
 	        ),
 	        _react2.default.createElement("input", { type: "text", className: "subfeed-form-link", placeholder: "(case sensitive; omit spaces)" }),
-	        _react2.default.createElement("input", { type: "submit", className: "subfeed-form-submit-button", value: "SUBMIT" })
+	        _react2.default.createElement("input", { type: "submit", className: "subfeed-form-submit-button", value: "Add Subfeed" })
 	      );
 	    }
 	  }, {

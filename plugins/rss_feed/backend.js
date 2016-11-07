@@ -8,8 +8,8 @@ class Backend {
   getNewerData(queue) {
     let feeder = new RssFeedEmitter();
     feeder.add({
-      url: 'http://www.nintendolife.com/feeds/news',
-      refresh: 2000
+      url: rssfeedLink,
+      refresh: 10000
     });
     feeder.on('new-item', function(item) {
       queue.push(item);

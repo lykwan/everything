@@ -1,3 +1,7 @@
+import React from "react";
+import $ from "jquery";
+
+
 class Frontend {
   constructor() {
 
@@ -11,9 +15,9 @@ class Frontend {
           <input type="text" className="subfeed-form-name"/>
 
           <div className="add-subfeed-label">RSS Feed link: (required)</div>
-          <input type="text" className="subfeed-form-link" placeholder="(case sensitive; omit spaces)"/>
+          <input type="text" className="subfeed-form-link"/>
 
-          <input type="submit" className="subfeed-form-submit-button" value="SUBMIT"/>
+          <input type="submit" className="subfeed-form-submit-button" value="Add Subfeed"/>
         </form>
     );
   }
@@ -21,18 +25,20 @@ class Frontend {
 
   handleSubfeedAdd(cb, e) {
     e.preventDefault();
-    let channelName = $('.subfeed-form-link').val();
+
+    let rssfeedLink = $('.subfeed-form-link').val();
     let subfeedName = $('.subfeed-form-name').val();
-    if (channelName.length === 0) {
-      channelName = "SesameStreet";
+    if (rssfeedLink.length === 0) {
+      rssfeedLink = "http://www.nintendolife.com/feeds/news";
     }
     if (subfeedName.length === 0) {
       subfeedName = "Subfeed";
     }
+
     const subfeedParams =
     JSON.stringify({
       subfeedName: subfeedName,
-      channelName: channelName
+      rssfeedLink: rssfeedLink
     });
     const data = {subfeedName: subfeedName,
                   subfeedParams: subfeedParams

@@ -18,7 +18,7 @@ class Frontend {
           <div className="add-subfeed-label">Channel: (required)</div>
           <input type="text" className="subfeed-form-link" placeholder="(case sensitive; omit spaces)"/>
 
-          <input type="submit" className="subfeed-form-submit-button" value="SUBMIT"/>
+          <input type="submit" className="subfeed-form-submit-button" value="Add Subfeed"/>
         </form>
     );
   }

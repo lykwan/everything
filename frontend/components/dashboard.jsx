@@ -66,7 +66,13 @@ class Dashboard extends React.Component{
 
     let name, image;
     if (this.props.currentUser) {
-      let link = `http://graph.facebook.com/${this.props.currentUser.fbId}/picture/`;
+      let link;
+      if (this.props.currentUser.fbId === "guest") {
+        link = "http://soarmedical.com/wp-content/uploads/2012/01/headshot-placeholder.png";
+      } else {
+        link = `http://graph.facebook.com/${this.props.currentUser.fbId}/picture/`;
+      }
+
       image = (<img className="user-profile-image" src={link}/>);
       name = this.props.currentUser.name;
     } else {
@@ -80,8 +86,8 @@ class Dashboard extends React.Component{
 
           <div className="user-container">
             {image}
-            <div className="user-name">{name} / via Facebook</div>
-            <button className="logout-button" onClick={this.handleLogout}>
+            <div className="user-name">{name}</div>
+            <button className="logout-button" onClick={this.handleLogout} title="Logout">
               <i className="fa fa-sign-out" aria-hidden="true"></i>
             </button>
           </div>

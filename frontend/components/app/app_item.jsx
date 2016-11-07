@@ -74,7 +74,8 @@ class AppItem extends React.Component{
 
         <button className="add-plugin-button"
           onClick={this.handleAddApp}>
-          <i className="fa fa-plus-circle" aria-hidden="true"></i>Add
+          <i className="fa fa-plus-circle" aria-hidden="true"></i>
+          Add a {this.props.app.name} subfeed
         </button>
 
         <Modal
