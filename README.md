@@ -1,5 +1,7 @@
 # #Everything
 
+Contributors: Valerie Lu, Lily Kwan
+
 Everyone on the internet is inundated with new information and updates. Wouldn’t it be great if you can just check one place for only the updates that you care about, and have it be highly customizable? This application replaces the need to check all the feeds, social media, and websites that you follow as it centralizes all the information in one place.
 
 Everything will provide a list of sources that users can add to their feed, such as youtube, RSS feed, etc. It also provides a framework API with which users can add different plugins to personalize their feed further if they do not see their application (source of feed) listed on Everything.
@@ -116,6 +118,3 @@ Each feed item has to be in the form of an object, with the following keys:
 
   * `getNewerData(callback)`
   In this method, fetch new data from your plugin's API when they are available. When you receive new items, use the callback provided to send us back new feed items. (similar to `getOlderData`)
-  
-
-Contributors: Valerie Lu, Lily Kwan
